@@ -1,6 +1,6 @@
 """Build the data behind The Leaky Loop from Eurostat's raw downloads.
 
-Reads three Eurostat datasets from data/raw/ and writes four tables to
+Reads Eurostat datasets from data/raw/ and writes these tables to
 data/processed/:
 
     ceilings_2022.csv        every country's circularity rate and how far
@@ -10,6 +10,9 @@ data/processed/:
     trend_drivers.csv        what moved each country's rate from 2012 to 2022:
                              more recycling, or a change in consumption
     materials_2022.csv       what each country consumes, in kg per person a day
+    loop_2022.csv            where each country's processed material goes:
+                             built into stock, burned or eaten, exported, spread
+                             on land, or back as waste
 
 Run from the repository root:
 
@@ -28,6 +31,8 @@ FILES = {
     "rate": "env_ac_cur_linear_2_0.csv",    # circular material use rate
     "mfa": "env_ac_mfa_linear_2_0.csv",     # material flow accounts
     "waste": "env_wastrt_linear_2_0.csv",   # treatment of waste
+    "flows": "env_ac_sd_linear_2_0.csv",    # material flows for the circular economy
+    "waste_by_material": "env_wassd_linear_2_0.csv",   # waste treated, by material
 }
 
 YEAR = 2022                      # latest year where every figure is reported
@@ -42,6 +47,14 @@ OPERATIONS = ["TRT", "RCV_R", "RCV_B"]          # treated, recycled, backfilled
 
 # Material groups for consumption, built from Eurostat's material codes
 MATERIAL_CODES = ["TOTAL", "MF1", "MF122", "MF2", "MF3", "MF38", "MF4", "MF5", "MF6"]
+
+# Where processed material goes, from Eurostat's Sankey data; waste comes from env_wassd
+LOOP_FLOWS = {
+    "built_into_stock": "MAT_ACCUM",
+    "burned_or_eaten": "EMIS",
+    "exported": "EXP_X_RCV_R",
+    "spread_on_land": "DFLOW",
+}
 
 
 def read_eurostat(name, columns, keep):
@@ -78,6 +91,55 @@ def load():
         & d["wst_oper"].isin(OPERATIONS) & d["waste"].isin(WASTE_CODES),
     )
     return rate, mfa, waste
+
+
+def load_loop():
+    in_year = lambda d: (d["material"] == "TOTAL") & (d["unit"] == "THS_T") & (d["TIME_PERIOD"] == str(YEAR))
+    flows = read_eurostat(
+        "flows",
+        ["indic_env", "material", "unit", "geo", "TIME_PERIOD", "OBS_VALUE", "CONF_STATUS"],
+        in_year,
+    )
+    waste = read_eurostat(
+        "waste_by_material",
+        ["wst_oper", "material", "unit", "geo", "TIME_PERIOD", "OBS_VALUE", "CONF_STATUS"],
+        lambda d: in_year(d) & (d["wst_oper"] == "TRT"),
+    )
+    return flows, waste
+
+
+def per_hundred(shares):
+    """Round shares to whole tonnes out of 100 by largest remainder, so they add up to 100."""
+    total = sum(shares.values())
+    scaled = {k: v / total * 100 for k, v in shares.items()}
+    whole = {k: int(np.floor(v)) for k, v in scaled.items()}
+    for k in sorted(scaled, key=lambda k: scaled[k] - whole[k], reverse=True)[:100 - sum(whole.values())]:
+        whole[k] += 1
+    return whole
+
+
+def loop_table(flows, waste, ceilings, names, geos):
+    """Of every 100 tonnes of material processed, where it went. Processed material is
+    what's extracted at home, imported, recycled or backfilled."""
+    f = flows.set_index(["geo", "indic_env"])["value"]
+    w = waste.set_index("geo")["value"]
+    soil_rock = ceilings.set_index("geo")["share_soil_rock_pct"] / 100
+    rows = []
+    for g in geos:
+        processed = f.get((g, "DMI_RCV_R_B"), np.nan)
+        kt = {name: f.get((g, code), np.nan) for name, code in LOOP_FLOWS.items()}
+        kt["back_as_waste"] = w.get(g, np.nan)
+        shares = {name: v / processed * 100 for name, v in kt.items()}
+        row = {"geo": g, "country": names[g], "processed_kt": processed}
+        row.update({f"{name}_kt": v for name, v in kt.items()})
+        row.update({f"{name}_pct": v for name, v in shares.items()})
+        row["unaccounted_pct"] = 100 - sum(shares.values())
+        # Approximate: soil and rock's share of all treated waste, applied to the waste in the flows
+        row["back_as_soil_rock_pct"] = shares["back_as_waste"] * soil_rock.get(g, np.nan)
+        if not any(np.isnan(list(shares.values()))):
+            row.update({f"{name}_per_100": v for name, v in per_hundred(shares).items()})
+        rows.append(row)
+    return pd.DataFrame(rows)
 
 
 def country_names(rate):
@@ -222,6 +284,10 @@ def main():
     materials.insert(0, "country", materials.index.map(names))
     materials.index.name = "geo"
     materials.round(3).to_csv(OUT / f"materials_{YEAR}.csv")
+
+    # 5. Where each country's processed material goes
+    loop = loop_table(*load_loop(), ceilings, names, geos)
+    loop.round(3).to_csv(OUT / f"loop_{YEAR}.csv", index=False)
 
     eu = ceilings.set_index("geo").loc["EU27_2020"]
     print(f"EU {YEAR}: rate {eu.rate_pct:.1f}%, ceiling {eu.ceiling_pct:.1f}% "
