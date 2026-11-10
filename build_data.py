@@ -15,6 +15,10 @@ data/processed/:
                              on land, or back as waste
     footprint_2022.csv       what the EU's material footprint ends up as, and how
                              much of each is investment or spending (EU only)
+    weight_vs_climate_2022.csv
+                             each material group's share of EU material use by
+                             weight and by the climate impact of producing it
+                             (EU only, from ETC CE Report 2025/3)
 
 Run from the repository root:
 
@@ -72,6 +76,16 @@ FOOTPRINT_GROUPS = {
 # Investment is gross capital formation, households buying new homes included; spending is
 # what households, governments and non-profits buy and use up
 FINAL_USES = ["RMC", "RMC_P5", "RMC_P3", "RMC_P3_S14"]
+
+# Shares of EU material use in 2022, in %, by weight and by the climate impact of producing
+# the materials, from extraction to the factory gate. Read from Figure 3-4 of ETC CE Report
+# 2025/3, Measuring environmental benefits of circular economy (Vercalsteren and others, 2025).
+WEIGHT_VS_CLIMATE = {
+    "Non-metallic minerals": (52.3, 11.4),
+    "Biomass": (22.7, 45.7),
+    "Fossil fuels": (19.5, 26.6),
+    "Metal ores": (5.5, 16.3),
+}
 
 
 def read_eurostat(name, columns, keep):
@@ -335,6 +349,14 @@ def main():
 
     # 6. What the EU's material footprint ends up as
     footprint_table().round(3).to_csv(OUT / f"footprint_{YEAR}.csv", index=False)
+
+    # 7. Weight against climate impact, from the report
+    climate = pd.DataFrame(
+        [(group, weight, impact) for group, (weight, impact) in WEIGHT_VS_CLIMATE.items()],
+        columns=["material_group", "share_of_weight_pct", "share_of_climate_impact_pct"],
+    )
+    climate["impact_per_weight"] = climate["share_of_climate_impact_pct"] / climate["share_of_weight_pct"]
+    climate.round(3).to_csv(OUT / f"weight_vs_climate_{YEAR}.csv", index=False)
 
     eu = ceilings.set_index("geo").loc["EU27_2020"]
     print(f"EU {YEAR}: rate {eu.rate_pct:.1f}%, ceiling {eu.ceiling_pct:.1f}% "
