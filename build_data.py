@@ -13,6 +13,8 @@ data/processed/:
     loop_2022.csv            where each country's processed material goes:
                              built into stock, burned or eaten, exported, spread
                              on land, or back as waste
+    footprint_2022.csv       what the EU's material footprint ends up as, and how
+                             much of each is investment or spending (EU only)
 
 Run from the repository root:
 
@@ -33,6 +35,7 @@ FILES = {
     "waste": "env_wastrt_linear_2_0.csv",   # treatment of waste
     "flows": "env_ac_sd_linear_2_0.csv",    # material flows for the circular economy
     "waste_by_material": "env_wassd_linear_2_0.csv",   # waste treated, by material
+    "footprint": "env_ac_rmefd_linear_2_0.csv",        # material footprint by final use
 }
 
 YEAR = 2022                      # latest year where every figure is reported
@@ -55,6 +58,20 @@ LOOP_FLOWS = {
     "exported": "EXP_X_RCV_R",
     "spread_on_land": "DFLOW",
 }
+
+# What the footprint ends up as: Eurostat's 63 product groups, grouped; the rest is services
+FOOTPRINT_GROUPS = {
+    "Buildings and infrastructure": ["CPA_F"],
+    "Food": ["CPA_A01", "CPA_A03", "CPA_C10-12", "CPA_I"],   # restaurants and catering included
+    "Energy and fuels": ["CPA_B", "CPA_C19", "CPA_D"],
+    "Wood from forestry": ["CPA_A02"],
+    "Vehicles, machinery and electronics": ["CPA_C26", "CPA_C27", "CPA_C28", "CPA_C29", "CPA_C30"],
+    "Other manufactured goods": ["CPA_C13-15", "CPA_C16", "CPA_C17", "CPA_C18", "CPA_C20", "CPA_C21",
+                                 "CPA_C22", "CPA_C23", "CPA_C24", "CPA_C25", "CPA_C31_32", "CPA_C33"],
+}
+# Investment is gross capital formation, households buying new homes included; spending is
+# what households, governments and non-profits buy and use up
+FINAL_USES = ["RMC", "RMC_P5", "RMC_P3", "RMC_P3_S14"]
 
 
 def read_eurostat(name, columns, keep):
@@ -140,6 +157,33 @@ def loop_table(flows, waste, ceilings, names, geos):
             row.update({f"{name}_per_100": v for name, v in per_hundred(shares).items()})
         rows.append(row)
     return pd.DataFrame(rows)
+
+
+def footprint_table():
+    """The EU's raw material consumption by what it ends up as. Eurostat publishes
+    this table for the EU only."""
+    fp = read_eurostat(
+        "footprint",
+        ["indic_env", "material", "cpa08", "unit", "geo", "TIME_PERIOD", "OBS_VALUE", "CONF_STATUS"],
+        lambda d: (d["geo"] == "EU27_2020") & (d["unit"] == "THS_T") & (d["material"] == "TOTAL")
+        & (d["TIME_PERIOD"] == str(YEAR)) & d["indic_env"].isin(FINAL_USES),
+    )
+    kt = fp.pivot(index="cpa08", columns="indic_env", values="value")
+    total = kt.loc["TOTAL", "RMC"]
+    named = [code for codes in FOOTPRINT_GROUPS.values() for code in codes]
+    groups = {**FOOTPRINT_GROUPS, "Services": [p for p in kt.index if p not in named + ["TOTAL"]]}
+    rows = []
+    for group, codes in groups.items():
+        g = kt.loc[codes].sum()
+        rows.append({
+            "group": group,
+            "footprint_kt": g["RMC"],
+            "share_of_footprint_pct": g["RMC"] / total * 100,
+            "investment_pct": g["RMC_P5"] / g["RMC"] * 100,
+            "spending_pct": g["RMC_P3"] / g["RMC"] * 100,
+            "households_pct": g["RMC_P3_S14"] / g["RMC"] * 100,
+        })
+    return pd.DataFrame(rows).sort_values("share_of_footprint_pct", ascending=False)
 
 
 def country_names(rate):
@@ -288,6 +332,9 @@ def main():
     # 5. Where each country's processed material goes
     loop = loop_table(*load_loop(), ceilings, names, geos)
     loop.round(3).to_csv(OUT / f"loop_{YEAR}.csv", index=False)
+
+    # 6. What the EU's material footprint ends up as
+    footprint_table().round(3).to_csv(OUT / f"footprint_{YEAR}.csv", index=False)
 
     eu = ceilings.set_index("geo").loc["EU27_2020"]
     print(f"EU {YEAR}: rate {eu.rate_pct:.1f}%, ceiling {eu.ceiling_pct:.1f}% "
