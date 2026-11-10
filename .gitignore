@@ -1,0 +1,9 @@
+data/raw/*
+!data/raw/.gitkeep
+!data/raw/README.md
+venv/
+.venv/
+__pycache__/
+*.pyc
+.DS_Store
+.env
