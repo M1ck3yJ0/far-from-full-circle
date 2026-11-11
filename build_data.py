@@ -19,12 +19,14 @@ data/processed/:
                              each material group's share of EU material use by
                              weight and by the climate impact of producing it
                              (EU only, from ETC CE Report 2025/3)
+    leaky_loop_data.js       everything the web page draws, in one file
 
 Run from the repository root:
 
     python build_data.py
 """
 
+import json
 from pathlib import Path
 
 import numpy as np
@@ -43,6 +45,7 @@ FILES = {
 }
 
 YEAR = 2022                      # latest year where every figure is reported
+DATA_AS_OF = "2026-10-28"        # latest Eurostat update among the files in data/raw
 REPORTING_YEARS = list(range(2010, 2025, 2))   # waste is reported in even years
 TREND_FROM, TREND_TO = 2012, 2022
 TARGETS = {"eu": 0.24, "ireland": 0.12}         # EU and Irish goals for 2030
@@ -200,6 +203,65 @@ def footprint_table():
     return pd.DataFrame(rows).sort_values("share_of_footprint_pct", ascending=False)
 
 
+def page_data(ceilings, trend, drivers, materials, loop, footprint, climate, names, geos):
+    """Everything the web page draws, rounded for display, as one JavaScript file."""
+    def r(x, digits=2):
+        return None if pd.isna(x) else round(float(x), digits)
+
+    c = ceilings.set_index("geo")
+    t = trend.set_index(["geo", "year"])
+    d = drivers.set_index("geo")
+    lp = loop.set_index("geo")
+    groups = [col for col in materials.columns if col not in ("country", "total")]
+    countries = {}
+    for g in geos:
+        x = c.loc[g]
+        countries[g] = {
+            "name": names[g],
+            "rate": r(x.rate_pct),
+            "ceiling": r(x.ceiling_pct),
+            "ceiling_replacing_new": r(x.ceiling_replacing_new_pct),
+            "ceiling_without_soil_rock": r(x.ceiling_without_soil_rock_pct),
+            "circular_use_kt": r(x.circular_use_kt, 0),
+            "consumption_kt": r(x.consumption_kt, 0),
+            "not_recycled_kt": r(x.waste_treated_kt - x.waste_recycled_kt, 0),
+            "not_recycled_without_soil_rock_kt": r((x.waste_treated_kt - x.soil_rock_treated_kt)
+                                                   - (x.waste_recycled_kt - x.soil_rock_recycled_kt), 0),
+            "waste_treated_per_consumption": r(x.waste_treated_per_consumption_pct),
+            "share_recycled": r(x.share_recycled_pct),
+            "share_soil_rock": r(x.share_soil_rock_pct),
+            "ceiling_used": r(x.ceiling_used_pct, 1),
+            "loop_per_100": [None if pd.isna(lp.loc[g, f"{k}_per_100"]) else int(lp.loc[g, f"{k}_per_100"])
+                             for k in list(LOOP_FLOWS) + ["back_as_waste"]],
+            "back_as_waste": r(lp.loc[g, "back_as_waste_pct"]),
+            "back_as_soil_rock": r(lp.loc[g, "back_as_soil_rock_pct"]),
+            "unaccounted": r(lp.loc[g, "unaccounted_pct"]),
+            "materials": [r(materials.loc[g, k]) for k in groups],
+            "materials_total": r(materials.loc[g, "total"]),
+            "trend": {
+                "rate": [r(t.loc[(g, y), "rate_pct"]) for y in REPORTING_YEARS],
+                "ceiling": [r(t.loc[(g, y), "ceiling_pct"]) for y in REPORTING_YEARS],
+                "ceiling_without_soil_rock": [r(t.loc[(g, y), "ceiling_without_soil_rock_pct"]) for y in REPORTING_YEARS],
+            },
+            "drivers": {k: r(v) for k, v in d.loc[g].items() if k.endswith(("_pts", "_pct"))},
+        }
+    data = {
+        "year": YEAR,
+        "data_as_of": DATA_AS_OF,
+        "trend_years": REPORTING_YEARS,
+        "trend_estimated_from": YEAR + 1,     # later years are Eurostat estimates
+        "drivers_years": [TREND_FROM, TREND_TO],
+        "loop_flows": list(LOOP_FLOWS) + ["back_as_waste"],
+        "material_groups": groups,
+        "countries": countries,
+        "footprint": [{k: (r(v) if isinstance(v, float) else v) for k, v in row.items() if k != "footprint_kt"}
+                      for row in footprint.to_dict("records")],
+        "weight_vs_climate": [{k: (r(v) if isinstance(v, float) else v) for k, v in row.items()}
+                              for row in climate.to_dict("records")],
+    }
+    return "window.LEAKY_LOOP_DATA = " + json.dumps(data, separators=(",", ":"), ensure_ascii=False) + ";\n"
+
+
 def country_names(rate):
     names = rate.drop_duplicates("geo").set_index("geo")["Geopolitical entity (reporting)"]
     return names.replace({names.get("EU27_2020", ""): "EU"}).to_dict()
@@ -323,7 +385,8 @@ def main():
         a, b = by_year.loc[(g, TREND_FROM)], by_year.loc[(g, TREND_TO)]
         rows.append({"geo": g, "country": names[g], "from_year": TREND_FROM, "to_year": TREND_TO,
                      "rate_from_pct": a["rate_pct"], "rate_to_pct": b["rate_pct"], **drivers(a, b)})
-    pd.DataFrame(rows).round(3).to_csv(OUT / "trend_drivers.csv", index=False)
+    trend_drivers = pd.DataFrame(rows)
+    trend_drivers.round(3).to_csv(OUT / "trend_drivers.csv", index=False)
 
     # 4. What each country consumes, in kg per person a day
     per_person = mfa[(mfa["unit"] == "T_HAB") & (mfa["year"] == YEAR)].pivot(
@@ -348,7 +411,8 @@ def main():
     loop.round(3).to_csv(OUT / f"loop_{YEAR}.csv", index=False)
 
     # 6. What the EU's material footprint ends up as
-    footprint_table().round(3).to_csv(OUT / f"footprint_{YEAR}.csv", index=False)
+    footprint = footprint_table()
+    footprint.round(3).to_csv(OUT / f"footprint_{YEAR}.csv", index=False)
 
     # 7. Weight against climate impact, from the report
     climate = pd.DataFrame(
@@ -357,6 +421,10 @@ def main():
     )
     climate["impact_per_weight"] = climate["share_of_climate_impact_pct"] / climate["share_of_weight_pct"]
     climate.round(3).to_csv(OUT / f"weight_vs_climate_{YEAR}.csv", index=False)
+
+    # 8. Everything the web page draws
+    (OUT / "leaky_loop_data.js").write_text(
+        page_data(ceilings, trend, trend_drivers, materials, loop, footprint, climate, names, geos), encoding="utf-8")
 
     eu = ceilings.set_index("geo").loc["EU27_2020"]
     print(f"EU {YEAR}: rate {eu.rate_pct:.1f}%, ceiling {eu.ceiling_pct:.1f}% "
