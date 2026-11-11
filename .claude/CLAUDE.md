@@ -16,5 +16,6 @@ This repo holds the analysis behind The Leaky Loop on milcahjoseph.com. `build_d
 ## Data
 
 - Never commit Eurostat's raw downloads. `data/raw/README.md` lists each file and where to get it.
+- Ask Milcah to upload the raw downloads before a rerun.
 - After changing `build_data.py`, rerun it from the repo root, check the changed tables against the previous ones, and commit each changed table separately.
 - Use American spelling and no em or en dashes in any text.
