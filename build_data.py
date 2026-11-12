@@ -9,10 +9,20 @@ data/processed/:
                              from 2010 to 2024
     trend_drivers.csv        what moved each country's rate from 2012 to 2022:
                              more recycling, or a change in consumption
+    trend_steps.csv          the same split for every two-year step, from 2004
+                             for the EU and from 2010 for each country
     materials_2022.csv       what each country consumes, in kg per person a day
     loop_2022.csv            where each country's processed material goes:
                              built into stock, burned or eaten, exported, spread
                              on land, or back as waste
+    flows_by_material_2022.csv
+                             the same, by material, for the EU and the 13
+                             member states that publish it
+    levers_2022.csv          how many points each lever would add to each
+                             country's 2022 rate
+    unrecycled_waste_2022.csv
+                             waste treated but not recycled, other than soil and
+                             rock, by kind of waste
     footprint_2022.csv       what the EU's material footprint ends up as, and how
                              much of each is investment or spending (EU only)
     weight_vs_climate_2022.csv
@@ -42,12 +52,14 @@ FILES = {
     "flows": "env_ac_sd_linear_2_0.csv.gz",    # material flows for the circular economy
     "waste_by_material": "env_wassd_linear_2_0.csv.gz",   # waste treated, by material
     "footprint": "env_ac_rmefd_linear_2_0.csv.gz",        # material footprint by final use
+    "generated": "env_wasgen_linear_2_0.csv.gz",          # waste generated, by activity
 }
 
 YEAR = 2022                      # latest year where every figure is reported
 DATA_AS_OF = "2026-10-28"        # latest Eurostat update among the files in data/raw
 REPORTING_YEARS = list(range(2010, 2025, 2))   # waste is reported in even years
 TREND_FROM, TREND_TO = 2012, 2022
+STEP_YEARS = list(range(2004, 2025, 2))         # two-year steps; country rates start in 2010
 TARGETS = {"eu": 0.24, "ireland": 0.12}         # EU and Irish goals for 2030
 
 # Soil and rock: soils, dredging spoils and other mineral waste (mostly from mining)
@@ -64,6 +76,23 @@ LOOP_FLOWS = {
     "burned_or_eaten": "EMIS",
     "exported": "EXP_X_RCV_R",
     "spread_on_land": "DFLOW",
+}
+FLOW_MATERIALS = {"Non-metallic minerals": "MF3", "Biomass": "MF1", "Fossil fuels": "MF4", "Metal ores": "MF2"}
+
+# Levers, in points added to the 2022 rate with everything else unchanged
+LEVERS = ["recycling_all_but_soil_rock", "recycling_every_tonne", "using_15pct_less", "using_no_fossil_fuels"]
+
+# Waste treated but not recycled, other than soil and rock, by kind (env_wastrt categories)
+UNRECYCLED_GROUPS = {
+    "Mixed household and similar waste": ["W101"],
+    "Sorting residues and other mixed waste": ["W102", "W103"],
+    "Construction and demolition rubble": ["W121"],
+    "Ash and residues from burning and treating waste": ["W124", "W128_13"],
+    "Chemical and medical waste, and sludges": ["W011", "W012", "W013", "W02A", "W032", "W033", "W05", "W11"],
+    "Metal, glass, paper, plastic, wood and textiles": ["W061", "W062", "W063", "W071", "W072", "W073",
+                                                        "W074", "W075", "W076", "W077"],
+    "Food, plant waste and manure": ["W091", "W092", "W093"],
+    "Discarded vehicles and equipment": ["W081", "W0841", "W08A"],
 }
 
 # What the footprint ends up as: Eurostat's 63 product groups, grouped; the rest is services
@@ -109,7 +138,7 @@ def load():
     rate = read_eurostat(
         "rate",
         ["geo", "Geopolitical entity (reporting)", "TIME_PERIOD", "OBS_VALUE", "OBS_FLAG"],
-        lambda d: d["TIME_PERIOD"].astype(int) >= 2010,
+        lambda d: d["TIME_PERIOD"].astype(int) >= STEP_YEARS[0],
     )
     mfa = read_eurostat(
         "mfa",
@@ -128,7 +157,8 @@ def load():
 
 
 def load_loop():
-    in_year = lambda d: (d["material"] == "TOTAL") & (d["unit"] == "THS_T") & (d["TIME_PERIOD"] == str(YEAR))
+    materials = ["TOTAL"] + list(FLOW_MATERIALS.values())
+    in_year = lambda d: d["material"].isin(materials) & (d["unit"] == "THS_T") & (d["TIME_PERIOD"] == str(YEAR))
     flows = read_eurostat(
         "flows",
         ["indic_env", "material", "unit", "geo", "TIME_PERIOD", "OBS_VALUE", "CONF_STATUS"],
@@ -155,8 +185,8 @@ def per_hundred(shares):
 def loop_table(flows, waste, ceilings, names, geos):
     """Of every 100 tonnes of material processed, where it went. Processed material is
     what's extracted at home, imported, recycled or backfilled."""
-    f = flows.set_index(["geo", "indic_env"])["value"]
-    w = waste.set_index("geo")["value"]
+    f = flows[flows["material"] == "TOTAL"].set_index(["geo", "indic_env"])["value"]
+    w = waste[waste["material"] == "TOTAL"].set_index("geo")["value"]
     soil_rock = ceilings.set_index("geo")["share_soil_rock_pct"] / 100
     rows = []
     for g in geos:
@@ -173,6 +203,106 @@ def loop_table(flows, waste, ceilings, names, geos):
         if not any(np.isnan(list(shares.values()))):
             row.update({f"{name}_per_100": v for name, v in per_hundred(shares).items()})
         rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def flows_by_material_table(flows, waste, ceilings, names, geos):
+    """Where each material goes, for the EU and the member states that split every flow by
+    material. Soil and rock sit in non-metallic minerals' waste, estimated as in loop_table."""
+    f = flows.set_index(["geo", "material", "indic_env"])["value"]
+    w = waste.set_index(["geo", "material"])["value"]
+    soil_rock = ceilings.set_index("geo")["share_soil_rock_pct"] / 100
+    rows = []
+    for g in geos:
+        by_material = {}
+        for material, code in FLOW_MATERIALS.items():
+            row = {"geo": g, "country": names[g], "material": material,
+                   "processed_kt": f.get((g, code, "DMI_RCV_R_B"), np.nan)}
+            row.update({f"{name}_kt": f.get((g, code, c), np.nan) for name, c in LOOP_FLOWS.items()})
+            row["back_as_waste_kt"] = w.get((g, code), np.nan)
+            by_material[material] = row
+        if any(np.isnan(v) for row in by_material.values() for k, v in row.items() if k.endswith("_kt")):
+            continue
+        for material, row in by_material.items():
+            fates = sum(row[f"{name}_kt"] for name in list(LOOP_FLOWS) + ["back_as_waste"])
+            row["unaccounted_kt"] = row["processed_kt"] - fates
+            row["back_as_soil_rock_kt"] = (w.get((g, "TOTAL"), np.nan) * soil_rock.get(g, np.nan)
+                                           if material == "Non-metallic minerals" else 0.0)
+            rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def rate_with(u, dmc):
+    return u / (u + dmc) * 100
+
+
+def step(geo, a, b, rate, consumption):
+    """Split the change in the rate from year a to year b into a recycling effect and a
+    consumption effect. The recycling effect is the change from recycling alone, averaged
+    over holding consumption at its starting and at its ending value; the consumption
+    effect is the rest, so the two add up to the change."""
+    ra, rb = rate.get((geo, a), np.nan) / 100, rate.get((geo, b), np.nan) / 100
+    da, db = consumption.get((geo, a), np.nan), consumption.get((geo, b), np.nan)
+    if np.isnan([ra, rb, da, db]).any():
+        return None
+    ua, ub = ra / (1 - ra) * da, rb / (1 - rb) * db
+    change = (rb - ra) * 100
+    recycling = ((rate_with(ub, da) - ra * 100) + (rb * 100 - rate_with(ua, db))) / 2
+    return {"geo": geo, "from_year": a, "to_year": b, "rate_from_pct": ra * 100, "rate_to_pct": rb * 100,
+            "rate_change_pts": change, "recycling_effect_pts": recycling,
+            "consumption_effect_pts": change - recycling,
+            "consumption_change_pct": (db / da - 1) * 100, "circular_use_change_pct": (ub / ua - 1) * 100}
+
+
+def load_generated():
+    """Waste generated by households and by everyone, in kt."""
+    gen = read_eurostat(
+        "generated",
+        ["unit", "hazard", "nace_r2", "waste", "geo", "TIME_PERIOD", "OBS_VALUE", "CONF_STATUS"],
+        lambda d: (d["unit"] == "T") & (d["hazard"] == "HAZ_NHAZ") & (d["waste"] == "TOTAL")
+        & d["nace_r2"].isin(["EP_HH", "TOTAL_HH"]) & (d["TIME_PERIOD"] == str(YEAR)),
+    )
+    return gen.pivot(index="geo", columns="nace_r2", values="value") / 1000
+
+
+def levers_table(ceilings, mfa, households, names):
+    """Points each lever would add to the 2022 rate, with everything else unchanged.
+    Recycling levers keep consumption as it is; using less keeps recycling as it is."""
+    fossil = mfa[(mfa["material"] == "MF4") & (mfa["unit"] == "THS_T") & (mfa["year"] == YEAR)].set_index("geo")["value"]
+    rows = []
+    for x in ceilings.itertuples():
+        u, dmc, r = x.circular_use_kt, x.consumption_kt, x.rate_pct
+        hh = households.get(x.geo, np.nan)
+        rows.append({
+            "geo": x.geo, "country": names[x.geo], "rate_pct": r,
+            "recycling_all_but_soil_rock_pts": x.ceiling_without_soil_rock_pct - r,
+            "recycling_every_tonne_pts": x.ceiling_pct - r,
+            "using_15pct_less_pts": rate_with(u, 0.85 * dmc) - r,
+            "using_no_fossil_fuels_pts": rate_with(u, dmc - fossil.get(x.geo, np.nan)) - r,
+            "household_waste_kt": hh,
+            # an upper bound: it counts household waste as if none of it were recycled today
+            "recycling_household_waste_at_most_pts": rate_with(u + hh, dmc) - r,
+        })
+    return pd.DataFrame(rows)
+
+
+def unrecycled_table(names, geos):
+    """Waste treated but not recycled, other than soil and rock, by kind of waste, in kt."""
+    codes = [c for cs in UNRECYCLED_GROUPS.values() for c in cs]
+    wst = read_eurostat(
+        "waste",
+        ["unit", "hazard", "wst_oper", "waste", "geo", "TIME_PERIOD", "OBS_VALUE", "CONF_STATUS"],
+        lambda d: (d["unit"] == "T") & (d["hazard"] == "HAZ_NHAZ") & d["wst_oper"].isin(["TRT", "RCV_R"])
+        & d["waste"].isin(codes) & (d["TIME_PERIOD"] == str(YEAR)),
+    )
+    v = wst.set_index(["geo", "waste", "wst_oper"])["value"] / 1000
+    rows = []
+    for g in geos:
+        left = {group: sum(v.get((g, c, "TRT"), np.nan) - v.get((g, c, "RCV_R"), np.nan) for c in cs)
+                for group, cs in UNRECYCLED_GROUPS.items()}
+        total = sum(left.values())
+        rows += [{"geo": g, "country": names[g], "kind": group, "unrecycled_kt": kt, "share_pct": kt / total * 100}
+                 for group, kt in left.items()]
     return pd.DataFrame(rows)
 
 
@@ -203,15 +333,29 @@ def footprint_table():
     return pd.DataFrame(rows).sort_values("share_of_footprint_pct", ascending=False)
 
 
-def page_data(ceilings, trend, drivers, materials, loop, footprint, climate, names, geos):
+def page_data(ceilings, trend, steps, materials, loop, flows_m, levers, unrecycled, generated,
+              waste_in_flows_kt, footprint, climate, names, geos):
     """Everything the web page draws, rounded for display, as one JavaScript file."""
     def r(x, digits=2):
         return None if pd.isna(x) else round(float(x), digits)
 
     c = ceilings.set_index("geo")
     t = trend.set_index(["geo", "year"])
-    d = drivers.set_index("geo")
+    s = steps.set_index(["geo", "from_year"])
+    lv = levers.set_index("geo")
     lp = loop.set_index("geo")
+
+    def by_step(g, key):
+        return [r(s.loc[(g, y), key]) if (g, y) in s.index else None for y in STEP_YEARS[:-1]]
+
+    def where_it_goes(row):
+        kt = [row[f"{name}_kt"] for name in list(LOOP_FLOWS) + ["back_as_waste"]]
+        return {"material": row["material"], "processed_kt": r(row["processed_kt"], 0),
+                "shares": [r(v / sum(kt) * 100, 1) for v in kt],
+                "soil_rock": r(row["back_as_soil_rock_kt"] / sum(kt) * 100, 1)}
+
+    eu = c.loc["EU27_2020"]
+    eu_left = unrecycled[unrecycled["geo"] == "EU27_2020"].sort_values("unrecycled_kt", ascending=False)
     groups = [col for col in materials.columns if col not in ("country", "total")]
     countries = {}
     for g in geos:
@@ -243,17 +387,27 @@ def page_data(ceilings, trend, drivers, materials, loop, footprint, climate, nam
                 "ceiling": [r(t.loc[(g, y), "ceiling_pct"]) for y in REPORTING_YEARS],
                 "ceiling_without_soil_rock": [r(t.loc[(g, y), "ceiling_without_soil_rock_pct"]) for y in REPORTING_YEARS],
             },
-            "drivers": {k: r(v) for k, v in d.loc[g].items() if k.endswith(("_pts", "_pct"))},
+            "steps": {"recycling": by_step(g, "recycling_effect_pts"), "consumption": by_step(g, "consumption_effect_pts"),
+                      "change": by_step(g, "rate_change_pts"), "consumption_change_pct": by_step(g, "consumption_change_pct")},
+            "levers": {k: r(lv.loc[g, f"{k}_pts"]) for k in LEVERS},
+            "less_for_target": {name: r(x[f"less_consumption_for_{name}_target_today_pct"], 1) for name in TARGETS},
         }
     data = {
         "year": YEAR,
         "data_as_of": DATA_AS_OF,
         "trend_years": REPORTING_YEARS,
         "trend_estimated_from": YEAR + 1,     # later years are Eurostat estimates
-        "drivers_years": [TREND_FROM, TREND_TO],
+        "step_years": STEP_YEARS,
         "loop_flows": list(LOOP_FLOWS) + ["back_as_waste"],
         "material_groups": groups,
+        "levers": LEVERS,
         "countries": countries,
+        "flows_by_material": [where_it_goes(row) for row in flows_m[flows_m["geo"] == "EU27_2020"].to_dict("records")],
+        "unrecycled": [{"kind": x.kind, "kt": r(x.unrecycled_kt, 0), "pct": r(x.share_pct, 1)} for x in eu_left.itertuples()],
+        "household": {"generated_kt": r(generated.loc["EU27_2020", "EP_HH"], 0),
+                      "share_of_generated_pct": r(generated.loc["EU27_2020", "EP_HH"] / generated.loc["EU27_2020", "TOTAL_HH"] * 100, 1),
+                      "at_most_pts": r(lv.loc["EU27_2020", "recycling_household_waste_at_most_pts"])},
+        "waste_bases": {"in_flows_kt": r(waste_in_flows_kt, 0), "treated_kt": r(eu.waste_treated_kt, 0)},
         "footprint": [{k: (r(v) if isinstance(v, float) else v) for k, v in row.items() if k != "footprint_kt"}
                       for row in footprint.to_dict("records")],
         "weight_vs_climate": [{k: (r(v) if isinstance(v, float) else v) for k, v in row.items()}
@@ -388,6 +542,12 @@ def main():
     trend_drivers = pd.DataFrame(rows)
     trend_drivers.round(3).to_csv(OUT / "trend_drivers.csv", index=False)
 
+    # 3b. The same split for every two-year step
+    steps = pd.DataFrame([x for g in geos for a, b in zip(STEP_YEARS, STEP_YEARS[1:])
+                          if (x := step(g, a, b, rate, consumption)) is not None])
+    steps.insert(1, "country", steps["geo"].map(names))
+    steps.round(3).to_csv(OUT / "trend_steps.csv", index=False)
+
     # 4. What each country consumes, in kg per person a day
     per_person = mfa[(mfa["unit"] == "T_HAB") & (mfa["year"] == YEAR)].pivot(
         index="geo", columns="material", values="value")
@@ -406,9 +566,19 @@ def main():
     materials.index.name = "geo"
     materials.round(3).to_csv(OUT / f"materials_{YEAR}.csv")
 
-    # 5. Where each country's processed material goes
-    loop = loop_table(*load_loop(), ceilings, names, geos)
+    # 5. Where each country's processed material goes, in total and by material
+    flows_sd, waste_sd = load_loop()
+    loop = loop_table(flows_sd, waste_sd, ceilings, names, geos)
     loop.round(3).to_csv(OUT / f"loop_{YEAR}.csv", index=False)
+    flows_m = flows_by_material_table(flows_sd, waste_sd, ceilings, names, geos)
+    flows_m.round(3).to_csv(OUT / f"flows_by_material_{YEAR}.csv", index=False)
+
+    # 5b. What each lever is worth, and what the unrecycled waste other than soil and rock is
+    generated = load_generated()
+    levers = levers_table(ceilings, mfa, generated["EP_HH"], names)
+    levers.round(3).to_csv(OUT / f"levers_{YEAR}.csv", index=False)
+    unrecycled = unrecycled_table(names, geos)
+    unrecycled.round(3).to_csv(OUT / f"unrecycled_waste_{YEAR}.csv", index=False)
 
     # 6. What the EU's material footprint ends up as
     footprint = footprint_table()
@@ -424,7 +594,9 @@ def main():
 
     # 8. Everything the web page draws
     (OUT / "far_from_full_circle_data.js").write_text(
-        page_data(ceilings, trend, trend_drivers, materials, loop, footprint, climate, names, geos), encoding="utf-8")
+        page_data(ceilings, trend, steps, materials, loop, flows_m, levers, unrecycled, generated,
+                  loop.set_index("geo").loc["EU27_2020", "back_as_waste_kt"], footprint, climate, names, geos),
+        encoding="utf-8")
 
     eu = ceilings.set_index("geo").loc["EU27_2020"]
     print(f"EU {YEAR}: rate {eu.rate_pct:.1f}%, ceiling {eu.ceiling_pct:.1f}% "
