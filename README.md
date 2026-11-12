@@ -1,8 +1,8 @@
-# The Leaky Loop
+# Far from Full Circle
 
 *How far could recycling take every EU country's circularity rate? Eurostat data for 2022, with a trend from 2010.*
 
-The analysis behind [The Leaky Loop](https://milcahjoseph.com/projects/eu_circularity/leaky_loop.html), by Milcah M. Joseph.
+The analysis behind [Far from Full Circle](https://milcahjoseph.com/projects/eu_circularity/far_from_full_circle.html), by Milcah M. Joseph.
 
 ## Bottom line
 
