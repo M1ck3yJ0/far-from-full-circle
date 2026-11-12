@@ -1,6 +1,6 @@
-# The Leaky Loop
+# Far from Full Circle
 
-This repo holds the analysis behind The Leaky Loop on milcahjoseph.com. `build_data.py` reads Eurostat's raw downloads from `data/raw` and writes the tables in `data/processed`.
+This repo holds the analysis behind Far from Full Circle on milcahjoseph.com. `build_data.py` reads Eurostat's raw downloads from `data/raw` and writes the tables in `data/processed`.
 
 ## How to make changes
 
