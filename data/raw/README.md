@@ -12,8 +12,6 @@ Eurostat's full downloads, gzip-compressed. `build_data.py` reads them from here
 | [Material footprints by final use of products (env_ac_rmefd)](https://ec.europa.eu/eurostat/databrowser/view/env_ac_rmefd/default/table?lang=en) | `env_ac_rmefd_linear_2_0.csv.gz` | July 21, 2026 | October 24, 2026 |
 | [Generation of waste by waste category (env_wasgen)](https://ec.europa.eu/eurostat/databrowser/view/env_wasgen/default/table?lang=en) | `env_wasgen_linear_2_0.csv.gz` | not recorded | November 10, 2026 |
 
-The build doesn't read env_wasgen yet.
-
 ## Replacing a file with a newer release
 
 1. In Eurostat's data browser, download the full dataset in SDMX-CSV 2.0 format, with codes and labels.
