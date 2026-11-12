@@ -61,7 +61,7 @@ Built by `build_data.py` into `data/processed`:
 | `loop_2022.csv` | Where each country's processed material went in 2022, in tonnes and out of every 100 tonnes |
 | `footprint_2022.csv` | What the EU's material footprint ended up as in 2022, and how much of each group was investment or spending |
 | `weight_vs_climate_2022.csv` | Each material group's share of EU material use in 2022 by weight and by climate impact |
-| `leaky_loop_data.js` | Everything the web page draws, rounded for display, in one file the page loads |
+| `far_from_full_circle_data.js` | Everything the web page draws, rounded for display, in one file the page loads |
 
 Weights are in thousand tonnes (kt) and shares in percent.
 
