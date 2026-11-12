@@ -346,13 +346,13 @@ def page_data(ceilings, trend, steps, materials, loop, flows_m, levers, unrecycl
     lp = loop.set_index("geo")
 
     def by_step(g, key):
-        return [r(s.loc[(g, y), key]) if (g, y) in s.index else None for y in STEP_YEARS[:-1]]
+        return [r(s.loc[(g, y), key], 3) if (g, y) in s.index else None for y in STEP_YEARS[:-1]]
 
     def where_it_goes(row):
         kt = [row[f"{name}_kt"] for name in list(LOOP_FLOWS) + ["back_as_waste"]]
         return {"material": row["material"], "processed_kt": r(row["processed_kt"], 0),
-                "shares": [r(v / sum(kt) * 100, 1) for v in kt],
-                "soil_rock": r(row["back_as_soil_rock_kt"] / sum(kt) * 100, 1)}
+                "shares": [r(v / sum(kt) * 100) for v in kt],
+                "soil_rock": r(row["back_as_soil_rock_kt"] / sum(kt) * 100)}
 
     eu = c.loc["EU27_2020"]
     eu_left = unrecycled[unrecycled["geo"] == "EU27_2020"].sort_values("unrecycled_kt", ascending=False)
@@ -389,8 +389,10 @@ def page_data(ceilings, trend, steps, materials, loop, flows_m, levers, unrecycl
             },
             "steps": {"recycling": by_step(g, "recycling_effect_pts"), "consumption": by_step(g, "consumption_effect_pts"),
                       "change": by_step(g, "rate_change_pts"), "consumption_change_pct": by_step(g, "consumption_change_pct")},
-            "levers": {k: r(lv.loc[g, f"{k}_pts"]) for k in LEVERS},
-            "less_for_target": {name: r(x[f"less_consumption_for_{name}_target_today_pct"], 1) for name in TARGETS},
+            "levers": {k: r(lv.loc[g, f"{k}_pts"], 3) for k in LEVERS},
+            "less_for_target": {name: r(x[f"less_consumption_for_{name}_target_today_pct"]) for name in TARGETS},
+            "less_for_target_without_soil_rock": {name: r(x[f"less_consumption_for_{name}_target_without_soil_rock_pct"])
+                                                  for name in TARGETS},
         }
     data = {
         "year": YEAR,
@@ -406,7 +408,7 @@ def page_data(ceilings, trend, steps, materials, loop, flows_m, levers, unrecycl
         "unrecycled": [{"kind": x.kind, "kt": r(x.unrecycled_kt, 0), "pct": r(x.share_pct, 1)} for x in eu_left.itertuples()],
         "household": {"generated_kt": r(generated.loc["EU27_2020", "EP_HH"], 0),
                       "share_of_generated_pct": r(generated.loc["EU27_2020", "EP_HH"] / generated.loc["EU27_2020", "TOTAL_HH"] * 100, 1),
-                      "at_most_pts": r(lv.loc["EU27_2020", "recycling_household_waste_at_most_pts"])},
+                      "at_most_pts": r(lv.loc["EU27_2020", "recycling_household_waste_at_most_pts"], 3)},
         "waste_bases": {"in_flows_kt": r(waste_in_flows_kt, 0), "treated_kt": r(eu.waste_treated_kt, 0)},
         "footprint": [{k: (r(v) if isinstance(v, float) else v) for k, v in row.items() if k != "footprint_kt"}
                       for row in footprint.to_dict("records")],
