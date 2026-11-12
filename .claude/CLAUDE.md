@@ -20,5 +20,5 @@ This repo holds the analysis behind Far from Full Circle on milcahjoseph.com. `b
 - Keep uncompressed downloads out of git.
 - Never print raw files into the chat. Query them with scripts and print only what the task needs.
 - After changing `build_data.py`, rerun it from the repo root, check the changed tables against the previous ones, and commit each changed table separately.
-- When `data/processed/leaky_loop_data.js` changes, copy it to `projects/eu_circularity/` in `M1ck3yJ0/M1ck3yJ0.github.io` and commit it there.
+- When `data/processed/far_from_full_circle_data.js` changes, copy it to `projects/eu_circularity/` in `M1ck3yJ0/M1ck3yJ0.github.io` and commit it there.
 - Use American spelling and no em or en dashes in any text.
