@@ -69,16 +69,17 @@ Weights are in thousand tonnes (kt) and shares in percent.
 
 ```
 build_data.py       builds every table in data/processed from the raw downloads
-data/raw/           Eurostat downloads, not stored (see data/raw/README.md)
+data/raw/           Eurostat downloads, gzip-compressed (see data/raw/README.md)
 data/processed/     the tables the page uses
 requirements.txt
 ```
 
 ## Reproducing the data
 
-1. Download the six Eurostat datasets into `data/raw`, as described in [data/raw/README.md](data/raw/README.md).
-2. Install the requirements: `pip install -r requirements.txt`
-3. From the repository root, run `python build_data.py`
+The Eurostat downloads are stored in `data/raw`. [data/raw/README.md](data/raw/README.md) lists their versions and how to replace one with a newer release.
+
+1. Install the requirements: `pip install -r requirements.txt`
+2. From the repository root, run `python build_data.py`
 
 ## Sources
 
