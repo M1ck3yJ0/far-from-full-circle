@@ -1,0 +1,225 @@
+geo,country,kind,unrecycled_kt,share_pct
+EU27_2020,EU,Mixed household and similar waste,75150.0,22.201
+EU27_2020,EU,Sorting residues and other mixed waste,85630.0,25.297
+EU27_2020,EU,Construction and demolition rubble,57250.0,16.913
+EU27_2020,EU,Ash and residues from burning and treating waste,69940.0,20.662
+EU27_2020,EU,"Chemical and medical waste, and sludges",17600.0,5.199
+EU27_2020,EU,"Metal, glass, paper, plastic, wood and textiles",26650.0,7.873
+EU27_2020,EU,"Food, plant waste and manure",6150.0,1.817
+EU27_2020,EU,Discarded vehicles and equipment,130.0,0.038
+AT,Austria,Mixed household and similar waste,1186.927,13.687
+AT,Austria,Sorting residues and other mixed waste,1681.111,19.386
+AT,Austria,Construction and demolition rubble,3357.761,38.72
+AT,Austria,Ash and residues from burning and treating waste,1392.397,16.056
+AT,Austria,"Chemical and medical waste, and sludges",631.076,7.277
+AT,Austria,"Metal, glass, paper, plastic, wood and textiles",414.844,4.784
+AT,Austria,"Food, plant waste and manure",7.695,0.089
+AT,Austria,Discarded vehicles and equipment,0.124,0.001
+BE,Belgium,Mixed household and similar waste,2049.668,29.307
+BE,Belgium,Sorting residues and other mixed waste,2353.221,33.647
+BE,Belgium,Construction and demolition rubble,34.31,0.491
+BE,Belgium,Ash and residues from burning and treating waste,666.717,9.533
+BE,Belgium,"Chemical and medical waste, and sludges",911.536,13.034
+BE,Belgium,"Metal, glass, paper, plastic, wood and textiles",832.397,11.902
+BE,Belgium,"Food, plant waste and manure",145.62,2.082
+BE,Belgium,Discarded vehicles and equipment,0.304,0.004
+BG,Bulgaria,Mixed household and similar waste,850.842,7.578
+BG,Bulgaria,Sorting residues and other mixed waste,1414.76,12.601
+BG,Bulgaria,Construction and demolition rubble,39.575,0.352
+BG,Bulgaria,Ash and residues from burning and treating waste,8207.346,73.102
+BG,Bulgaria,"Chemical and medical waste, and sludges",458.76,4.086
+BG,Bulgaria,"Metal, glass, paper, plastic, wood and textiles",150.661,1.342
+BG,Bulgaria,"Food, plant waste and manure",90.638,0.807
+BG,Bulgaria,Discarded vehicles and equipment,14.747,0.131
+CY,Cyprus,Mixed household and similar waste,67.177,12.554
+CY,Cyprus,Sorting residues and other mixed waste,440.794,82.378
+CY,Cyprus,Construction and demolition rubble,17.718,3.311
+CY,Cyprus,Ash and residues from burning and treating waste,0.0,0.0
+CY,Cyprus,"Chemical and medical waste, and sludges",6.642,1.241
+CY,Cyprus,"Metal, glass, paper, plastic, wood and textiles",0.906,0.169
+CY,Cyprus,"Food, plant waste and manure",1.853,0.346
+CY,Cyprus,Discarded vehicles and equipment,0.0,0.0
+CZ,Czechia,Mixed household and similar waste,3297.959,
+CZ,Czechia,Sorting residues and other mixed waste,,
+CZ,Czechia,Construction and demolition rubble,1860.646,
+CZ,Czechia,Ash and residues from burning and treating waste,,
+CZ,Czechia,"Chemical and medical waste, and sludges",,
+CZ,Czechia,"Metal, glass, paper, plastic, wood and textiles",,
+CZ,Czechia,"Food, plant waste and manure",139.536,
+CZ,Czechia,Discarded vehicles and equipment,,
+DE,Germany,Mixed household and similar waste,14064.768,
+DE,Germany,Sorting residues and other mixed waste,17941.569,
+DE,Germany,Construction and demolition rubble,10910.211,
+DE,Germany,Ash and residues from burning and treating waste,15268.095,
+DE,Germany,"Chemical and medical waste, and sludges",,
+DE,Germany,"Metal, glass, paper, plastic, wood and textiles",,
+DE,Germany,"Food, plant waste and manure",1515.486,
+DE,Germany,Discarded vehicles and equipment,6.96,
+DK,Denmark,Mixed household and similar waste,2155.341,33.598
+DK,Denmark,Sorting residues and other mixed waste,663.446,10.342
+DK,Denmark,Construction and demolition rubble,2958.381,46.116
+DK,Denmark,Ash and residues from burning and treating waste,183.204,2.856
+DK,Denmark,"Chemical and medical waste, and sludges",164.182,2.559
+DK,Denmark,"Metal, glass, paper, plastic, wood and textiles",112.762,1.758
+DK,Denmark,"Food, plant waste and manure",176.84,2.757
+DK,Denmark,Discarded vehicles and equipment,0.912,0.014
+EE,Estonia,Mixed household and similar waste,278.542,3.506
+EE,Estonia,Sorting residues and other mixed waste,143.713,1.809
+EE,Estonia,Construction and demolition rubble,255.846,3.221
+EE,Estonia,Ash and residues from burning and treating waste,6235.894,78.5
+EE,Estonia,"Chemical and medical waste, and sludges",943.087,11.872
+EE,Estonia,"Metal, glass, paper, plastic, wood and textiles",84.522,1.064
+EE,Estonia,"Food, plant waste and manure",2.158,0.027
+EE,Estonia,Discarded vehicles and equipment,0.029,0.0
+EL,Greece,Mixed household and similar waste,3376.236,50.0
+EL,Greece,Sorting residues and other mixed waste,1688.807,25.01
+EL,Greece,Construction and demolition rubble,7.886,0.117
+EL,Greece,Ash and residues from burning and treating waste,1098.419,16.267
+EL,Greece,"Chemical and medical waste, and sludges",108.386,1.605
+EL,Greece,"Metal, glass, paper, plastic, wood and textiles",33.37,0.494
+EL,Greece,"Food, plant waste and manure",439.334,6.506
+EL,Greece,Discarded vehicles and equipment,0.0,0.0
+ES,Spain,Mixed household and similar waste,4485.374,16.355
+ES,Spain,Sorting residues and other mixed waste,14749.365,53.78
+ES,Spain,Construction and demolition rubble,4320.587,15.754
+ES,Spain,Ash and residues from burning and treating waste,1844.933,6.727
+ES,Spain,"Chemical and medical waste, and sludges",1211.554,4.418
+ES,Spain,"Metal, glass, paper, plastic, wood and textiles",612.928,2.235
+ES,Spain,"Food, plant waste and manure",176.666,0.644
+ES,Spain,Discarded vehicles and equipment,23.906,0.087
+FI,Finland,Mixed household and similar waste,1462.647,24.776
+FI,Finland,Sorting residues and other mixed waste,815.195,13.809
+FI,Finland,Construction and demolition rubble,370.266,6.272
+FI,Finland,Ash and residues from burning and treating waste,464.352,7.866
+FI,Finland,"Chemical and medical waste, and sludges",533.533,9.038
+FI,Finland,"Metal, glass, paper, plastic, wood and textiles",2178.695,36.905
+FI,Finland,"Food, plant waste and manure",69.576,1.179
+FI,Finland,Discarded vehicles and equipment,9.257,0.157
+FR,France,Mixed household and similar waste,18854.271,29.766
+FR,France,Sorting residues and other mixed waste,10892.293,17.196
+FR,France,Construction and demolition rubble,21677.893,34.224
+FR,France,Ash and residues from burning and treating waste,1095.411,1.729
+FR,France,"Chemical and medical waste, and sludges",3262.852,5.151
+FR,France,"Metal, glass, paper, plastic, wood and textiles",5906.669,9.325
+FR,France,"Food, plant waste and manure",1621.675,2.56
+FR,France,Discarded vehicles and equipment,30.811,0.049
+HR,Croatia,Mixed household and similar waste,895.008,66.65
+HR,Croatia,Sorting residues and other mixed waste,240.245,17.891
+HR,Croatia,Construction and demolition rubble,78.643,5.856
+HR,Croatia,Ash and residues from burning and treating waste,27.711,2.064
+HR,Croatia,"Chemical and medical waste, and sludges",17.732,1.32
+HR,Croatia,"Metal, glass, paper, plastic, wood and textiles",61.938,4.612
+HR,Croatia,"Food, plant waste and manure",21.561,1.606
+HR,Croatia,Discarded vehicles and equipment,0.008,0.001
+HU,Hungary,Mixed household and similar waste,1878.213,23.352
+HU,Hungary,Sorting residues and other mixed waste,1231.276,15.309
+HU,Hungary,Construction and demolition rubble,2950.381,36.683
+HU,Hungary,Ash and residues from burning and treating waste,1387.621,17.253
+HU,Hungary,"Chemical and medical waste, and sludges",178.574,2.22
+HU,Hungary,"Metal, glass, paper, plastic, wood and textiles",179.553,2.232
+HU,Hungary,"Food, plant waste and manure",233.003,2.897
+HU,Hungary,Discarded vehicles and equipment,4.331,0.054
+IE,Ireland,Mixed household and similar waste,720.875,27.265
+IE,Ireland,Sorting residues and other mixed waste,1121.701,42.425
+IE,Ireland,Construction and demolition rubble,378.715,14.324
+IE,Ireland,Ash and residues from burning and treating waste,229.225,8.67
+IE,Ireland,"Chemical and medical waste, and sludges",75.221,2.845
+IE,Ireland,"Metal, glass, paper, plastic, wood and textiles",70.843,2.679
+IE,Ireland,"Food, plant waste and manure",47.389,1.792
+IE,Ireland,Discarded vehicles and equipment,0.002,0.0
+IT,Italy,Mixed household and similar waste,2958.83,14.141
+IT,Italy,Sorting residues and other mixed waste,11097.728,53.039
+IT,Italy,Construction and demolition rubble,1188.01,5.678
+IT,Italy,Ash and residues from burning and treating waste,3465.264,16.561
+IT,Italy,"Chemical and medical waste, and sludges",1016.804,4.86
+IT,Italy,"Metal, glass, paper, plastic, wood and textiles",1068.651,5.107
+IT,Italy,"Food, plant waste and manure",128.28,0.613
+IT,Italy,Discarded vehicles and equipment,0.183,0.001
+LT,Lithuania,Mixed household and similar waste,21.019,2.067
+LT,Lithuania,Sorting residues and other mixed waste,762.47,74.998
+LT,Lithuania,Construction and demolition rubble,119.0,11.705
+LT,Lithuania,Ash and residues from burning and treating waste,19.685,1.936
+LT,Lithuania,"Chemical and medical waste, and sludges",22.979,2.26
+LT,Lithuania,"Metal, glass, paper, plastic, wood and textiles",62.961,6.193
+LT,Lithuania,"Food, plant waste and manure",8.153,0.802
+LT,Lithuania,Discarded vehicles and equipment,0.386,0.038
+LU,Luxembourg,Mixed household and similar waste,134.566,31.895
+LU,Luxembourg,Sorting residues and other mixed waste,85.11,20.173
+LU,Luxembourg,Construction and demolition rubble,61.406,14.554
+LU,Luxembourg,Ash and residues from burning and treating waste,49.987,11.848
+LU,Luxembourg,"Chemical and medical waste, and sludges",5.509,1.306
+LU,Luxembourg,"Metal, glass, paper, plastic, wood and textiles",80.186,19.006
+LU,Luxembourg,"Food, plant waste and manure",5.143,1.219
+LU,Luxembourg,Discarded vehicles and equipment,0.0,0.0
+LV,Latvia,Mixed household and similar waste,31.935,5.287
+LV,Latvia,Sorting residues and other mixed waste,440.497,72.931
+LV,Latvia,Construction and demolition rubble,47.91,7.932
+LV,Latvia,Ash and residues from burning and treating waste,11.821,1.957
+LV,Latvia,"Chemical and medical waste, and sludges",25.328,4.193
+LV,Latvia,"Metal, glass, paper, plastic, wood and textiles",32.972,5.459
+LV,Latvia,"Food, plant waste and manure",6.891,1.141
+LV,Latvia,Discarded vehicles and equipment,6.637,1.099
+MT,Malta,Mixed household and similar waste,187.172,
+MT,Malta,Sorting residues and other mixed waste,77.504,
+MT,Malta,Construction and demolition rubble,704.651,
+MT,Malta,Ash and residues from burning and treating waste,0.333,
+MT,Malta,"Chemical and medical waste, and sludges",14.032,
+MT,Malta,"Metal, glass, paper, plastic, wood and textiles",,
+MT,Malta,"Food, plant waste and manure",12.115,
+MT,Malta,Discarded vehicles and equipment,0.001,
+NL,Netherlands,Mixed household and similar waste,3677.7,30.013
+NL,Netherlands,Sorting residues and other mixed waste,4151.9,33.883
+NL,Netherlands,Construction and demolition rubble,219.4,1.79
+NL,Netherlands,Ash and residues from burning and treating waste,619.6,5.056
+NL,Netherlands,"Chemical and medical waste, and sludges",1396.6,11.397
+NL,Netherlands,"Metal, glass, paper, plastic, wood and textiles",1410.8,11.513
+NL,Netherlands,"Food, plant waste and manure",762.3,6.221
+NL,Netherlands,Discarded vehicles and equipment,15.3,0.125
+PL,Poland,Mixed household and similar waste,837.404,2.702
+PL,Poland,Sorting residues and other mixed waste,6174.897,19.928
+PL,Poland,Construction and demolition rubble,3480.419,11.232
+PL,Poland,Ash and residues from burning and treating waste,19450.784,62.771
+PL,Poland,"Chemical and medical waste, and sludges",372.011,1.201
+PL,Poland,"Metal, glass, paper, plastic, wood and textiles",648.22,2.092
+PL,Poland,"Food, plant waste and manure",22.636,0.073
+PL,Poland,Discarded vehicles and equipment,0.307,0.001
+PT,Portugal,Mixed household and similar waste,4058.364,68.141
+PT,Portugal,Sorting residues and other mixed waste,544.866,9.148
+PT,Portugal,Construction and demolition rubble,844.11,14.173
+PT,Portugal,Ash and residues from burning and treating waste,111.022,1.864
+PT,Portugal,"Chemical and medical waste, and sludges",313.67,5.267
+PT,Portugal,"Metal, glass, paper, plastic, wood and textiles",65.057,1.092
+PT,Portugal,"Food, plant waste and manure",15.044,0.253
+PT,Portugal,Discarded vehicles and equipment,3.665,0.062
+RO,Romania,Mixed household and similar waste,3224.301,25.033
+RO,Romania,Sorting residues and other mixed waste,1903.736,14.78
+RO,Romania,Construction and demolition rubble,483.867,3.757
+RO,Romania,Ash and residues from burning and treating waste,5373.539,41.719
+RO,Romania,"Chemical and medical waste, and sludges",280.102,2.175
+RO,Romania,"Metal, glass, paper, plastic, wood and textiles",1218.429,9.46
+RO,Romania,"Food, plant waste and manure",396.373,3.077
+RO,Romania,Discarded vehicles and equipment,0.0,0.0
+SE,Sweden,Mixed household and similar waste,3128.869,
+SE,Sweden,Sorting residues and other mixed waste,,
+SE,Sweden,Construction and demolition rubble,,
+SE,Sweden,Ash and residues from burning and treating waste,,
+SE,Sweden,"Chemical and medical waste, and sludges",,
+SE,Sweden,"Metal, glass, paper, plastic, wood and textiles",,
+SE,Sweden,"Food, plant waste and manure",46.216,
+SE,Sweden,Discarded vehicles and equipment,,
+SI,Slovenia,Mixed household and similar waste,67.495,6.955
+SI,Slovenia,Sorting residues and other mixed waste,168.495,17.364
+SI,Slovenia,Construction and demolition rubble,340.192,35.057
+SI,Slovenia,Ash and residues from burning and treating waste,341.897,35.233
+SI,Slovenia,"Chemical and medical waste, and sludges",28.699,2.957
+SI,Slovenia,"Metal, glass, paper, plastic, wood and textiles",23.464,2.418
+SI,Slovenia,"Food, plant waste and manure",0.147,0.015
+SI,Slovenia,Discarded vehicles and equipment,0.0,0.0
+SK,Slovakia,Mixed household and similar waste,1201.841,40.502
+SK,Slovakia,Sorting residues and other mixed waste,254.782,8.586
+SK,Slovakia,Construction and demolition rubble,81.617,2.751
+SK,Slovakia,Ash and residues from burning and treating waste,1202.292,40.518
+SK,Slovakia,"Chemical and medical waste, and sludges",124.951,4.211
+SK,Slovakia,"Metal, glass, paper, plastic, wood and textiles",42.091,1.418
+SK,Slovakia,"Food, plant waste and manure",57.568,1.94
+SK,Slovakia,Discarded vehicles and equipment,2.193,0.074
