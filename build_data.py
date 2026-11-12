@@ -36,12 +36,12 @@ RAW = Path("data/raw")
 OUT = Path("data/processed")
 
 FILES = {
-    "rate": "env_ac_cur_linear_2_0.csv",    # circular material use rate
-    "mfa": "env_ac_mfa_linear_2_0.csv",     # material flow accounts
-    "waste": "env_wastrt_linear_2_0.csv",   # treatment of waste
-    "flows": "env_ac_sd_linear_2_0.csv",    # material flows for the circular economy
-    "waste_by_material": "env_wassd_linear_2_0.csv",   # waste treated, by material
-    "footprint": "env_ac_rmefd_linear_2_0.csv",        # material footprint by final use
+    "rate": "env_ac_cur_linear_2_0.csv.gz",    # circular material use rate
+    "mfa": "env_ac_mfa_linear_2_0.csv.gz",     # material flow accounts
+    "waste": "env_wastrt_linear_2_0.csv.gz",   # treatment of waste
+    "flows": "env_ac_sd_linear_2_0.csv.gz",    # material flows for the circular economy
+    "waste_by_material": "env_wassd_linear_2_0.csv.gz",   # waste treated, by material
+    "footprint": "env_ac_rmefd_linear_2_0.csv.gz",        # material footprint by final use
 }
 
 YEAR = 2022                      # latest year where every figure is reported
