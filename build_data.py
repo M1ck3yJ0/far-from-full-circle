@@ -19,7 +19,7 @@ data/processed/:
                              each material group's share of EU material use by
                              weight and by the climate impact of producing it
                              (EU only, from ETC CE Report 2025/3)
-    leaky_loop_data.js       everything the web page draws, in one file
+    far_from_full_circle_data.js       everything the web page draws, in one file
 
 Run from the repository root:
 
@@ -259,7 +259,7 @@ def page_data(ceilings, trend, drivers, materials, loop, footprint, climate, nam
         "weight_vs_climate": [{k: (r(v) if isinstance(v, float) else v) for k, v in row.items()}
                               for row in climate.to_dict("records")],
     }
-    return "window.LEAKY_LOOP_DATA = " + json.dumps(data, separators=(",", ":"), ensure_ascii=False) + ";\n"
+    return "window.FAR_FROM_FULL_CIRCLE_DATA = " + json.dumps(data, separators=(",", ":"), ensure_ascii=False) + ";\n"
 
 
 def country_names(rate):
@@ -423,7 +423,7 @@ def main():
     climate.round(3).to_csv(OUT / f"weight_vs_climate_{YEAR}.csv", index=False)
 
     # 8. Everything the web page draws
-    (OUT / "leaky_loop_data.js").write_text(
+    (OUT / "far_from_full_circle_data.js").write_text(
         page_data(ceilings, trend, trend_drivers, materials, loop, footprint, climate, names, geos), encoding="utf-8")
 
     eu = ceilings.set_index("geo").loc["EU27_2020"]
