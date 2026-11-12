@@ -1,4 +1,4 @@
-"""Build the data behind The Leaky Loop from Eurostat's raw downloads.
+"""Build the data behind Far from Full Circle from Eurostat's raw downloads.
 
 Reads Eurostat datasets from data/raw/ and writes these tables to
 data/processed/:
