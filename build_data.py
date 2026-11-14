@@ -7,6 +7,9 @@ data/processed/:
                              recycling alone could take it, in 2022
     trend.csv                the same measures in every waste reporting year
                              from 2010 to 2024
+    material_vs_circular_use.csv
+                             material use against circular use in every
+                             reporting year, with both ceilings as circular use
     trend_drivers.csv        what moved each country's rate from 2012 to 2022:
                              more recycling, or a change in consumption
     trend_steps.csv          the same split for every two-year step, from 2004
@@ -608,6 +611,16 @@ def main():
     trend["rate_flag"] = [rate_flag.get((g, y), "") for g, y in zip(trend["geo"], trend["year"])]
     trend["waste_flag"] = [waste_flag.get((g, y), "") for g, y in zip(trend["geo"], trend["year"])]
     trend.round(3).to_csv(OUT / "trend.csv", index=False)
+
+    # 2b. Material use against circular use, with both ceilings expressed as circular use
+    use = trend[["geo", "country", "year", "rate_pct", "consumption_kt", "circular_use_kt"]].copy()
+    not_recycled = trend["waste_treated_kt"] - trend["waste_recycled_kt"]
+    not_recycled_without_sr = ((trend["waste_treated_kt"] - trend["soil_rock_treated_kt"])
+                               - (trend["waste_recycled_kt"] - trend["soil_rock_recycled_kt"]))
+    use["circular_use_ceiling_kt"] = trend["circular_use_kt"] + not_recycled
+    use["circular_use_ceiling_without_soil_rock_kt"] = trend["circular_use_kt"] + not_recycled_without_sr
+    use["rate_flag"], use["waste_flag"] = trend["rate_flag"], trend["waste_flag"]
+    use.round(3).to_csv(OUT / "material_vs_circular_use.csv", index=False)
 
     # 3. What moved the rate between the two ends of the trend
     by_year = trend.set_index(["geo", "year"])
