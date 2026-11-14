@@ -71,6 +71,7 @@ Built by `build_data.py` into `data/processed`:
 | `unrecycled_waste_2022.csv` | Waste treated but not recycled in 2022, other than soil and rock, by kind of waste |
 | `footprint_2022.csv` | What the EU's material footprint ended up as in 2022, and how much of each group was investment or spending |
 | `weight_vs_climate_2022.csv` | Each material group's share of EU material use in 2022 by weight and by climate impact |
+| `examples.csv` | Figures derived from the example datapoints in `data/examples`, each with its calculation |
 | `far_from_full_circle_data.js` | Everything the web page draws, rounded for display, in one file the page loads |
 
 Weights are in thousand tonnes (kt) and shares in percent.
@@ -78,8 +79,9 @@ Weights are in thousand tonnes (kt) and shares in percent.
 ## Repository structure
 
 ```
-build_data.py       builds every table in data/processed from the raw downloads
+build_data.py       builds every table in data/processed from the raw downloads and the examples
 data/raw/           Eurostat downloads, gzip-compressed (see data/raw/README.md)
+data/examples/      datapoints for the page's examples, with their sources
 data/processed/     the tables the page uses
 requirements.txt
 ```
