@@ -10,7 +10,7 @@ Most of what Europe uses never comes back as waste. Of every 100 tonnes of mater
 
 The EU wants to double the share of its materials that comes from recycled waste, to 24% by 2030. In 2022 it was 11.4%. Had Europe recycled every tonne of waste it treated that year, soil and mining rock included, its rate would have reached 23.7%: about the target, and no further. Leave out the soil and rock, and it reaches 15.4%. Latvia, Lithuania, Portugal, Croatia and Ireland would have stayed below 12% even recycling everything.
 
-The trend points the same way. From 2012 to 2022 the rate rose only 0.4 points. Europe recycled 8% more waste, but it also consumed 3% more material and treated 7% less waste, so the most recycling could deliver fell from 25.5% to 23.7%.
+The trend points the same way. From 2012 to 2022 the rate rose only 0.4 points. Europe recycled 8% more waste, but it also consumed 3% more material and treated 7% less waste. The most recycling could deliver has stayed between 23.7% and 25.8% since 2010, and on Eurostat's 2024 estimates it is 24.7%.
 
 Recycling alone can't close the gap. Using less material can, and that lever has no ceiling.
 
