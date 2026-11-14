@@ -1,0 +1,26 @@
+example,metric,value,unit,calculation
+zin,benchmark_upfront_per_m2,561.0,kg CO2/m2,"upfront_per_m2 + upfront_saved_per_m2, reading the 377 as the whole building"
+zin,building_upfront_cut_check,32.799,%,"upfront_saved_per_m2 / benchmark_upfront_per_m2, against the paper's 33%"
+zin,structure_benchmark_per_m2,368.0,kg CO2/m2,upfront_saved_per_m2 / structure_upfront_cut
+zin,implied_area,116304.348,m2,upfront_saved_total / upfront_saved_per_m2; the paper doesn't state its area basis
+zin,original_structure,201176.471,t,structure_kept / structure_kept_share
+zin,slabs_demolished,30176.471,t,original_structure - structure_kept
+zin,co2_per_tonne_kept,0.125,t CO2 per t,upfront_saved_total / structure_kept
+zin,tonnes_kept_per_tonne_co2,7.991,t per t CO2,structure_kept / upfront_saved_total
+zin,tonnes_kept_per_tonne_recycled,5.7,t per t,structure_kept / rubble_to_aggregate
+zin,module_d_credit_per_m2,71.0,kg CO2/m2,whole_life_per_m2 - whole_life_with_credits_per_m2
+zin,existing_reused_or_recycled_share,94.0,%,existing_reused_on_site_share + existing_recycled_share
+ikea,winnow_kg_per_meal,0.444,kg,winnow_food_saved_per_year / (winnow_meals_per_second x seconds in a year)
+ikea,winnow_co2e_per_tonne,4.357,t CO2e per t,winnow_co2e_per_year / winnow_food_saved_per_year; Winnow publishes no factor
+ikea,food_saved_to_2022,8878.742,t,"meals_saved x winnow_kg_per_meal; an estimate, as Ingka publishes meals, not tonnes"
+ikea,food_saved_fy17_fy25,21087.012,t,meals_saved_fy17_fy25 x winnow_kg_per_meal; an estimate
+ikea,food_saved_fy25,4261.796,t,meals_saved_fy25 x winnow_kg_per_meal; an estimate
+ikea,co2e_per_tonne,4.055,t CO2e per t,co2e_avoided / food_saved_to_2022
+ikea,share_of_winnow_2022_if_yearly,51.698,%,"meals the 36,000 t would mean if yearly, at Winnow's ratios, over Winnow's whole fleet in 2022"
+ikea,food_spend_saved_by_halving_low,2.5,%,kitchen_waste_share_low / 2
+ikea,food_spend_saved_by_halving_high,7.5,%,kitchen_waste_share_high / 2
+comparison,ikea_food_vs_zin_structure,5.192,%,food_saved_to_2022 / structure_kept
+comparison,ikea_co2e_vs_zin,1.682,times,IKEA's running total to 2022 / ZIN's one-off saving
+comparison,winnow_food_vs_zin_structure,16.374,%,Winnow's yearly food saved / structure_kept
+comparison,winnow_co2e_vs_zin,5.701,times,Winnow's yearly CO2e / ZIN's one-off saving
+comparison,food_vs_structure_per_tonne,32.399,times,IKEA's CO2e per tonne of food / ZIN's CO2 per tonne of structure kept
