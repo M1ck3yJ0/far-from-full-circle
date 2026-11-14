@@ -1,0 +1,53 @@
+example,state,metric,value,unit,basis,source_id,locator,status,note
+zin,could_have_been,structure_upfront_cut,50,%,"Structure, upfront carbon (module A), against a realistic benchmark for efficient new construction",greisch_iabse2025,"Section 5, Fig. 14",confirmed,"About 50%. The paper doesn't define the benchmark further"
+zin,could_have_been,building_upfront_cut,33,%,"Whole building, upfront carbon, against the same benchmark",greisch_iabse2025,Section 5,confirmed,"Greisch's project page gives the same 50% and 33%"
+zin,is,upfront_saved_per_m2,184,kg CO2/m2,"Structure kept, upfront (module A); one-off",greisch_iabse2025,"Section 5, Fig. 14",confirmed,"Area basis not stated. 21,400 t divided by 184 kg/m2 implies about 116,300 m2"
+zin,is,upfront_saved_total,21400,t CO2,"Structure kept, upfront (module A); one-off",greisch_iabse2025,"Section 5, Fig. 14",confirmed,
+zin,is,upfront_per_m2,377,kg CO2/m2,Construction stage (module A),greisch_iabse2025,Section 5,confirmed,"The paper doesn't say whether this covers the structure or the whole building. Read as the whole building, 184 / (377 + 184) is 33%, the paper's whole-building cut"
+zin,is,structure_kept,171000,t,"Concrete structure retained, cores and basements",greisch_iabse2025,Section 3.1,confirmed,"Cores plus basements make 170,000 t; the paper rounds"
+zin,is,structure_kept_cores,40000,t,Cores,greisch_iabse2025,Section 3.1,confirmed,
+zin,is,structure_kept_basements,130000,t,Basements,greisch_iabse2025,Section 3.1,confirmed,
+zin,is,structure_kept_share,85,%,Share of the original structural mass,greisch_iabse2025,Section 3.1,confirmed,"The other 15% was slabs, demolished"
+zin,is,rubble_to_aggregate,30000,t,"Concrete rubble made into certified aggregate, within 15 km of the site",greisch_iabse2025,Abstract; Section 3.3,confirmed,"Matches the demolished slabs: 15% of about 201,000 t of structure"
+zin,is,existing_reused_on_site_share,62,%,Share of existing materials,greisch_iabse2025,Section 3.2,confirmed,
+zin,is,existing_recycled_share,32,%,Share of existing materials,greisch_iabse2025,Section 3.2,confirmed,"With reuse on site, 94%; the abstract says 95%"
+zin,is,new_materials_c2c_share,99,%,Share of new materials that are Cradle to Cradle certified,greisch_iabse2025,Section 3.2,confirmed,
+zin,will_be,whole_life_per_m2,572,kg CO2/m2,"Modules A, B and C over 60 years",greisch_iabse2025,Section 5,confirmed,"No standard named"
+zin,will_be,whole_life_with_credits_per_m2,501,kg CO2/m2,"Modules A to D over 60 years, with reuse and recycling credits",greisch_iabse2025,Section 5,confirmed,
+zin,context,floor_area_above_ground,110000,m2,Mixed-use space,greisch_iabse2025,Section 2,confirmed,"Greisch's project page says more than 110,000 m2"
+zin,context,floor_area_basements,35000,m2,Basements,greisch_iabse2025,Section 2,confirmed,
+zin,context,planned_preserved_share,65,%,"Existing materials to be preserved in place, as planned in 2021",befimmo2021,,seen in summary,"Same measure as the paper's 62% reused on site. The 85% uses a different base, structural mass only"
+zin,context,planned_kept_or_recycled_share,95,%,"Existing materials to be preserved, reused or recycled, as planned in 2021",befimmo2021,,seen in summary,"Same measure as the paper's 94% (abstract 95%)"
+zin,context,award_year,2025,year,Named best tall building worldwide,greisch_award2025,,seen in summary,
+zin,context,completion_year,,year,Completion,,,not found,"Not in the paper. Find before publishing"
+ikea,could_have_been,baseline_food_waste,,g per cover,Production food waste at the 2017 baseline,ingka2022,,not found,"Ingka publishes the cut, not the baseline"
+ikea,is,food_waste_cut,54,%,"Production food waste in Ingka's IKEA stores against the 2017 baseline, as of July 2022",ingka2022,Footnote,confirmed,"Restaurants, bistros and Swedish Food Markets. The 50% goal was first met at the end of 2021. Later reports measure it in grams per cover, so it's a cut in intensity, not tonnes. Tracked with WRI's Food Loss and Waste Standard"
+ikea,is,meals_saved,20000000,meals,"Cumulative, over the four years to 2022",ingka2022,Headline,confirmed,"More than 20 million"
+ikea,is,co2e_avoided,36000,t CO2e,"Cumulative to 2022, as read",ingka2022,Body,confirmed,"The release doesn't say yearly or cumulative. WRI says yearly, but the over-four-years headline and Winnow's whole fleet then (36 million meals a year) point to cumulative"
+ikea,is,money_saved,37000000,EUR,Total to 2022,reuters2022,,seen in summary,"From a spokesperson. WRI says $37 million a year. Not in Ingka's release"
+ikea,is,restaurants,400,restaurants,In-store restaurants in 32 markets,wri_ikea,,confirmed,About 400
+ikea,is,people_served_per_year,560000000,people,Served food each year,ingka2022,,confirmed,"More than 560 million"
+ikea,will_be,food_waste_cut_fy24,60.5,%,"Production food waste in grams per cover, FY17 to FY24",ingka_fy24,,confirmed,"The cut held and deepened"
+ikea,will_be,portions_saved_fy17_fy24,37800000,portions,"Cumulative, FY17 to FY24",ingka_fy24,,confirmed,"About 37.8 million"
+ikea,will_be,food_waste_cut_fy25,60,%,"Same measure, FY17 to FY25",ingka_fy25,,seen in summary,
+ikea,will_be,meals_saved_fy17_fy25,47500000,meals,"Cumulative, FY17 to FY25",ingka_fy25,,seen in summary,
+ikea,will_be,meals_saved_fy25,9600000,meals,FY25 alone,ingka_fy25,,seen in summary,
+ikea,will_be,eu_food_waste_target,30,%,"Binding per-person cut in retail, restaurants, food services and households by the end of 2030, against the 2021 to 2023 average",eu_wfd2025,,confirmed,"Directive (EU) 2025/1892. Processing and manufacturing: 10%"
+ikea,context,winnow_food_saved_per_year,28000,t,"All Winnow kitchens, per year, as of April 2026",winnow2026,,confirmed,"Vendor's figure"
+ikea,context,winnow_co2e_per_year,122000,t CO2e,"All Winnow kitchens, per year, as of April 2026",winnow2026,,confirmed,"No conversion factor or source given. Winnow's September 2026 release says more than 128,000 t"
+ikea,context,winnow_meals_per_second,2,meals,"All Winnow kitchens, as of April 2026",winnow2026,,confirmed,"With the 28,000 t, gives the kilograms per meal used to estimate IKEA's tonnes"
+ikea,context,winnow_meals_per_year_2022,36000000,meals,"All Winnow kitchens, per year, as of September 2022",ingka2022,About Winnow,confirmed,"1,500 locations then"
+ikea,context,kitchen_waste_share_low,5,%,"Share of food purchased that most commercial kitchens waste, low end",winnow2026,,confirmed,
+ikea,context,kitchen_waste_share_high,15,%,"Same, high end",winnow2026,,confirmed,
+ikea,context,measuring_kitchens_cut,50,%,Typical cut in kitchens that measure their waste,winnow2026,,confirmed,"Over 50%"
+ikea,context,ingka_stake_in_winnow,2019,year,Ingka Investments took a minority stake in Winnow,ingka2022,About Winnow,confirmed,"Disclose on the page"
+library_of_things,is,members,36000,members,Tally to June 2025,lot_impact,,not reopened,
+library_of_things,is,rentals,68000,rentals,Tally to June 2025,lot_impact,,not reopened,
+library_of_things,is,sites,21,sites,As of June 2025,lot_impact,,not reopened,
+library_of_things,is,co2e_avoided,1375,t CO2e,Tally to June 2025,lot_impact,,not reopened,
+library_of_things,is,borrows_replacing_purchase,25,%,"Share of borrows that replace a purchase, by members' survey answers",lot_method,,not reopened,"About one in four"
+foodcloud,is,food_redistributed,150603,t,Tally to March 2025,foodcloud_danone,,not reopened,"Five markets"
+foodcloud,is,co2e_avoided,444903,t CO2e,Tally to March 2025,foodcloud_danone,,not reopened,"About. A conversion factor applied to weight"
+quay_quarter_tower,is,co2e_saved,,t CO2e,Saving from keeping the old tower's structure,qqt_archello,,not reopened,"Published figures disagree: 12,000, 7,500 and about 13,000 t (Archello, WorldGBC and others). Pick one source before use"
+buffalo_tool_library,is,loans,19478,loans,2023 filing,buffalo_tl,,not reopened,
+buffalo_tool_library,is,active_members,1421,members,2023 filing,buffalo_tl,,not reopened,
