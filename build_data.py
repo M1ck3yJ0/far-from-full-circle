@@ -29,6 +29,8 @@ data/processed/:
                              each material group's share of EU material use by
                              weight and by the climate impact of producing it
                              (EU only, from ETC CE Report 2025/3)
+    examples.csv             figures derived from the example datapoints in
+                             data/examples, each with its calculation
     far_from_full_circle_data.js       everything the web page draws, in one file
 
 Run from the repository root:
@@ -44,6 +46,8 @@ import pandas as pd
 
 RAW = Path("data/raw")
 OUT = Path("data/processed")
+EXAMPLES = Path("data/examples")
+SECONDS_A_YEAR = 365 * 24 * 3600
 
 FILES = {
     "rate": "env_ac_cur_linear_2_0.csv.gz",    # circular material use rate
@@ -333,6 +337,74 @@ def footprint_table():
     return pd.DataFrame(rows).sort_values("share_of_footprint_pct", ascending=False)
 
 
+def examples_table():
+    """Figures derived from the example datapoints in data/examples/examples_input.csv, each
+    with its calculation. ZIN's carbon saving is one-off, Winnow's is yearly, and IKEA's is
+    a running total to 2022."""
+    inputs = pd.read_csv(EXAMPLES / "examples_input.csv")
+    v = inputs.dropna(subset=["value"]).set_index(["example", "metric"])["value"]
+    zin = lambda m: v[("zin", m)]
+    ikea = lambda m: v[("ikea", m)]
+
+    kg_per_meal = ikea("winnow_food_saved_per_year") * 1000 / (ikea("winnow_meals_per_second") * SECONDS_A_YEAR)
+    winnow_ratio = ikea("winnow_co2e_per_year") / ikea("winnow_food_saved_per_year")
+    ikea_t = ikea("meals_saved") * kg_per_meal / 1000
+    benchmark = zin("upfront_per_m2") + zin("upfront_saved_per_m2")
+    original = zin("structure_kept") / (zin("structure_kept_share") / 100)
+    zin_ratio = zin("upfront_saved_total") / zin("structure_kept")
+    rows = [
+        ("zin", "benchmark_upfront_per_m2", benchmark, "kg CO2/m2",
+         "upfront_per_m2 + upfront_saved_per_m2, reading the 377 as the whole building"),
+        ("zin", "building_upfront_cut_check", zin("upfront_saved_per_m2") / benchmark * 100, "%",
+         "upfront_saved_per_m2 / benchmark_upfront_per_m2, against the paper's 33%"),
+        ("zin", "structure_benchmark_per_m2", zin("upfront_saved_per_m2") / (zin("structure_upfront_cut") / 100),
+         "kg CO2/m2", "upfront_saved_per_m2 / structure_upfront_cut"),
+        ("zin", "implied_area", zin("upfront_saved_total") * 1000 / zin("upfront_saved_per_m2"), "m2",
+         "upfront_saved_total / upfront_saved_per_m2; the paper doesn't state its area basis"),
+        ("zin", "original_structure", original, "t", "structure_kept / structure_kept_share"),
+        ("zin", "slabs_demolished", original - zin("structure_kept"), "t", "original_structure - structure_kept"),
+        ("zin", "co2_per_tonne_kept", zin_ratio, "t CO2 per t", "upfront_saved_total / structure_kept"),
+        ("zin", "tonnes_kept_per_tonne_co2", 1 / zin_ratio, "t per t CO2", "structure_kept / upfront_saved_total"),
+        ("zin", "tonnes_kept_per_tonne_recycled", zin("structure_kept") / zin("rubble_to_aggregate"), "t per t",
+         "structure_kept / rubble_to_aggregate"),
+        ("zin", "module_d_credit_per_m2", zin("whole_life_per_m2") - zin("whole_life_with_credits_per_m2"),
+         "kg CO2/m2", "whole_life_per_m2 - whole_life_with_credits_per_m2"),
+        ("zin", "existing_reused_or_recycled_share",
+         zin("existing_reused_on_site_share") + zin("existing_recycled_share"), "%",
+         "existing_reused_on_site_share + existing_recycled_share"),
+        ("ikea", "winnow_kg_per_meal", kg_per_meal, "kg",
+         "winnow_food_saved_per_year / (winnow_meals_per_second x seconds in a year)"),
+        ("ikea", "winnow_co2e_per_tonne", winnow_ratio, "t CO2e per t",
+         "winnow_co2e_per_year / winnow_food_saved_per_year; Winnow publishes no factor"),
+        ("ikea", "food_saved_to_2022", ikea_t, "t",
+         "meals_saved x winnow_kg_per_meal; an estimate, as Ingka publishes meals, not tonnes"),
+        ("ikea", "food_saved_fy17_fy25", ikea("meals_saved_fy17_fy25") * kg_per_meal / 1000, "t",
+         "meals_saved_fy17_fy25 x winnow_kg_per_meal; an estimate"),
+        ("ikea", "food_saved_fy25", ikea("meals_saved_fy25") * kg_per_meal / 1000, "t",
+         "meals_saved_fy25 x winnow_kg_per_meal; an estimate"),
+        ("ikea", "co2e_per_tonne", ikea("co2e_avoided") / ikea_t, "t CO2e per t", "co2e_avoided / food_saved_to_2022"),
+        ("ikea", "share_of_winnow_2022_if_yearly",
+         ikea("co2e_avoided") / winnow_ratio * 1000 / kg_per_meal / ikea("winnow_meals_per_year_2022") * 100, "%",
+         "meals the 36,000 t would mean if yearly, at Winnow's ratios, over Winnow's whole fleet in 2022"),
+        ("ikea", "food_spend_saved_by_halving_low", ikea("kitchen_waste_share_low") / 2, "%",
+         "kitchen_waste_share_low / 2"),
+        ("ikea", "food_spend_saved_by_halving_high", ikea("kitchen_waste_share_high") / 2, "%",
+         "kitchen_waste_share_high / 2"),
+        ("comparison", "ikea_food_vs_zin_structure", ikea_t / zin("structure_kept") * 100, "%",
+         "food_saved_to_2022 / structure_kept"),
+        ("comparison", "ikea_co2e_vs_zin", ikea("co2e_avoided") / zin("upfront_saved_total"), "times",
+         "IKEA's running total to 2022 / ZIN's one-off saving"),
+        ("comparison", "winnow_food_vs_zin_structure",
+         ikea("winnow_food_saved_per_year") / zin("structure_kept") * 100, "%",
+         "Winnow's yearly food saved / structure_kept"),
+        ("comparison", "winnow_co2e_vs_zin", ikea("winnow_co2e_per_year") / zin("upfront_saved_total"), "times",
+         "Winnow's yearly CO2e / ZIN's one-off saving"),
+        ("comparison", "food_vs_structure_per_tonne", (ikea("co2e_avoided") / ikea_t) / zin_ratio, "times",
+         "IKEA's CO2e per tonne of food / ZIN's CO2 per tonne of structure kept"),
+    ]
+    return pd.DataFrame(rows, columns=["example", "metric", "value", "unit", "calculation"])
+
+
 def page_data(ceilings, trend, steps, materials, loop, flows_m, levers, unrecycled, generated,
               waste_in_flows_kt, footprint, climate, names, geos):
     """Everything the web page draws, rounded for display, as one JavaScript file."""
@@ -593,6 +665,9 @@ def main():
     )
     climate["impact_per_weight"] = climate["share_of_climate_impact_pct"] / climate["share_of_weight_pct"]
     climate.round(3).to_csv(OUT / f"weight_vs_climate_{YEAR}.csv", index=False)
+
+    # 7b. What the example datapoints imply
+    examples_table().round(3).to_csv(OUT / "examples.csv", index=False)
 
     # 8. Everything the web page draws
     (OUT / "far_from_full_circle_data.js").write_text(
