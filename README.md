@@ -29,7 +29,7 @@ The published rate doesn't rebuild exactly from Eurostat's component tables, so 
 - Ceiling if each recycled tonne replaced a tonne of new material, so U + DMC stays the same: (U + treated - recycled) / (U + DMC).
 - Ceiling without soil and rock: as above, adding only the waste that isn't soils, dredging spoils or other mineral waste (codes W126, W127 and W12B). Where a country keeps part of that confidential, the sum is derived from Eurostat's totals.
 - Rate with backfilling counted as recycling: (U + backfilled) / (U + backfilled + DMC).
-- Consumption needed for a target t, holding recycling fixed: DMC falls to U × (1 - t) / t.
+- Consumption needed for a target t, holding recycling fixed: DMC falls to U × (1 - t) / t. The tables give the cut at four levels of recycling: today's, every tonne but soil and rock, 70% of all treated waste (the EEA's 2030 scenario) and every tonne. A negative cut means room to use more.
 - What moved the rate between two years: the recycling effect is U₂ / (U₂ + DMC₁) - r₁, and the consumption effect is U₁ / (U₁ + DMC₂) - r₁.
 - What moved the rate in each two-year step: the recycling effect is the change from U₁ to U₂ alone, averaged over holding consumption at DMC₁ and at DMC₂, so ½ × [(U₂ / (U₂ + DMC₁) - r₁) + (r₂ - U₁ / (U₁ + DMC₂))]. The consumption effect is the rest of the change, so the two add up to it. The EU's rate starts in 2004, each country's in 2010.
 - What each lever is worth, in points added to the 2022 rate with everything else unchanged: recycling all waste but soil and rock, and recycling every tonne, are the ceilings above minus the rate. Using 15% less of everything is U / (U + 0.85 × DMC) - r. Using no fossil fuels takes fossil energy materials out of DMC. Recycling all household waste adds the waste households generated (env_wasgen) to U: an upper bound, since it counts that waste as if none of it were recycled today.
@@ -62,6 +62,7 @@ Built by `build_data.py` into `data/processed`:
 |---|---|
 | `ceilings_2022.csv` | For the EU and each country in 2022: the published rate, consumption, waste treated, recycled and backfilled, soil and rock, every ceiling, and the consumption cut each target would need |
 | `trend.csv` | The same measures in every waste reporting year from 2010 to 2024, with Eurostat's flags |
+| `material_vs_circular_use.csv` | Material use against circular use in every reporting year, with both ceilings expressed as circular use |
 | `trend_drivers.csv` | The change in each rate from 2012 to 2022, split into a recycling effect and a consumption effect |
 | `trend_steps.csv` | The change in each rate in every two-year step, from 2004 for the EU and from 2010 for each country, split the same way |
 | `materials_2022.csv` | What each country consumed in 2022, in kg per person a day, by material group |
