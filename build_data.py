@@ -65,6 +65,7 @@ REPORTING_YEARS = list(range(2010, 2025, 2))   # waste is reported in even years
 TREND_FROM, TREND_TO = 2012, 2022
 STEP_YEARS = list(range(2004, 2025, 2))         # two-year steps; country rates start in 2010
 TARGETS = {"eu": 0.24, "ireland": 0.12}         # EU and Irish goals for 2030
+EEA_RECYCLED_SHARE = 0.70                       # share of treated waste recycled in the EEA's 2030 scenario
 
 # Soil and rock: soils, dredging spoils and other mineral waste (mostly from mining)
 SOIL_AND_ROCK = ["W126", "W127", "W12B"]
@@ -526,6 +527,7 @@ def measures(geo, year, rate, consumption, waste):
     U = r / (1 - r) * dmc
     extra = treated - recycled                                # treated but not yet recycled
     extra_without_sr = (treated - sr_treated) - (recycled - sr_recycled)
+    extra_at_eea_share = np.maximum(0, EEA_RECYCLED_SHARE * treated - recycled)
 
     def ceiling(u):          # consumption unchanged
         return u / (u + dmc) * 100
@@ -558,6 +560,7 @@ def measures(geo, year, rate, consumption, waste):
     for name, target in TARGETS.items():
         row[f"less_consumption_for_{name}_target_today_pct"] = cut_for(target, U)
         row[f"less_consumption_for_{name}_target_without_soil_rock_pct"] = cut_for(target, U + extra_without_sr)
+        row[f"less_consumption_for_{name}_target_70pct_recycled_pct"] = cut_for(target, U + extra_at_eea_share)
         row[f"less_consumption_for_{name}_target_everything_pct"] = cut_for(target, U + extra)
     return row
 
