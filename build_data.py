@@ -23,6 +23,9 @@ data/processed/:
                              member states that publish it
     levers_2022.csv          how many points each lever would add to each
                              country's 2022 rate
+    two_levers_2022.csv      for the EU, the cut in consumption the 2030 target
+                             needs at each share of waste recycled from 2022's
+                             to 70%, and what that cut removes
     unrecycled_waste_2022.csv
                              waste treated but not recycled, other than soil and
                              rock, by kind of waste
@@ -291,6 +294,53 @@ def levers_table(ceilings, mfa, households, names):
             # an upper bound: it counts household waste as if none of it were recycled today
             "recycling_household_waste_at_most_pts": rate_with(u + hh, dmc) - r,
         })
+    return pd.DataFrame(rows)
+
+
+def import_shares(geo="EU27_2020"):
+    """Each material group's share of all tonnes imported in YEAR, in %."""
+    imp = read_eurostat(
+        "mfa",
+        ["indic_env", "material", "unit", "geo", "TIME_PERIOD", "OBS_VALUE", "CONF_STATUS"],
+        lambda d: (d["indic_env"] == "IMP") & (d["unit"] == "THS_T") & (d["geo"] == geo)
+        & (d["TIME_PERIOD"] == str(YEAR)) & d["material"].isin(["TOTAL"] + list(FLOW_MATERIALS.values())),
+    ).set_index("material")["value"]
+    return {group: imp[code] / imp["TOTAL"] * 100 for group, code in FLOW_MATERIALS.items()}
+
+
+def two_levers_table(ceilings, imports):
+    """For the EU: at each share of treated waste recycled, from today's to the EEA's 70%, the cut in
+    consumption the EU target needs, with waste held at its tonnes, and what that cut removes, taking
+    material groups whole, heaviest first or dirtiest per tonne first, on Figure 3-4's weight shares.
+    Imports fall in proportion to each group's use. Recycling more removes no material, so it cuts
+    neither climate impact nor imports."""
+    eu = ceilings.set_index("geo").loc["EU27_2020"]
+    target = TARGETS["eu"]
+    weight = {g: w for g, (w, _) in WEIGHT_VS_CLIMATE.items()}
+    climate = {g: c for g, (_, c) in WEIGHT_VS_CLIMATE.items()}
+    routes = {
+        "heaviest_first": sorted(weight, key=weight.get, reverse=True),
+        "dirtiest_first": sorted(weight, key=lambda g: climate[g] / weight[g], reverse=True),
+    }
+
+    def removed(cut, order):   # cut in % of consumption
+        left, share = cut, {}
+        for g in order:
+            share[g] = min(left, weight[g]) / weight[g]
+            left -= min(left, weight[g])
+        return sum(share[g] * climate[g] for g in order), sum(share[g] * imports[g] for g in order)
+
+    today = eu.share_recycled_pct
+    rows = []
+    for s in [today] + list(range(int(today) + 1, round(EEA_RECYCLED_SHARE * 100) + 1)):
+        u = eu.circular_use_kt + (s - today) / 100 * eu.waste_treated_kt
+        cut = (1 - u * (1 - target) / target / eu.consumption_kt) * 100
+        row = {"recycled_share_pct": s, "circular_use_kt": u,
+               "rate_without_cut_pct": rate_with(u, eu.consumption_kt),
+               "less_consumption_for_eu_target_pct": cut}
+        for name, order in routes.items():
+            row[f"climate_cut_{name}_pct"], row[f"imports_cut_{name}_pct"] = removed(cut, order)
+        rows.append(row)
     return pd.DataFrame(rows)
 
 
@@ -670,6 +720,10 @@ def main():
     unrecycled = unrecycled_table(names, geos)
     unrecycled.round(3).to_csv(OUT / f"unrecycled_waste_{YEAR}.csv", index=False)
 
+    # 5c. Recycling more and using less together, for the EU
+    two_levers = two_levers_table(ceilings, import_shares())
+    two_levers.round(3).to_csv(OUT / f"two_levers_{YEAR}.csv", index=False)
+
     # 6. What the EU's material footprint ends up as
     footprint = footprint_table()
     footprint.round(3).to_csv(OUT / f"footprint_{YEAR}.csv", index=False)
@@ -695,6 +749,10 @@ def main():
     print(f"EU {YEAR}: rate {eu.rate_pct:.1f}%, ceiling {eu.ceiling_pct:.1f}% "
           f"({eu.ceiling_replacing_new_pct:.1f}% replacing new), "
           f"{eu.ceiling_without_soil_rock_pct:.1f}% without soil and rock")
+    a, b = two_levers.iloc[0], two_levers.iloc[-1]
+    print(f"EU {YEAR}, target by using less: {a.less_consumption_for_eu_target_pct:.1f}% less material at "
+          f"{a.recycled_share_pct:.1f}% recycled, {b.less_consumption_for_eu_target_pct:.1f}% at "
+          f"{b.recycled_share_pct:.0f}%")
     print(f"Wrote {len(ceilings)} countries to {OUT}/")
 
 
