@@ -15,6 +15,8 @@ data/processed/:
     trend_steps.csv          the same split for every two-year step, from 2004
                              for the EU and from 2010 for each country
     materials_2022.csv       what each country consumes, in kg per person a day
+    weight_mix_2022.csv      each country's consumption split into the four
+                             material groups the ring's shards draw, by weight
     loop_2022.csv            where each country's processed material goes:
                              built into stock, burned or eaten, exported, spread
                              on land, or back as waste
@@ -72,6 +74,17 @@ TREND_FROM, TREND_TO = 2012, 2022
 STEP_YEARS = list(range(2004, 2025, 2))         # two-year steps; country rates start in 2010
 TARGETS = {"eu": 0.24, "ireland": 0.12}         # EU and Irish goals for 2030
 EEA_RECYCLED_SHARE = 0.70                       # share of treated waste recycled in the EEA's 2030 scenario
+
+# Countries whose figures the explorers flag, and why
+EXPLORER_WARNINGS = {
+    "RO": "imputed_use",       # material use imputed by Eurostat for 2010 to 2018; reported minerals then jump
+    "SE": "recycling_jump",    # recycled waste doubled from 2020 to 2022, in mineral wastes unpublished by category
+    "EE": "swings",            # rates that swing by several points on recycling alone
+    "FI": "swings",
+    "BG": "swings",
+}
+# The four material groups of the ring's shards, in the shard solver's order
+MIX_GROUPS = {"minerals": "MF3", "biomass": "MF1", "fossil": "MF4", "metals": "MF2"}
 
 # Soil and rock: soils, dredging spoils and other mineral waste (mostly from mining)
 SOIL_AND_ROCK = ["W126", "W127", "W12B"]
@@ -459,7 +472,7 @@ def examples_table():
     return pd.DataFrame(rows, columns=["example", "metric", "value", "unit", "calculation"])
 
 
-def page_data(ceilings, trend, steps, materials, loop, flows_m, levers, unrecycled, generated,
+def page_data(ceilings, trend, steps, materials, mix, loop, flows_m, levers, unrecycled, generated,
               waste_in_flows_kt, footprint, climate, names, geos):
     """Everything the web page draws, rounded for display, as one JavaScript file."""
     def r(x, digits=2):
@@ -498,7 +511,7 @@ def page_data(ceilings, trend, steps, materials, loop, flows_m, levers, unrecycl
             "not_recycled_without_soil_rock_kt": r((x.waste_treated_kt - x.soil_rock_treated_kt)
                                                    - (x.waste_recycled_kt - x.soil_rock_recycled_kt), 0),
             "waste_treated_per_consumption": r(x.waste_treated_per_consumption_pct),
-            "share_recycled": r(x.share_recycled_pct),
+            "share_recycled": r(x.share_recycled_pct, 3),
             "share_soil_rock": r(x.share_soil_rock_pct),
             "ceiling_used": r(x.ceiling_used_pct, 1),
             "loop_per_100": [None if pd.isna(lp.loc[g, f"{k}_per_100"]) else int(lp.loc[g, f"{k}_per_100"])
@@ -519,6 +532,11 @@ def page_data(ceilings, trend, steps, materials, loop, flows_m, levers, unrecycl
             "less_for_target": {name: r(x[f"less_consumption_for_{name}_target_today_pct"]) for name in TARGETS},
             "less_for_target_without_soil_rock": {name: r(x[f"less_consumption_for_{name}_target_without_soil_rock_pct"])
                                                   for name in TARGETS},
+            "rate_70pct_recycled": r(x.rate_70pct_recycled_pct, 3),
+            "less_for_target_70pct_recycled": {name: r(x[f"less_consumption_for_{name}_target_70pct_recycled_pct"], 3)
+                                               for name in TARGETS},
+            "mix": {k: r(mix.loc[g, f"{k}_pct"]) for k in MIX_GROUPS},
+            "warning": EXPLORER_WARNINGS.get(g),
         }
     data = {
         "year": YEAR,
@@ -604,6 +622,7 @@ def measures(geo, year, rate, consumption, waste):
         "ceiling_replacing_new_pct": (U + extra) / (U + dmc) * 100,   # each recycled tonne replaces a new one
         "ceiling_without_soil_rock_pct": ceiling(U + extra_without_sr),
         "rate_with_backfilling_pct": ceiling(U + backfilled),
+        "rate_70pct_recycled_pct": ceiling(U + extra_at_eea_share),   # a higher share recycled is kept
         "waste_treated_per_consumption_pct": treated / dmc * 100,
         "share_recycled_pct": recycled / treated * 100,
         "share_backfilled_pct": backfilled / treated * 100,
@@ -706,6 +725,17 @@ def main():
     materials.index.name = "geo"
     materials.round(3).to_csv(OUT / f"materials_{YEAR}.csv")
 
+    # 4b. The same consumption in the ring's four material groups, as shares of their sum by
+    # weight; other products and waste for final treatment (MF5, MF6) are left out
+    tonnes = mfa[(mfa["unit"] == "THS_T") & (mfa["year"] == YEAR)].pivot(
+        index="geo", columns="material", values="value")
+    four = tonnes[list(MIX_GROUPS.values())]
+    mix = four.div(four.sum(axis=1), axis=0).mul(100).set_axis([f"{k}_pct" for k in MIX_GROUPS], axis=1)
+    mix = mix.reindex(geos)
+    mix.insert(0, "country", mix.index.map(names))
+    mix.index.name = "geo"
+    mix.round(3).to_csv(OUT / f"weight_mix_{YEAR}.csv")
+
     # 5. Where each country's processed material goes, in total and by material
     flows_sd, waste_sd = load_loop()
     loop = loop_table(flows_sd, waste_sd, ceilings, names, geos)
@@ -741,7 +771,7 @@ def main():
 
     # 8. Everything the web page draws
     (OUT / "far_from_full_circle_data.js").write_text(
-        page_data(ceilings, trend, steps, materials, loop, flows_m, levers, unrecycled, generated,
+        page_data(ceilings, trend, steps, materials, mix, loop, flows_m, levers, unrecycled, generated,
                   loop.set_index("geo").loc["EU27_2020", "back_as_waste_kt"], footprint, climate, names, geos),
         encoding="utf-8")
 
