@@ -1,0 +1,113 @@
+geo,country,material,treated_kt,recycled_kt,exported_for_recycling_kt,imported_for_recycling_kt,net_recycled_kt,not_recycled_raw_kt,circular_use_kt,not_recycled_kt,share_of_circular_use_pct,share_of_not_recycled_pct,recycled_share_pct,scale_circular_use,scale_not_recycled,check
+EU27_2020,EU,Non-metallic minerals,1288802.0,481529.0,4330.0,4573.0,481286.0,807273.0,536476.002,1004601.481,65.307,86.466,37.363,1.115,1.244,
+EU27_2020,EU,Biomass,231138.0,142653.0,9919.0,28995.0,123577.0,88485.0,137747.815,110114.127,16.769,9.478,61.718,1.115,1.244,
+EU27_2020,EU,Fossil fuels,60592.0,31147.0,2718.0,1481.0,32384.0,29445.0,36097.536,36642.487,4.394,3.154,51.404,1.115,1.244,
+EU27_2020,EU,Metal ores,94283.0,85860.0,19469.0,5620.0,99709.0,8423.0,111142.825,10481.904,13.53,0.902,91.066,1.115,1.244,
+AT,Austria,Non-metallic minerals,29888.0,14032.0,991.0,386.0,14637.0,15856.0,14219.237,40340.74,64.714,87.665,46.949,0.971,2.544,waste not yet recycled scaled by over half
+AT,Austria,Biomass,7479.0,5966.0,1204.0,2676.0,4494.0,1513.0,4365.734,3849.366,19.869,8.365,79.77,0.971,2.544,waste not yet recycled scaled by over half
+AT,Austria,Fossil fuels,1063.0,463.0,246.0,271.0,438.0,600.0,425.499,1526.516,1.937,3.317,43.556,0.971,2.544,waste not yet recycled scaled by over half
+AT,Austria,Metal ores,3225.0,3107.0,1462.0,1520.0,3049.0,118.0,2961.977,300.215,13.48,0.652,96.341,0.971,2.544,waste not yet recycled scaled by over half
+BE,Belgium,Non-metallic minerals,14228.0,6543.0,1450.0,1954.0,6039.0,7685.0,13566.981,10709.008,41.213,68.967,45.987,2.247,1.393,circular use scaled by over half
+BE,Belgium,Biomass,7019.0,4450.0,4411.0,4155.0,4706.0,2569.0,10572.315,3579.888,32.116,23.055,63.399,2.247,1.393,circular use scaled by over half
+BE,Belgium,Fossil fuels,1645.0,970.0,828.0,494.0,1304.0,675.0,2929.515,940.609,8.899,6.058,58.967,2.247,1.393,circular use scaled by over half
+BE,Belgium,Metal ores,3660.0,3446.0,4674.0,5516.0,2604.0,214.0,5850.044,298.208,17.771,1.92,94.153,2.247,1.393,circular use scaled by over half
+BG,Bulgaria,Non-metallic minerals,72186.0,2522.0,,,2522.0,69664.0,2780.081,69526.901,55.21,98.091,3.494,1.102,0.998,trade by material not published
+BG,Bulgaria,Biomass,1943.0,963.0,,,963.0,980.0,1061.545,978.071,21.081,1.38,49.563,1.102,0.998,trade by material not published
+BG,Bulgaria,Fossil fuels,603.0,347.0,,,347.0,256.0,382.509,255.496,7.596,0.36,57.546,1.102,0.998,trade by material not published
+BG,Bulgaria,Metal ores,856.0,736.0,,,736.0,120.0,811.316,119.764,16.112,0.169,85.981,1.102,0.998,trade by material not published
+CY,Cyprus,Non-metallic minerals,958.0,584.0,0.0,4.0,580.0,374.0,695.244,744.194,43.187,84.234,60.96,1.199,1.99,a material's circular use is negative; waste not yet recycled scaled by over half
+CY,Cyprus,Biomass,841.0,789.0,58.0,212.0,635.0,52.0,761.172,103.471,47.282,11.712,93.817,1.199,1.99,a material's circular use is negative; waste not yet recycled scaled by over half
+CY,Cyprus,Fossil fuels,31.0,18.0,12.0,31.0,-1.0,13.0,-1.199,25.868,-0.074,2.928,58.065,1.199,1.99,a material's circular use is negative; waste not yet recycled scaled by over half
+CY,Cyprus,Metal ores,7.0,2.0,127.0,0.0,129.0,5.0,154.632,9.949,9.605,1.126,28.571,1.199,1.99,a material's circular use is negative; waste not yet recycled scaled by over half
+CZ,Czechia,Non-metallic minerals,24214.0,13476.0,1405.0,474.0,14407.0,10738.0,14697.375,11610.674,68.628,74.513,55.654,1.02,1.081,
+CZ,Czechia,Biomass,4395.0,1974.0,1631.0,1012.0,2593.0,2421.0,2645.262,2617.754,12.352,16.8,44.915,1.02,1.081,
+CZ,Czechia,Fossil fuels,1512.0,543.0,133.0,127.0,549.0,969.0,560.065,1047.75,2.615,6.724,35.913,1.02,1.081,
+CZ,Czechia,Metal ores,2090.0,1807.0,2362.0,725.0,3444.0,283.0,3513.414,305.999,16.405,1.964,86.459,1.02,1.081,
+DE,Germany,Non-metallic minerals,234984.0,96561.0,4276.0,2317.0,98520.0,138423.0,112350.525,170124.129,68.325,83.041,41.093,1.14,1.229,
+DE,Germany,Biomass,44815.0,23565.0,7836.0,11416.0,19985.0,21250.0,22790.553,26116.597,13.86,12.748,52.583,1.14,1.229,
+DE,Germany,Fossil fuels,13367.0,7993.0,1408.0,932.0,8469.0,5374.0,9657.903,6604.734,5.873,3.224,59.797,1.14,1.229,
+DE,Germany,Metal ores,15529.0,13884.0,9641.0,6306.0,17219.0,1645.0,19636.254,2021.732,11.942,0.987,89.407,1.14,1.229,
+DK,Denmark,Non-metallic minerals,14049.0,10473.0,159.0,181.0,10451.0,3576.0,11815.33,4651.532,79.246,59.0,74.546,1.131,1.301,
+DK,Denmark,Biomass,4228.0,2502.0,1022.0,2882.0,642.0,1726.0,725.81,2245.118,4.868,28.477,59.177,1.131,1.301,
+DK,Denmark,Fossil fuels,1007.0,428.0,119.0,215.0,332.0,579.0,375.341,753.142,2.517,9.553,42.502,1.131,1.301,
+DK,Denmark,Metal ores,565.0,385.0,2039.0,661.0,1763.0,180.0,1993.152,234.138,13.368,2.97,68.142,1.131,1.301,
+EE,Estonia,Non-metallic minerals,18883.0,8946.0,,,8946.0,9937.0,9491.378,10163.704,94.497,89.846,47.376,1.061,1.023,trade by material not published
+EE,Estonia,Biomass,504.0,168.0,,,168.0,336.0,178.242,343.666,1.775,3.038,33.333,1.061,1.023,trade by material not published
+EE,Estonia,Fossil fuels,875.0,262.0,,,262.0,613.0,277.972,626.985,2.768,5.542,29.943,1.061,1.023,trade by material not published
+EE,Estonia,Metal ores,265.0,91.0,,,91.0,174.0,96.548,177.97,0.961,1.573,34.34,1.061,1.023,trade by material not published
+EL,Greece,Non-metallic minerals,12314.0,3691.0,658.0,152.0,4197.0,8623.0,4292.966,10758.775,56.594,67.658,29.974,1.023,1.248,
+EL,Greece,Biomass,4783.0,1860.0,584.0,798.0,1646.0,2923.0,1683.636,3646.979,22.195,22.934,38.888,1.023,1.248,
+EL,Greece,Fossil fuels,1197.0,312.0,80.0,80.0,312.0,885.0,319.134,1104.2,4.207,6.944,26.065,1.023,1.248,
+EL,Greece,Metal ores,2490.0,2176.0,215.0,1130.0,1261.0,314.0,1289.833,391.773,17.004,2.464,87.39,1.023,1.248,
+ES,Spain,Non-metallic minerals,38091.0,25130.0,1238.0,965.0,25403.0,12961.0,30324.872,27076.546,66.059,66.837,65.974,1.194,2.089,waste not yet recycled scaled by over half
+ES,Spain,Biomass,12971.0,8921.0,1854.0,6613.0,4162.0,4050.0,4968.394,8460.768,10.823,20.885,68.777,1.194,2.089,waste not yet recycled scaled by over half
+ES,Spain,Fossil fuels,4016.0,2160.0,285.0,383.0,2062.0,1856.0,2461.516,3877.33,5.362,9.571,53.785,1.194,2.089,waste not yet recycled scaled by over half
+ES,Spain,Metal ores,9920.0,9395.0,1246.0,3813.0,6828.0,525.0,8150.936,1096.766,17.756,2.707,94.708,1.194,2.089,waste not yet recycled scaled by over half
+FI,Finland,Non-metallic minerals,90798.0,10913.0,215.0,72.0,11056.0,79885.0,11760.646,87868.886,76.059,94.923,12.019,1.064,1.1,
+FI,Finland,Biomass,4983.0,1521.0,194.0,707.0,1008.0,3462.0,1072.244,3808.0,6.935,4.114,30.524,1.064,1.1,
+FI,Finland,Fossil fuels,844.0,222.0,36.0,40.0,218.0,622.0,231.894,684.164,1.5,0.739,26.303,1.064,1.1,
+FI,Finland,Metal ores,1751.0,1562.0,764.0,72.0,2254.0,189.0,2397.657,207.889,15.506,0.225,89.206,1.064,1.1,
+FR,France,Non-metallic minerals,191253.0,120045.0,1742.0,1827.0,119960.0,71208.0,112828.35,100476.951,76.992,71.332,62.768,0.941,1.411,
+FR,France,Biomass,40778.0,20764.0,4565.0,6367.0,18962.0,20014.0,17834.705,28240.446,12.17,20.049,50.92,0.941,1.411,
+FR,France,Fossil fuels,9790.0,2939.0,626.0,235.0,3330.0,6851.0,3132.031,9666.998,2.137,6.863,30.02,0.941,1.411,
+FR,France,Metal ores,9748.0,7995.0,7487.0,1925.0,13557.0,1753.0,12751.033,2473.544,8.701,1.756,82.017,0.941,1.411,
+HR,Croatia,Non-metallic minerals,1319.0,1071.0,60.0,808.0,323.0,248.0,430.415,396.378,12.767,21.106,81.198,1.333,1.598,waste not yet recycled scaled by over half
+HR,Croatia,Biomass,1882.0,1229.0,366.0,547.0,1048.0,653.0,1396.518,1043.69,41.423,55.574,65.303,1.333,1.598,waste not yet recycled scaled by over half
+HR,Croatia,Fossil fuels,309.0,104.0,40.0,32.0,112.0,205.0,149.246,327.651,4.427,17.447,33.657,1.333,1.598,waste not yet recycled scaled by over half
+HR,Croatia,Metal ores,828.0,759.0,695.0,407.0,1047.0,69.0,1395.185,110.283,41.383,5.872,91.667,1.333,1.598,waste not yet recycled scaled by over half
+HU,Hungary,Non-metallic minerals,14262.0,2451.0,79.0,393.0,2137.0,11811.0,2255.402,9638.659,33.648,82.658,17.186,1.055,0.816,
+HU,Hungary,Biomass,3334.0,1719.0,1485.0,1377.0,1827.0,1615.0,1928.227,1317.961,28.767,11.302,51.56,1.055,0.816,
+HU,Hungary,Fossil fuels,1165.0,487.0,133.0,100.0,520.0,678.0,548.811,553.299,8.188,4.745,41.803,1.055,0.816,
+HU,Hungary,Metal ores,1073.0,888.0,1203.0,224.0,1867.0,185.0,1970.443,150.974,29.397,1.295,82.759,1.055,0.816,
+IE,Ireland,Non-metallic minerals,10161.0,499.0,322.0,487.0,334.0,9662.0,5326.585,10886.457,196.471,90.122,4.911,15.948,1.127,a material's circular use is negative; circular use scaled by over half
+IE,Ireland,Biomass,1282.0,608.0,710.0,2460.0,-1142.0,674.0,-18212.456,759.415,-671.765,6.287,47.426,15.948,1.127,a material's circular use is negative; circular use scaled by over half
+IE,Ireland,Fossil fuels,342.0,41.0,79.0,47.0,73.0,301.0,1164.194,339.145,42.941,2.808,11.988,15.948,1.127,a material's circular use is negative; circular use scaled by over half
+IE,Ireland,Metal ores,353.0,269.0,655.0,19.0,905.0,84.0,14432.813,94.645,532.353,0.784,76.204,15.948,1.127,a material's circular use is negative; circular use scaled by over half
+IT,Italy,Non-metallic minerals,84512.0,80005.0,882.0,445.0,80442.0,4507.0,84158.575,10453.171,63.414,45.365,94.667,1.046,2.319,waste not yet recycled scaled by over half
+IT,Italy,Biomass,29999.0,26306.0,1994.0,4095.0,24205.0,3693.0,25323.317,8565.245,19.081,37.172,87.69,1.046,2.319,waste not yet recycled scaled by over half
+IT,Italy,Fossil fuels,8673.0,7312.0,449.0,322.0,7439.0,1361.0,7782.696,3156.593,5.864,13.699,84.308,1.046,2.319,waste not yet recycled scaled by over half
+IT,Italy,Metal ores,19985.0,19611.0,1300.0,6145.0,14766.0,374.0,15448.218,867.425,11.64,3.764,98.129,1.046,2.319,waste not yet recycled scaled by over half
+LT,Lithuania,Non-metallic minerals,1403.0,643.0,,,643.0,760.0,1066.593,1401.796,44.965,85.393,45.83,1.659,1.844,trade by material not published; circular use scaled by over half; waste not yet recycled scaled by over half
+LT,Lithuania,Biomass,582.0,505.0,,,505.0,77.0,837.682,142.024,35.315,8.652,86.77,1.659,1.844,trade by material not published; circular use scaled by over half; waste not yet recycled scaled by over half
+LT,Lithuania,Fossil fuels,244.0,196.0,,,196.0,48.0,325.12,88.534,13.706,5.393,80.328,1.659,1.844,trade by material not published; circular use scaled by over half; waste not yet recycled scaled by over half
+LT,Lithuania,Metal ores,91.0,86.0,,,86.0,5.0,142.655,9.222,6.014,0.562,94.505,1.659,1.844,trade by material not published; circular use scaled by over half; waste not yet recycled scaled by over half
+LU,Luxembourg,Non-metallic minerals,4164.0,2111.0,105.0,955.0,1261.0,2053.0,1495.15,5005.458,71.485,90.64,50.696,1.186,2.438,waste not yet recycled scaled by over half
+LU,Luxembourg,Biomass,559.0,390.0,90.0,63.0,417.0,169.0,494.431,412.042,23.639,7.461,69.767,1.186,2.438,waste not yet recycled scaled by over half
+LU,Luxembourg,Fossil fuels,72.0,40.0,13.0,12.0,41.0,32.0,48.613,78.02,2.324,1.413,55.556,1.186,2.438,waste not yet recycled scaled by over half
+LU,Luxembourg,Metal ores,2021.0,2010.0,105.0,2070.0,45.0,11.0,53.356,26.819,2.551,0.486,99.456,1.186,2.438,waste not yet recycled scaled by over half
+LV,Latvia,Non-metallic minerals,460.0,386.0,,,386.0,74.0,546.625,289.283,38.294,46.835,83.913,1.416,3.909,trade by material not published; waste not yet recycled scaled by over half
+LV,Latvia,Biomass,339.0,303.0,,,303.0,36.0,429.086,140.732,30.06,22.785,89.381,1.416,3.909,trade by material not published; waste not yet recycled scaled by over half
+LV,Latvia,Fossil fuels,172.0,134.0,,,134.0,38.0,189.761,148.551,13.294,24.051,77.907,1.416,3.909,trade by material not published; waste not yet recycled scaled by over half
+LV,Latvia,Metal ores,195.0,185.0,,,185.0,10.0,261.983,39.092,18.353,6.329,94.872,1.416,3.909,trade by material not published; waste not yet recycled scaled by over half
+MT,Malta,Non-metallic minerals,2037.0,1327.0,,,1327.0,710.0,1409.809,802.845,95.468,76.757,65.145,1.062,1.131,trade by material not published
+MT,Malta,Biomass,170.0,19.0,,,19.0,151.0,20.186,170.746,1.367,16.324,11.176,1.062,1.131,trade by material not published
+MT,Malta,Fossil fuels,91.0,41.0,,,41.0,50.0,43.559,56.538,2.95,5.405,45.055,1.062,1.131,trade by material not published
+MT,Malta,Metal ores,17.0,3.0,,,3.0,14.0,3.187,15.831,0.216,1.514,17.647,1.062,1.131,trade by material not published
+NL,Netherlands,Non-metallic minerals,35923.0,34812.0,1216.0,1405.0,34623.0,1111.0,37891.701,8617.982,57.098,14.686,96.907,1.094,7.757,waste not yet recycled scaled by over half
+NL,Netherlands,Biomass,24525.0,19714.0,7823.0,9992.0,17545.0,4811.0,19201.395,37318.733,28.934,63.596,80.383,1.094,7.757,waste not yet recycled scaled by over half
+NL,Netherlands,Fossil fuels,3083.0,1832.0,968.0,990.0,1810.0,1251.0,1980.879,9703.957,2.985,16.537,59.423,1.094,7.757,waste not yet recycled scaled by over half
+NL,Netherlands,Metal ores,3221.0,2829.0,7714.0,3883.0,6660.0,392.0,7288.76,3040.728,10.983,5.182,87.83,1.094,7.757,waste not yet recycled scaled by over half
+PL,Poland,Non-metallic minerals,110697.0,26024.0,465.0,967.0,25522.0,84673.0,28927.373,89446.787,59.755,95.489,23.509,1.133,1.056,
+PL,Poland,Biomass,9112.0,7161.0,2829.0,4161.0,5829.0,1951.0,6606.757,2060.996,13.648,2.2,78.589,1.133,1.056,
+PL,Poland,Fossil fuels,4566.0,2880.0,413.0,388.0,2905.0,1686.0,3292.611,1781.055,6.802,1.901,63.075,1.133,1.056,
+PL,Poland,Metal ores,7376.0,7013.0,2689.0,1247.0,8455.0,363.0,9583.141,383.466,19.796,0.409,95.079,1.133,1.056,
+PT,Portugal,Non-metallic minerals,5610.0,2342.0,134.0,584.0,1892.0,3268.0,1931.339,3541.54,34.463,45.219,41.747,1.021,1.084,
+PT,Portugal,Biomass,4893.0,2132.0,847.0,507.0,2472.0,2761.0,2523.398,2992.103,45.027,38.204,43.572,1.021,1.084,
+PT,Portugal,Fossil fuels,1379.0,518.0,104.0,100.0,522.0,861.0,532.854,933.068,9.508,11.914,37.563,1.021,1.084,
+PT,Portugal,Metal ores,1648.0,1311.0,436.0,1143.0,604.0,337.0,616.559,365.208,11.002,4.663,79.551,1.021,1.084,
+RO,Romania,Non-metallic minerals,142729.0,1979.0,109.0,543.0,1545.0,140750.0,1644.186,142685.292,19.436,96.713,1.387,1.064,1.014,
+RO,Romania,Biomass,6795.0,3061.0,1119.0,741.0,3439.0,3734.0,3659.777,3785.342,43.263,2.566,45.048,1.064,1.014,
+RO,Romania,Fossil fuels,1181.0,390.0,61.0,134.0,317.0,791.0,337.351,801.876,3.988,0.544,33.023,1.064,1.014,
+RO,Romania,Metal ores,1608.0,1350.0,1515.0,217.0,2648.0,258.0,2817.997,261.547,33.312,0.177,83.955,1.064,1.014,
+SE,Sweden,Non-metallic minerals,119665.0,10540.0,357.0,301.0,10596.0,109125.0,20790.439,112790.927,59.149,92.295,8.808,1.962,1.034,circular use scaled by over half
+SE,Sweden,Biomass,9601.0,3706.0,1048.0,1081.0,3673.0,5895.0,7206.803,6093.036,20.504,4.986,38.6,1.962,1.034,circular use scaled by over half
+SE,Sweden,Fossil fuels,2679.0,150.0,197.0,174.0,173.0,2529.0,339.444,2613.959,0.966,2.139,5.599,1.962,1.034,circular use scaled by over half
+SE,Sweden,Metal ores,2889.0,2203.0,1772.0,503.0,3472.0,686.0,6812.42,709.045,19.381,0.58,76.255,1.962,1.034,circular use scaled by over half
+SI,Slovenia,Non-metallic minerals,9628.0,1540.0,96.0,234.0,1402.0,8088.0,1601.897,8247.639,57.435,98.418,15.995,1.143,1.02,
+SI,Slovenia,Biomass,678.0,610.0,1090.0,1356.0,344.0,68.0,393.047,69.342,14.093,0.827,89.971,1.143,1.02,
+SI,Slovenia,Fossil fuels,203.0,150.0,128.0,162.0,116.0,53.0,132.539,54.046,4.752,0.645,73.892,1.143,1.02,
+SI,Slovenia,Metal ores,706.0,697.0,688.0,806.0,579.0,9.0,661.554,9.178,23.72,0.11,98.725,1.143,1.02,
+SK,Slovakia,Non-metallic minerals,4385.0,2882.0,359.0,399.0,2842.0,1503.0,2910.438,1759.323,36.459,54.065,65.724,1.024,1.171,
+SK,Slovakia,Biomass,2650.0,1744.0,732.0,487.0,1989.0,906.0,2036.897,1060.51,25.516,32.59,65.811,1.024,1.171,
+SK,Slovakia,Fossil fuels,483.0,215.0,62.0,72.0,205.0,268.0,209.937,313.705,2.63,9.64,44.513,1.024,1.171,
+SK,Slovakia,Metal ores,2166.0,2063.0,992.0,296.0,2759.0,103.0,2825.44,120.566,35.394,3.705,95.245,1.024,1.171,
