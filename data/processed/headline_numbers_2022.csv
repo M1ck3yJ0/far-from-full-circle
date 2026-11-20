@@ -1,0 +1,97 @@
+metric,value,unit,calculation
+ring_closed,47.5,%,rate_pct / 24
+less_new_material_using_less_alone,59.255,%,ceilings: less_consumption_for_eu_target_today_pct
+less_new_material_at_70pct_recycled,30.958,%,ceilings: less_consumption_for_eu_target_70pct_recycled_pct; the same under both bounds
+waste_back_per_material_consumed,30.874,%,waste_treated_kt / consumption_kt
+ireland_ring_closed,8.75,%,Ireland's rate_pct / 24
+ireland_less_using_less_alone,93.207,%,Ireland's less_consumption_for_eu_target_today_pct
+best_case_recycled_share_to_close,87.119,%,(waste_recycled_kt + 24% x (U + DMC) - U) / waste_treated_kt; each extra recycled tonne replaces a new one
+best_case_recycling_multiple_to_close,2.122,times,(waste_recycled_kt + extra) / waste_recycled_kt
+best_case_less_new_material_to_close,14.221,%,extra recycled tonnes to close / DMC; the least new material any route to 24% takes away
+best_case_rate_every_tonne,27.524,%,(U + not yet recycled) / (U + DMC)
+best_case_rate_70pct_recycled,19.317,%,(U + extra at 70%) / (U + DMC)
+best_case_replaced_at_70pct,8.936,%,extra recycled at 70% / DMC
+best_case_gone_without_at_70pct,22.022,%,less_new_material_at_70pct_recycled - best_case_replaced_at_70pct
+best_case_gone_without_per_point_recycled,1.286,% per point,"each point of treated waste recycled: cut falls by 1% of T x 0.76 / 0.24 / DMC, and recycling stands in for 1% of T / DMC more"
+adding_bound_rate_every_tonne,23.702,%,(U + not yet recycled) / (U + not yet recycled + DMC)
+adding_bound_rate_70pct_recycled,17.9,%,(U + extra at 70%) / (U + extra + DMC)
+adding_bound_cut_per_point_recycled,0.978,% per point,1% of T x 0.76 / 0.24 / DMC
+not_recycled_minerals_share,86.466,%,env_wassd: minerals' treated less recycled over all four groups'
+not_recycled_biomass_share,9.478,%,as above
+not_recycled_fossil_share,3.154,%,as above
+not_recycled_metals_share,0.902,%,as above
+climate_total,2890.0,Mt CO2e,"ETC CE Report 2025/3, Table 3-1, 2022"
+climate_cut_at_close_by_recycling,4.006,%,"two_levers at 70%: climate impact removed by recycling alone, at each group's average impact per tonne"
+waterfall_change_2004_2024,4.0,pts,sum of EU steps
+waterfall_recycling_2004_2024,2.4,pts,sum of recycling effects
+waterfall_using_less_2004_2024,1.6,pts,sum of consumption effects
+step_2008_2010_change,1.6,pts,trend_steps
+step_2008_2010_use_share,83.671,%,consumption effect / change
+step_2008_2010_use_change,-13.964,%,trend_steps
+step_2022_2024_change,0.8,pts,trend_steps; 2024 estimated
+step_2022_2024_use_share,83.007,%,consumption effect / change
+step_2022_2024_use_change,-6.183,%,trend_steps
+steps_using_less_added,2.859,pts,consumption effects in steps when use fell
+steps_using_more_took_back,-1.259,pts,consumption effects in steps when use rose
+pace_needed_per_year,1.575,pts a year,(24 - rate) / 8
+pace_2004_2024_per_year,0.2,pts a year,change 2004 to 2024 / 20
+use_per_person,14.285,t,DMC per person
+use_per_person_a_day,39.137,kg,DMC per person x 1000 / 365
+use_per_person_to_close_by_using_less,8.465,t,per person x 59.3%
+threshold_recycled_per_tonne_today,0.129,t per t,U / DMC
+threshold_recycled_per_tonne_every_tonne,0.311,t per t,(U + not yet recycled) / DMC
+recycled_per_tonne_used_fossil,0.025,t per t,env_wassd recycled / DMC
+recycled_per_tonne_used_biomass,0.096,t per t,env_wassd recycled / DMC
+recycled_per_tonne_used_minerals,0.146,t per t,env_wassd recycled / DMC
+recycled_per_tonne_used_metals,0.247,t per t,env_wassd recycled / DMC
+minerals_share_of_recycled,64.967,%,"env_wassd recycled, minerals over the four groups"
+record_steps_use_fell,5.0,steps,EU two-year steps since 2004 with consumption falling
+record_steps_circular_use_rose_or_held,3.0,steps,of those
+record_circular_use_2012_2014,-0.576,%,trend_steps
+record_circular_use_2018_2020,-7.648,%,trend_steps
+record_minerals_use_2022_2024,-5.132,%,DMC; 2024 estimated
+record_minerals_waste_2022_2024,0.525,%,env_wassd treated
+record_fossil_use_2022_2024,-18.335,%,DMC
+record_fossil_waste_2022_2024,4.519,%,env_wassd treated
+record_ireland_use_2010_2012,-14.297,%,trend_steps
+record_ireland_circular_use_2010_2012,-14.297,%,trend_steps
+record_finland_use_2022_2024,-13.092,%,trend_steps
+record_finland_circular_use_2022_2024,-71.194,%,trend_steps
+fall_2008_2010_minerals_share,77.067,%,"DMC fall, minerals over total"
+fall_2022_2024_fossil_share,56.888,%,"DMC fall, fossil over total"
+fall_2022_2024_minerals_share,42.91,%,"DMC fall, minerals over total"
+fall_2022_2024_biomass_change,46116.639,kt,"DMC, biomass 2024 less 2022"
+fossil_fall_2022_2024,224.576,Mt,DMC
+fossil_fall_coal_share,67.04,%,coal and other solids over all fossil
+fossil_imports_fall_2022_2024,112.99,Mt,imports
+gas_imports_fall_2022_2024,12.75,Mt,imports
+use_change_2025,3.421,%,"DMC, 2025 imputed by Eurostat"
+use_2025_returned_of_drop,51.901,%,2025 rise / 2022 to 2024 fall
+use_2025_rebound_minerals_share,64.193,%,minerals' rise over total rise
+use_2025_minerals_recovered,77.644,%,minerals' 2025 rise / their 2022 to 2024 fall
+use_2025_fossil_change,-1.811,%,DMC
+rate_with_no_fossil_fuels,13.735,%,"U / (U + DMC - fossil), recycling held"
+rate_with_no_fossil_or_metals,14.581,%,U / (U + DMC - fossil - metals)
+fossil_and_metals_share_of_cut,41.558,%,(fossil + metals) / cut to close
+cut_to_close_kt,3783058.717,kt,59.3% x DMC
+material_not_coming_back_kt,4413251.949,kt,DMC - waste treated
+cut_share_of_material_not_coming_back,85.72,%,cut / (DMC - waste treated)
+waste_exported_for_recycling_kt,36436.0,kt,"env_ac_sd, four groups"
+waste_imported_for_recycling_kt,40669.0,kt,"env_ac_sd, four groups"
+metals_exported_for_recycling_kt,19469.0,kt,env_ac_sd
+metals_imported_for_recycling_kt,5620.0,kt,env_ac_sd
+metals_exported_share_of_circular_use,19.526,%,metals exported for recycling / metals' circular use
+nl_rate_2022,28.5,%,published
+nl_use_per_person,9.406,t,DMC per person
+nl_exported_share,55.554,%,loop: exported / processed
+countries_exported_share_median,22.572,%,"loop, the 27 countries"
+nl_minerals_share_rank_lowest,1.0,rank,"weight_mix, 1 = least"
+nl_fossil_share_rank_highest,1.0,rank,"weight_mix, 1 = most"
+nl_step_2022_2024_change,4.2,pts,trend_steps; 2024 estimated
+nl_rate_2024,32.7,%,estimate
+nl_step_2022_2024_use_share,71.132,%,consumption effect / change
+nl_step_2022_2024_use_change,-13.136,%,trend_steps
+nl_fall_2022_2024_fossil_share,73.48,%,DMC fall
+nl_fall_2022_2024_gas_share,38.602,%,natural gas: extraction + imports - exports
+nl_step_2014_2016_change,4.0,pts,trend_steps
+nl_step_2014_2016_use_change,-12.201,%,trend_steps
