@@ -524,6 +524,8 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix):
     ).set_index(["material", "year"])["value"]
 
     need = target * (U + D) - U
+    close_climate = sum(min(1.0, need * wm.loc[g, "share_of_not_recycled_pct"] / 100 / dmc("EU27_2020", FLOW_MATERIALS[g], YEAR))
+                        * WEIGHT_VS_CLIMATE[g][1] for g in FLOW_MATERIALS)
     e70 = max(0.0, EEA_RECYCLED_SHARE * T - eu.waste_recycled_kt)
     per_point = 0.01 * T
     cut_slope = per_point * (1 - target) / target / D * 100
@@ -568,8 +570,12 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix):
         ("not_recycled_fossil_share", wm.loc["Fossil fuels", "share_of_not_recycled_pct"], "%", "as above"),
         ("not_recycled_metals_share", wm.loc["Metal ores", "share_of_not_recycled_pct"], "%", "as above"),
         ("climate_total", CLIMATE_TOTAL_MT, "Mt CO2e", "ETC CE Report 2025/3, Table 3-1, 2022"),
-        ("climate_cut_at_close_by_recycling", tl["climate_cut_by_recycling_pct"].iloc[-1], "%",
+        ("climate_cut_by_recycling_at_70pct", tl["climate_cut_by_recycling_pct"].iloc[-1], "%",
          "two_levers at 70%: climate impact removed by recycling alone, at each group's average impact per tonne"),
+        ("climate_cut_by_recycling_at_close", close_climate, "%",
+         "recycling alone closing the ring: each group's share of its use replaced x its climate share"),
+        ("climate_cut_by_recycling_at_close_mt", close_climate / 100 * CLIMATE_TOTAL_MT, "Mt CO2e",
+         "climate_cut_by_recycling_at_close x climate_total"),
         ("waterfall_change_2004_2024", eu_steps["rate_change_pts"].sum(), "pts", "sum of EU steps"),
         ("waterfall_recycling_2004_2024", eu_steps["recycling_effect_pts"].sum(), "pts", "sum of recycling effects"),
         ("waterfall_using_less_2004_2024", eu_steps["consumption_effect_pts"].sum(), "pts", "sum of consumption effects"),
