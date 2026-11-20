@@ -21,7 +21,9 @@ not_recycled_biomass_share,9.478,%,as above
 not_recycled_fossil_share,3.154,%,as above
 not_recycled_metals_share,0.902,%,as above
 climate_total,2890.0,Mt CO2e,"ETC CE Report 2025/3, Table 3-1, 2022"
-climate_cut_at_close_by_recycling,4.006,%,"two_levers at 70%: climate impact removed by recycling alone, at each group's average impact per tonne"
+climate_cut_by_recycling_at_70pct,4.006,%,"two_levers at 70%: climate impact removed by recycling alone, at each group's average impact per tonne"
+climate_cut_by_recycling_at_close,6.375,%,recycling alone closing the ring: each group's share of its use replaced x its climate share
+climate_cut_by_recycling_at_close_mt,184.236,Mt CO2e,climate_cut_by_recycling_at_close x climate_total
 waterfall_change_2004_2024,4.0,pts,sum of EU steps
 waterfall_recycling_2004_2024,2.4,pts,sum of recycling effects
 waterfall_using_less_2004_2024,1.6,pts,sum of consumption effects
