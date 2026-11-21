@@ -586,6 +586,8 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix):
              "recycling alone closing the ring: each group's share of its use replaced x its climate share"),
             (f"climate_cut_by_recycling_at_close_mt_{key}", close_climate(k) / 100 * CLIMATE_TOTAL_MT, "Mt CO2e",
              f"climate_cut_by_recycling_at_close_{key} x climate_total"),
+            (f"countries_past_target_at_70pct_{key}", int((c.drop("EU27_2020")[f"rate_70pct_recycled_{key}_pct"] >= 24).sum()),
+             "countries", "rate at 70% recycled, recycling alone, at or above 24%"),
         ]],
         ("replacement", REPLACEMENT, "new t per recycled t", "the page's assumed midpoint; the tables also carry 0 and 1"),
         ("cut_per_point_recycled", cut_slope, "% per point", "1% of T x 0.76 / 0.24 / DMC; the same at every replacement"),
