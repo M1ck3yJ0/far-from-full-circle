@@ -520,8 +520,13 @@ def footprint_table():
         "footprint",
         ["indic_env", "material", "cpa08", "unit", "geo", "TIME_PERIOD", "OBS_VALUE", "CONF_STATUS"],
         lambda d: (d["geo"] == "EU27_2020") & (d["unit"] == "THS_T") & (d["material"] == "TOTAL")
-        & (d["TIME_PERIOD"] == str(YEAR)) & d["indic_env"].isin(FINAL_USES),
+        & (d["TIME_PERIOD"].astype(int) <= YEAR) & d["indic_env"].isin(FINAL_USES),
     )
+    # Eurostat publishes the split by product later than the rest: use the latest year that has it
+    year = fp.loc[fp["cpa08"] != "TOTAL", "TIME_PERIOD"].astype(int).max()
+    if year != YEAR:
+        print(f"Warning: the footprint table is for {year}, the latest with products, not {YEAR}")
+    fp = fp[fp["TIME_PERIOD"].astype(int) == year]
     kt = fp.pivot(index="cpa08", columns="indic_env", values="value")
     total = kt.loc["TOTAL", "RMC"]
     named = [code for codes in FOOTPRINT_GROUPS.values() for code in codes]
