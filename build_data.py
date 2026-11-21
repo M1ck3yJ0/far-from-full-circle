@@ -864,7 +864,7 @@ def page_data(ceilings, trend, steps, materials, mix, loop, flows_m, levers, unr
                                                for name in TARGETS},
             "mix": {k: r(mix.loc[g, f"{k}_pct"]) for k in MIX_GROUPS},
             # at the page's replacement, REPLACEMENT
-            "extra_recycled_70pct_kt": r(max(0.0, EEA_RECYCLED_SHARE * x.waste_treated_kt - x.waste_recycled_kt), 0),
+            "extra_recycled_70pct_kt": r(np.maximum(0.0, EEA_RECYCLED_SHARE * x.waste_treated_kt - x.waste_recycled_kt), 0),
             "rate_70pct_recycled": r(x[f"rate_70pct_recycled_{PAGE_K}_pct"], 3),
             "rate_70pct_recycled_if_adding": r(x["rate_70pct_recycled_k0_pct"], 3),   # recycled tonnes replacing none
             "replaced_70pct_recycled": {name: r(x[f"replaced_by_recycling_for_{name}_target_70pct_recycled_{PAGE_K}_pct"], 3)
@@ -1011,8 +1011,8 @@ def measures(geo, year, rate, consumption, waste):
             for case, e in cases.items():
                 replaced = k * e / dmc * 100
                 row[f"replaced_by_recycling_for_{name}_target_{case}_{key}_pct"] = replaced
-                # zero when recycling alone passes the target
-                row[f"gone_without_for_{name}_target_{case}_{key}_pct"] = max(0.0, cut_for(target, U + e) - replaced)
+                # zero when recycling alone passes the target; missing when its waste is unpublished
+                row[f"gone_without_for_{name}_target_{case}_{key}_pct"] = np.maximum(0.0, cut_for(target, U + e) - replaced)
     return row
 
 
