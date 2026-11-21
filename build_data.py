@@ -1052,6 +1052,10 @@ def main():
     ceilings = pd.DataFrame([measures(g, YEAR, rate, consumption, waste) for g in geos])
     ceilings.insert(1, "country", ceilings["geo"].map(names))
     ceilings.drop(columns="year").round(3).to_csv(OUT / f"ceilings_{YEAR}.csv", index=False)
+    missing = ceilings.loc[ceilings[["rate_pct", "consumption_kt", "waste_treated_kt", "waste_recycled_kt"]]
+                           .isna().any(axis=1), "country"].tolist()
+    if missing:
+        print(f"Warning: no rate, consumption or waste for {YEAR} in: {', '.join(missing)}")
 
     # 2. The same measures in every reporting year; 2024 values are Eurostat estimates
     trend = pd.DataFrame([measures(g, y, rate, consumption, waste) for g in geos for y in REPORTING_YEARS])
