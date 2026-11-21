@@ -23,4 +23,7 @@ comparison,ikea_food_vs_zin_structure,5.192,%,food_saved_to_2022 / structure_kep
 comparison,ikea_co2e_vs_zin,1.682,times,IKEA's running total to 2022 / ZIN's one-off saving
 comparison,winnow_food_vs_zin_structure,16.374,%,Winnow's yearly food saved / structure_kept
 comparison,winnow_co2e_vs_zin,5.701,times,Winnow's yearly CO2e / ZIN's one-off saving
+comparison,structure_share_of_tonnes_saved,95.064,%,structure_kept / (structure_kept + food_saved_to_2022)
+comparison,food_share_of_tonnes_saved,4.936,%,food_saved_to_2022 / (structure_kept + food_saved_to_2022)
+comparison,food_share_of_carbon_saved,62.718,%,"co2e_avoided / (co2e_avoided + upfront_saved_total); CO2e and CO2, total to 2022 and one-off"
 comparison,food_vs_structure_per_tonne,32.399,times,IKEA's CO2e per tonne of food / ZIN's CO2 per tonne of structure kept
