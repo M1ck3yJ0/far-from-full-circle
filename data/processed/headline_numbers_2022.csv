@@ -16,6 +16,7 @@ gone_without_per_point_recycled_k0,0.978,% per point,"each point of treated wast
 climate_cut_by_recycling_at_70pct_k0,0.0,%,"two_levers at 70%: climate impact removed by recycling alone, at each group's average impact per tonne"
 climate_cut_by_recycling_at_close_k0,,%,recycling alone closing the ring: each group's share of its use replaced x its climate share
 climate_cut_by_recycling_at_close_mt_k0,,Mt CO2e,climate_cut_by_recycling_at_close_k0 x climate_total
+countries_past_target_at_70pct_k0,4.0,countries,"rate at 70% recycled, recycling alone, at or above 24%"
 recycled_share_to_close_k05,93.4,%,"(waste_recycled_kt + extra) / waste_treated_kt, extra = (24% x (U + DMC) - U) / (1 - 24% x (1 - 0.5)); over 100: can't"
 recycling_multiple_to_close_k05,2.275,times,(waste_recycled_kt + extra) / waste_recycled_kt
 less_new_material_to_close_k05,8.08,%,0.5 x extra / DMC; the least new material any route to 24% takes away
@@ -27,6 +28,7 @@ gone_without_per_point_recycled_k05,1.132,% per point,"each point of treated was
 climate_cut_by_recycling_at_70pct_k05,2.003,%,"two_levers at 70%: climate impact removed by recycling alone, at each group's average impact per tonne"
 climate_cut_by_recycling_at_close_k05,3.622,%,recycling alone closing the ring: each group's share of its use replaced x its climate share
 climate_cut_by_recycling_at_close_mt_k05,104.68,Mt CO2e,climate_cut_by_recycling_at_close_k05 x climate_total
+countries_past_target_at_70pct_k05,8.0,countries,"rate at 70% recycled, recycling alone, at or above 24%"
 recycled_share_to_close_k1,87.119,%,"(waste_recycled_kt + extra) / waste_treated_kt, extra = (24% x (U + DMC) - U) / (1 - 24% x (1 - 1.0)); over 100: can't"
 recycling_multiple_to_close_k1,2.122,times,(waste_recycled_kt + extra) / waste_recycled_kt
 less_new_material_to_close_k1,14.221,%,1.0 x extra / DMC; the least new material any route to 24% takes away
@@ -38,6 +40,7 @@ gone_without_per_point_recycled_k1,1.286,% per point,"each point of treated wast
 climate_cut_by_recycling_at_70pct_k1,4.006,%,"two_levers at 70%: climate impact removed by recycling alone, at each group's average impact per tonne"
 climate_cut_by_recycling_at_close_k1,6.375,%,recycling alone closing the ring: each group's share of its use replaced x its climate share
 climate_cut_by_recycling_at_close_mt_k1,184.236,Mt CO2e,climate_cut_by_recycling_at_close_k1 x climate_total
+countries_past_target_at_70pct_k1,8.0,countries,"rate at 70% recycled, recycling alone, at or above 24%"
 replacement,0.5,new t per recycled t,the page's assumed midpoint; the tables also carry 0 and 1
 cut_per_point_recycled,0.978,% per point,1% of T x 0.76 / 0.24 / DMC; the same at every replacement
 not_recycled_minerals_share,86.466,%,env_wassd: minerals' treated less recycled over all four groups'
