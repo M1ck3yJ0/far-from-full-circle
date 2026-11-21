@@ -877,6 +877,13 @@ def page_data(ceilings, trend, steps, materials, mix, loop, flows_m, levers, unr
                                  for k, name in zip(MIX_GROUPS, FLOW_ORDER)},
             "waste_check": bm.loc[(g, "Biomass"), "check"] or None,
             "warning": EXPLORER_WARNINGS.get(g),
+            "highlights": [{"from": a, "to": a + 2, "arrow": arrow,
+                            "rate_from": r(s.loc[(g, a), "rate_from_pct"], 1),
+                            "rate_to": r(s.loc[(g, a), "rate_to_pct"], 1),
+                            "use_change_pct": r(s.loc[(g, a), "consumption_change_pct"], 1),
+                            "circular_use_change_pct": r(s.loc[(g, a), "circular_use_change_pct"], 1),
+                            "estimated": a + 2 > YEAR}
+                           for a, arrow in WATERFALL_HIGHLIGHTS.get(g, [])],
         }
     data = {
         "year": YEAR,
