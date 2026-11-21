@@ -392,12 +392,12 @@ def two_levers_table(ceilings, imports, by_material, dmc_by_group):
     in for (each extra recycled tonne replacing k new tonnes of the same material, one row set for each
     k in REPLACEMENTS) and what the EU goes without; and what that removes. Extra recycling is split across materials by
     each one's waste not yet recycled. What the EU goes without is taken in whole material groups,
-    heaviest first or dirtiest per tonne first, on Figure 3-4's weight shares; recycling's removals are
-    each group's own share of its Eurostat consumption, applied to those weight shares. Imports fall in
-    proportion to each group's use."""
+    heaviest first or dirtiest per tonne first, on each group's share of Eurostat's consumption (the ring's
+    weight shares) and Figure 3-4's climate shares; recycling's removals are each group's own share of its
+    Eurostat consumption. Imports fall in proportion to each group's use."""
     eu = ceilings.set_index("geo").loc["EU27_2020"]
     target = TARGETS["eu"]
-    weight = {g: w for g, (w, _) in WEIGHT_VS_CLIMATE.items()}
+    weight = {g: 100 * dmc_by_group[g] / sum(dmc_by_group.values()) for g in WEIGHT_VS_CLIMATE}
     climate = {g: c for g, (_, c) in WEIGHT_VS_CLIMATE.items()}
     routes = {
         "heaviest_first": sorted(weight, key=weight.get, reverse=True),
