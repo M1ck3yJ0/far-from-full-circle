@@ -20,5 +20,5 @@ This repo holds the analysis behind Far from Full Circle on milcahjoseph.com. `b
 - Keep uncompressed downloads out of git.
 - Never print raw files into the chat. Query them with scripts and print only what the task needs.
 - After changing `build_data.py`, rerun it from the repo root, check the changed tables against the previous ones, and commit each changed table separately.
-- When `data/processed/far_from_full_circle_data.js` changes, merge its blocks into `projects/far_from_full_circle/far_from_full_circle_data.js` in `M1ck3yJ0/M1ck3yJ0.github.io`, keeping that file's own blocks (`examples`, `imports`, `center_shards`, `food_heaps`), and commit it there.
+- When `data/processed/far_from_full_circle_data.js` changes, merge its blocks into `projects/far_from_full_circle/far_from_full_circle_data.js` in `M1ck3yJ0/M1ck3yJ0.github.io`, keeping that file's own blocks (`examples`, `center_shards`, `food_heaps`), and commit it there.
 - Use American spelling and no em or en dashes in any text.
