@@ -347,6 +347,29 @@ def import_shares(geo="EU27_2020"):
     return {group: imp[code] / imp["TOTAL"] * 100 for group, code in FLOW_MATERIALS.items()}
 
 
+def imports_block(geo="EU27_2020"):
+    """The page's imports block: extra-EU imports in YEAR, in total and by material group, with each
+    group's imports over its direct material input and its share of all imports."""
+    m = read_eurostat(
+        "mfa",
+        ["indic_env", "material", "unit", "geo", "TIME_PERIOD", "OBS_VALUE", "CONF_STATUS"],
+        lambda d: d["indic_env"].isin(["IMP", "DMI"]) & (d["unit"] == "THS_T") & (d["geo"] == geo)
+        & (d["TIME_PERIOD"] == str(YEAR)) & d["material"].isin(["TOTAL"] + list(FLOW_MATERIALS.values())),
+    ).set_index(["indic_env", "material"])["value"]
+    total = m[("IMP", "TOTAL")]
+    order = ["Non-metallic minerals", "Metal ores", "Fossil fuels", "Biomass"]
+    return {
+        "year": YEAR,
+        "source": f"Eurostat env_ac_mfa, {geo}, extra-EU imports",
+        "imports_kt": round(float(total), 1),
+        "materials": [{"material_group": g,
+                       "imports_kt": round(float(m[("IMP", FLOW_MATERIALS[g])]), 1),
+                       "dmi_kt": round(float(m[("DMI", FLOW_MATERIALS[g])]), 1),
+                       "imports_over_dmi_pct": round(float(m[("IMP", FLOW_MATERIALS[g])] / m[("DMI", FLOW_MATERIALS[g])] * 100), 2),
+                       "share_of_imports_pct": round(float(m[("IMP", FLOW_MATERIALS[g])] / total * 100), 2)} for g in order],
+    }
+
+
 def two_levers_table(ceilings, imports, by_material, dmc_by_group):
     """For the EU: at each share of treated waste recycled, from today's to the EEA's 70%, the new
     material the EU target takes away, with waste held at its tonnes, split into what recycling stands
@@ -859,6 +882,7 @@ def page_data(ceilings, trend, steps, materials, mix, loop, flows_m, levers, unr
         "footprint": [{k: (r(v) if isinstance(v, float) else v) for k, v in row.items() if k != "footprint_kt"}
                       for row in footprint.to_dict("records")],
         "climate_total_mt": CLIMATE_TOTAL_MT,
+        "imports": imports_block(),
         "game": {
             "source": f"EU27_2020, {YEAR}. Material use by group: Eurostat env_ac_mfa, DMC. Waste not yet recycled by group: "
                       f"env_wassd, scaled to the rate's totals (waste_by_material_{YEAR}.csv)",
