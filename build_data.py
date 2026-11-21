@@ -558,11 +558,11 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix):
     S0 = STEP_YEARS[0]
     U, D, T = eu.circular_use_kt, eu.consumption_kt, eu.waste_treated_kt
     N = T - eu.waste_recycled_kt
-    codes = ["TOTAL", "MF1", "MF2", "MF3", "MF4", "MF41", "MF422"]
+    codes = ["TOTAL", "MF1", "MF2", "MF3", "MF4", "MF41", "MF411", "MF413", "MF422"]   # MF411 lignite, MF413 oil shale
     mfa = read_eurostat(
         "mfa",
         ["indic_env", "material", "unit", "geo", "TIME_PERIOD", "OBS_VALUE", "CONF_STATUS"],
-        lambda d: d["geo"].isin(["EU27_2020", "NL"]) & d["material"].isin(codes)
+        lambda d: d["geo"].isin(["EU27_2020", "NL", "DE", "LV", "EE", "RO", "FI"]) & d["material"].isin(codes)
         & d["indic_env"].isin(["DMC", "IMP", "EXP", "DE"]) & d["unit"].isin(["THS_T", "T_HAB"]),
     )
     mv = mfa.set_index(["geo", "indic_env", "material", "unit", "year"])["value"]
@@ -589,6 +589,31 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix):
         & d["wst_oper"].isin(["TRT", "RCV_R"]) & d["waste"].isin(["TOTAL", "TOT_X_MIN", "W124", "W128_13"])
         & (d["TIME_PERIOD"] == str(YEAR)),
     ).set_index(["waste", "wst_oper"])["value"] / 1000
+
+    # Waste recycled by country, for 20b's cards, kt
+    rcv = read_eurostat(
+        "waste",
+        ["unit", "hazard", "wst_oper", "waste", "geo", "TIME_PERIOD", "OBS_VALUE", "CONF_STATUS"],
+        lambda d: d["geo"].isin(["SE", "DK", "FR", "SK", "FI"]) & (d["unit"] == "T") & (d["hazard"] == "HAZ_NHAZ")
+        & (d["wst_oper"] == "RCV_R") & d["waste"].isin(["TOTAL", "TOT_X_MIN"] + SOIL_AND_ROCK),
+    ).set_index(["geo", "waste", "year"])["value"] / 1000
+
+    def recycled(geo, year, code="TOTAL"):
+        return rcv.get((geo, code, year), np.nan)
+
+    def soil_rock_recycled(geo, year):     # missing if any part is confidential
+        return sum(recycled(geo, year, code) for code in SOIL_AND_ROCK)
+
+    def soil_rock_share_of_change(geo, a, b):
+        return (soil_rock_recycled(geo, b) - soil_rock_recycled(geo, a)) / (recycled(geo, b) - recycled(geo, a)) * 100
+
+    def major_mineral_share_of_change(geo, a, b):   # major mineral wastes: TOTAL less TOT_X_MIN
+        return (1 - (recycled(geo, b, "TOT_X_MIN") - recycled(geo, a, "TOT_X_MIN"))
+                / (recycled(geo, b) - recycled(geo, a))) * 100
+
+    # Finland's 2024 rate if its circular use had moved as env_wastrt's recycled waste did
+    fi_u22 = st.loc[("FI", 2022), "rate_from_pct"] / (100 - st.loc[("FI", 2022), "rate_from_pct"]) * dmc("FI", "TOTAL", 2022)
+    fi_u24 = fi_u22 * recycled("FI", 2024) / recycled("FI", 2022)
 
     def left(code):      # treated but not yet recycled, kt
         return wst[(code, "TRT")] - wst[(code, "RCV_R")]
@@ -754,6 +779,46 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix):
          "natural gas: extraction + imports - exports"),
         ("nl_step_2014_2016_change", st.loc[("NL", 2014), "rate_change_pts"], "pts", "trend_steps"),
         ("nl_step_2014_2016_use_change", st.loc[("NL", 2014), "consumption_change_pct"], "%", "trend_steps"),
+        # 20b's country cards
+        ("de_step_2022_2024_use_change", st.loc[("DE", 2022), "consumption_change_pct"], "%", "trend_steps; DMC reported"),
+        ("de_fall_2022_2024_minerals_share", fall("DE", "MF3", 2022, 2024) / fall("DE", "TOTAL", 2022, 2024) * 100,
+         "%", "DMC fall, minerals over total; biomass rose, so the shares add to more than 100"),
+        ("de_fall_2022_2024_fossil_share", fall("DE", "MF4", 2022, 2024) / fall("DE", "TOTAL", 2022, 2024) * 100,
+         "%", "DMC fall, fossil over total"),
+        ("de_fall_2022_2024_lignite_share", fall("DE", "MF411", 2022, 2024) / fall("DE", "TOTAL", 2022, 2024) * 100,
+         "%", "DMC fall, lignite (MF411) over total"),
+        ("lv_step_2022_2024_use_change", st.loc[("LV", 2022), "consumption_change_pct"], "%", "trend_steps; DMC reported"),
+        ("lv_fall_2022_2024_biomass_share", fall("LV", "MF1", 2022, 2024) / fall("LV", "TOTAL", 2022, 2024) * 100,
+         "%", "DMC fall, biomass over total"),
+        ("lv_fall_2022_2024_minerals_share", fall("LV", "MF3", 2022, 2024) / fall("LV", "TOTAL", 2022, 2024) * 100,
+         "%", "DMC fall, minerals over total"),
+        ("lv_fall_2022_2024_biomass_and_minerals_share",
+         (fall("LV", "MF1", 2022, 2024) + fall("LV", "MF3", 2022, 2024)) / fall("LV", "TOTAL", 2022, 2024) * 100,
+         "%", "DMC fall, biomass plus minerals over total"),
+        ("se_recycled_outside_major_mineral_2020", recycled("SE", 2020, "TOT_X_MIN") / 1000, "Mt",
+         "env_wastrt RCV_R, TOT_X_MIN"),
+        ("se_recycled_outside_major_mineral_2022", recycled("SE", 2022, "TOT_X_MIN") / 1000, "Mt",
+         "env_wastrt RCV_R, TOT_X_MIN"),
+        ("se_extra_recycling_2020_2022_major_mineral_share", major_mineral_share_of_change("SE", 2020, 2022), "%",
+         "env_wastrt RCV_R: change in (TOTAL - TOT_X_MIN) over change in TOTAL; its kinds are confidential for 2022"),
+        ("dk_extra_recycling_2020_2022_soil_rock_share", soil_rock_share_of_change("DK", 2020, 2022), "%",
+         "env_wastrt RCV_R: change in W126 + W127 + W12B over change in TOTAL"),
+        ("fr_recycling_fall_2018_2020_soil_rock_share", soil_rock_share_of_change("FR", 2018, 2020), "%",
+         "as above, of the fall; env_wastrt's recycled fell 26%, the card's 31% is circular use (trend_steps)"),
+        ("sk_extra_recycling_2018_2020_soil_rock_share", soil_rock_share_of_change("SK", 2018, 2020), "%",
+         "env_wastrt RCV_R: change in W126 + W127 + W12B over change in TOTAL"),
+        ("fi_rate_2024_estimated", st.loc[("FI", 2022), "rate_to_pct"], "%", "env_ac_cur, imputed by Eurostat"),
+        ("fi_circular_use_2022_2024_change_estimated", st.loc[("FI", 2022), "circular_use_change_pct"], "%",
+         "trend_steps, from the estimated rate"),
+        ("fi_waste_recycled_2022_2024_change", (recycled("FI", 2024) / recycled("FI", 2022) - 1) * 100, "%",
+         "env_wastrt RCV_R, TOTAL, 2024 as published October 2026"),
+        ("fi_rate_2024_if_circular_use_followed_waste", rate_with(fi_u24, dmc("FI", "TOTAL", 2024)), "%",
+         "U_2022 = rate / (100 - rate) x DMC_2022, scaled by env_wastrt's recycled 2024 / 2022; U / (U + DMC_2024)"),
+        ("ee_oil_shale_2018_2020_change", (dmc("EE", "MF413", 2020) / dmc("EE", "MF413", 2018) - 1) * 100, "%",
+         "DMC, oil shale and tar sands (MF413)"),
+        ("ro_minerals_2018", dmc("RO", "MF3", 2018) / 1000, "Mt", "DMC; total DMC imputed by Eurostat for 2009 to 2019"),
+        ("ro_minerals_2020", dmc("RO", "MF3", 2020) / 1000, "Mt", "DMC"),
+        ("ro_minerals_2018_2020_change", (dmc("RO", "MF3", 2020) / dmc("RO", "MF3", 2018) - 1) * 100, "%", "DMC"),
     ]
     return pd.DataFrame(rows, columns=["metric", "value", "unit", "calculation"])
 
