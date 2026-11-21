@@ -12,7 +12,7 @@ The EU wants to double the share of its materials that comes from recycled waste
 
 The trend points the same way. From 2012 to 2022 the rate rose only 0.4 points. Europe recycled 8% more waste, but it also consumed 3% more material and treated 7% less waste. The most recycling could deliver has stayed between 23.7% and 25.8% since 2010, and on Eurostat's 2024 estimates it is 24.7%.
 
-Recycling alone can't close the gap. Using less material can, and that lever has no ceiling.
+Neither lever is practical alone at the scale 24% needs: recycling gets there only by reaching about 93% of the waste treated, 2.3 times 2022's, and only if each recycled tonne replaces half a new one, while using less gets there only with 59.3% less material, when the EU's biggest two-year fall on record was 14%. So what Europe cuts matters more than the rate: the waste left to recycle is mostly minerals, but most of the climate impact of making materials lies in biomass, fossil fuels and metal ores.
 
 ## The question
 
