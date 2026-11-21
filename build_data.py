@@ -108,6 +108,22 @@ EXPLORER_WARNINGS = {
     "FI": "swings",
     "BG": "swings",
 }
+# 20b's highlighted steps: country, then (first year of the step, the arrow its label names),
+# "use" for material use and "recycling" for circular use. "imports" names the recycling arrow
+# but labels it as waste brought in. Romania has none.
+WATERFALL_HIGHLIGHTS = {
+    "AT": [(2012, "recycling")], "BE": [(2020, "recycling"), (2022, "use")],
+    "BG": [(2018, "recycling"), (2020, "recycling")], "HR": [(2010, "recycling")],
+    "CY": [(2020, "recycling")], "CZ": [(2016, "recycling")],
+    "DK": [(2014, "use"), (2020, "recycling")], "EE": [(2010, "recycling"), (2018, "use")],
+    "FI": [(2012, "recycling")], "FR": [(2014, "use"), (2018, "recycling")],
+    "DE": [(2022, "use")], "EL": [(2010, "use"), (2020, "recycling")], "HU": [(2012, "use")],
+    "IE": [(2010, "use")], "IT": [(2012, "use"), (2020, "use")],
+    "LV": [(2012, "imports"), (2022, "use")], "LT": [(2012, "use")], "LU": [(2012, "recycling")],
+    "MT": [(2010, "use"), (2018, "recycling")], "NL": [(2014, "use"), (2022, "use")],
+    "PL": [(2018, "recycling")], "PT": [(2020, "recycling")], "SK": [(2018, "recycling")],
+    "SI": [(2010, "use"), (2020, "use")], "ES": [(2010, "use")], "SE": [(2020, "recycling")],
+}
 # The four material groups of the ring's shards, in the shard solver's order
 MIX_GROUPS = {"minerals": "MF3", "biomass": "MF1", "fossil": "MF4", "metals": "MF2"}
 FLOW_ORDER = ["Non-metallic minerals", "Biomass", "Fossil fuels", "Metal ores"]   # MIX_GROUPS' order, by name
