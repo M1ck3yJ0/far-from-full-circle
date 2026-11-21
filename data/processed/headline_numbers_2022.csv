@@ -125,3 +125,25 @@ nl_fall_2022_2024_fossil_share,73.48,%,DMC fall
 nl_fall_2022_2024_gas_share,38.602,%,natural gas: extraction + imports - exports
 nl_step_2014_2016_change,4.0,pts,trend_steps
 nl_step_2014_2016_use_change,-12.201,%,trend_steps
+de_step_2022_2024_use_change,-13.738,%,trend_steps; DMC reported
+de_fall_2022_2024_minerals_share,51.025,%,"DMC fall, minerals over total; biomass rose, so the shares add to more than 100"
+de_fall_2022_2024_fossil_share,53.881,%,"DMC fall, fossil over total"
+de_fall_2022_2024_lignite_share,24.6,%,"DMC fall, lignite (MF411) over total"
+lv_step_2022_2024_use_change,-27.558,%,trend_steps; DMC reported
+lv_fall_2022_2024_biomass_share,46.482,%,"DMC fall, biomass over total"
+lv_fall_2022_2024_minerals_share,46.144,%,"DMC fall, minerals over total"
+lv_fall_2022_2024_biomass_and_minerals_share,92.627,%,"DMC fall, biomass plus minerals over total"
+se_recycled_outside_major_mineral_2020,7.245,Mt,"env_wastrt RCV_R, TOT_X_MIN"
+se_recycled_outside_major_mineral_2022,7.845,Mt,"env_wastrt RCV_R, TOT_X_MIN"
+se_extra_recycling_2020_2022_major_mineral_share,96.409,%,env_wastrt RCV_R: change in (TOTAL - TOT_X_MIN) over change in TOTAL; its kinds are confidential for 2022
+dk_extra_recycling_2020_2022_soil_rock_share,81.006,%,env_wastrt RCV_R: change in W126 + W127 + W12B over change in TOTAL
+fr_recycling_fall_2018_2020_soil_rock_share,67.386,%,"as above, of the fall; env_wastrt's recycled fell 26%, the card's 31% is circular use (trend_steps)"
+sk_extra_recycling_2018_2020_soil_rock_share,65.532,%,env_wastrt RCV_R: change in W126 + W127 + W12B over change in TOTAL
+fi_rate_2024_estimated,2.0,%,"env_ac_cur, imputed by Eurostat"
+fi_circular_use_2022_2024_change_estimated,-71.194,%,"trend_steps, from the estimated rate"
+fi_waste_recycled_2022_2024_change,-13.678,%,"env_wastrt RCV_R, TOTAL, 2024 as published October 2026"
+fi_rate_2024_if_circular_use_followed_waste,5.763,%,"U_2022 = rate / (100 - rate) x DMC_2022, scaled by env_wastrt's recycled 2024 / 2022; U / (U + DMC_2024)"
+ee_oil_shale_2018_2020_change,-42.331,%,"DMC, oil shale and tar sands (MF413)"
+ro_minerals_2018,314.258,Mt,DMC; total DMC imputed by Eurostat for 2009 to 2019
+ro_minerals_2020,444.784,Mt,DMC
+ro_minerals_2018_2020_change,41.535,%,DMC
