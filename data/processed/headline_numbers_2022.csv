@@ -3,6 +3,10 @@ ring_closed,47.5,%,rate_pct / 24
 less_new_material_using_less_alone,59.255,%,ceilings: less_consumption_for_eu_target_today_pct
 less_new_material_at_70pct_recycled,30.958,%,ceilings: less_consumption_for_eu_target_70pct_recycled_pct; the same under both bounds
 waste_back_per_material_consumed,30.874,%,waste_treated_kt / consumption_kt
+rate_rebuilt,11.25,%,"waste_recycled_kt / (waste_recycled_kt + DMC), env_wastrt; no trade"
+rate_rebuilt_with_backfilling,14.614,%,"(recycled + backfilled) / (recycled + backfilled + DMC), env_wastrt; no trade"
+not_recycled_major_mineral_share,75.791,%,env_wastrt: (TOTAL - TOT_X_MIN) treated less recycled / TOTAL treated less recycled
+not_recycled_major_mineral_and_ash_share,81.811,%,"env_wastrt: as above, plus W124 (combustion) and W128_13 (mineral waste from waste treatment)"
 ireland_ring_closed,8.75,%,Ireland's rate_pct / 24
 ireland_less_using_less_alone,93.207,%,Ireland's less_consumption_for_eu_target_today_pct
 recycled_share_to_close_k0,101.665,%,"(waste_recycled_kt + extra) / waste_treated_kt, extra = (24% x (U + DMC) - U) / (1 - 24% x (1 - 0.0)); over 100: can't"
