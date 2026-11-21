@@ -5,25 +5,46 @@ less_new_material_at_70pct_recycled,30.958,%,ceilings: less_consumption_for_eu_t
 waste_back_per_material_consumed,30.874,%,waste_treated_kt / consumption_kt
 ireland_ring_closed,8.75,%,Ireland's rate_pct / 24
 ireland_less_using_less_alone,93.207,%,Ireland's less_consumption_for_eu_target_today_pct
-best_case_recycled_share_to_close,87.119,%,(waste_recycled_kt + 24% x (U + DMC) - U) / waste_treated_kt; each extra recycled tonne replaces a new one
-best_case_recycling_multiple_to_close,2.122,times,(waste_recycled_kt + extra) / waste_recycled_kt
-best_case_less_new_material_to_close,14.221,%,extra recycled tonnes to close / DMC; the least new material any route to 24% takes away
-best_case_rate_every_tonne,27.524,%,(U + not yet recycled) / (U + DMC)
-best_case_rate_70pct_recycled,19.317,%,(U + extra at 70%) / (U + DMC)
-best_case_replaced_at_70pct,8.936,%,extra recycled at 70% / DMC
-best_case_gone_without_at_70pct,22.022,%,less_new_material_at_70pct_recycled - best_case_replaced_at_70pct
-best_case_gone_without_per_point_recycled,1.286,% per point,"each point of treated waste recycled: cut falls by 1% of T x 0.76 / 0.24 / DMC, and recycling stands in for 1% of T / DMC more"
-adding_bound_rate_every_tonne,23.702,%,(U + not yet recycled) / (U + not yet recycled + DMC)
-adding_bound_rate_70pct_recycled,17.9,%,(U + extra at 70%) / (U + extra + DMC)
-adding_bound_cut_per_point_recycled,0.978,% per point,1% of T x 0.76 / 0.24 / DMC
+recycled_share_to_close_k0,101.665,%,"(waste_recycled_kt + extra) / waste_treated_kt, extra = (24% x (U + DMC) - U) / (1 - 24% x (1 - 0.0)); over 100: can't"
+recycling_multiple_to_close_k0,2.476,times,(waste_recycled_kt + extra) / waste_recycled_kt
+less_new_material_to_close_k0,0.0,%,0.0 x extra / DMC; the least new material any route to 24% takes away
+rate_every_tonne_k0,23.702,%,(U + not yet recycled) / (U + DMC + (1 - 0.0) x not yet recycled)
+rate_70pct_recycled_k0,17.9,%,(U + extra at 70%) / (U + DMC + (1 - 0.0) x extra)
+replaced_at_70pct_k0,0.0,%,0.0 x extra recycled at 70% / DMC
+gone_without_at_70pct_k0,30.958,%,less_new_material_at_70pct_recycled - replaced_at_70pct_k0
+gone_without_per_point_recycled_k0,0.978,% per point,"each point of treated waste recycled: cut falls by 1% of T x 0.76 / 0.24 / DMC, and recycling stands in for 0.0 x 1% of T / DMC more"
+climate_cut_by_recycling_at_70pct_k0,0.0,%,"two_levers at 70%: climate impact removed by recycling alone, at each group's average impact per tonne"
+climate_cut_by_recycling_at_close_k0,,%,recycling alone closing the ring: each group's share of its use replaced x its climate share
+climate_cut_by_recycling_at_close_mt_k0,,Mt CO2e,climate_cut_by_recycling_at_close_k0 x climate_total
+recycled_share_to_close_k05,93.4,%,"(waste_recycled_kt + extra) / waste_treated_kt, extra = (24% x (U + DMC) - U) / (1 - 24% x (1 - 0.5)); over 100: can't"
+recycling_multiple_to_close_k05,2.275,times,(waste_recycled_kt + extra) / waste_recycled_kt
+less_new_material_to_close_k05,8.08,%,0.5 x extra / DMC; the least new material any route to 24% takes away
+rate_every_tonne_k05,25.47,%,(U + not yet recycled) / (U + DMC + (1 - 0.5) x not yet recycled)
+rate_70pct_recycled_k05,18.582,%,(U + extra at 70%) / (U + DMC + (1 - 0.5) x extra)
+replaced_at_70pct_k05,4.468,%,0.5 x extra recycled at 70% / DMC
+gone_without_at_70pct_k05,26.49,%,less_new_material_at_70pct_recycled - replaced_at_70pct_k05
+gone_without_per_point_recycled_k05,1.132,% per point,"each point of treated waste recycled: cut falls by 1% of T x 0.76 / 0.24 / DMC, and recycling stands in for 0.5 x 1% of T / DMC more"
+climate_cut_by_recycling_at_70pct_k05,2.003,%,"two_levers at 70%: climate impact removed by recycling alone, at each group's average impact per tonne"
+climate_cut_by_recycling_at_close_k05,3.622,%,recycling alone closing the ring: each group's share of its use replaced x its climate share
+climate_cut_by_recycling_at_close_mt_k05,104.68,Mt CO2e,climate_cut_by_recycling_at_close_k05 x climate_total
+recycled_share_to_close_k1,87.119,%,"(waste_recycled_kt + extra) / waste_treated_kt, extra = (24% x (U + DMC) - U) / (1 - 24% x (1 - 1.0)); over 100: can't"
+recycling_multiple_to_close_k1,2.122,times,(waste_recycled_kt + extra) / waste_recycled_kt
+less_new_material_to_close_k1,14.221,%,1.0 x extra / DMC; the least new material any route to 24% takes away
+rate_every_tonne_k1,27.524,%,(U + not yet recycled) / (U + DMC + (1 - 1.0) x not yet recycled)
+rate_70pct_recycled_k1,19.317,%,(U + extra at 70%) / (U + DMC + (1 - 1.0) x extra)
+replaced_at_70pct_k1,8.936,%,1.0 x extra recycled at 70% / DMC
+gone_without_at_70pct_k1,22.022,%,less_new_material_at_70pct_recycled - replaced_at_70pct_k1
+gone_without_per_point_recycled_k1,1.286,% per point,"each point of treated waste recycled: cut falls by 1% of T x 0.76 / 0.24 / DMC, and recycling stands in for 1.0 x 1% of T / DMC more"
+climate_cut_by_recycling_at_70pct_k1,4.006,%,"two_levers at 70%: climate impact removed by recycling alone, at each group's average impact per tonne"
+climate_cut_by_recycling_at_close_k1,6.375,%,recycling alone closing the ring: each group's share of its use replaced x its climate share
+climate_cut_by_recycling_at_close_mt_k1,184.236,Mt CO2e,climate_cut_by_recycling_at_close_k1 x climate_total
+replacement,0.5,new t per recycled t,the page's assumed midpoint; the tables also carry 0 and 1
+cut_per_point_recycled,0.978,% per point,1% of T x 0.76 / 0.24 / DMC; the same at every replacement
 not_recycled_minerals_share,86.466,%,env_wassd: minerals' treated less recycled over all four groups'
 not_recycled_biomass_share,9.478,%,as above
 not_recycled_fossil_share,3.154,%,as above
 not_recycled_metals_share,0.902,%,as above
 climate_total,2890.0,Mt CO2e,"ETC CE Report 2025/3, Table 3-1, 2022"
-climate_cut_by_recycling_at_70pct,4.006,%,"two_levers at 70%: climate impact removed by recycling alone, at each group's average impact per tonne"
-climate_cut_by_recycling_at_close,6.375,%,recycling alone closing the ring: each group's share of its use replaced x its climate share
-climate_cut_by_recycling_at_close_mt,184.236,Mt CO2e,climate_cut_by_recycling_at_close x climate_total
 waterfall_change_2004_2024,4.0,pts,sum of EU steps
 waterfall_recycling_2004_2024,2.4,pts,sum of recycling effects
 waterfall_using_less_2004_2024,1.6,pts,sum of consumption effects
@@ -36,7 +57,7 @@ step_2022_2024_use_change,-6.183,%,trend_steps
 steps_using_less_added,2.859,pts,consumption effects in steps when use fell
 steps_using_more_took_back,-1.259,pts,consumption effects in steps when use rose
 pace_needed_per_year,1.575,pts a year,(24 - rate) / 8
-pace_2004_2024_per_year,0.2,pts a year,change 2004 to 2024 / 20
+pace_2004_2024_per_year,0.2,pts a year,change over the steps / years
 use_per_person,14.285,t,DMC per person
 use_per_person_a_day,39.137,kg,DMC per person x 1000 / 365
 use_per_person_to_close_by_using_less,8.465,t,per person x 59.3%
