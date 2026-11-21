@@ -582,6 +582,20 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix):
         lambda d: (d["geo"] == "EU27_2020") & (d["unit"] == "THS_T") & (d["wst_oper"] == "TRT"),
     ).set_index(["material", "year"])["value"]
 
+    wst = read_eurostat(
+        "waste",
+        ["unit", "hazard", "wst_oper", "waste", "geo", "TIME_PERIOD", "OBS_VALUE", "CONF_STATUS"],
+        lambda d: (d["geo"] == "EU27_2020") & (d["unit"] == "T") & (d["hazard"] == "HAZ_NHAZ")
+        & d["wst_oper"].isin(["TRT", "RCV_R"]) & d["waste"].isin(["TOTAL", "TOT_X_MIN", "W124", "W128_13"])
+        & (d["TIME_PERIOD"] == str(YEAR)),
+    ).set_index(["waste", "wst_oper"])["value"] / 1000
+
+    def left(code):      # treated but not yet recycled, kt
+        return wst[(code, "TRT")] - wst[(code, "RCV_R")]
+    major_mineral = left("TOTAL") - left("TOT_X_MIN")
+    ash = left("W124") + left("W128_13")
+    Rc, Bf = eu.waste_recycled_kt, eu.waste_backfilled_kt   # recycled, backfilled
+
     def close_climate(k):   # climate impact removed when recycling alone closes the ring at replacement k
         need = (target * (U + D) - U) / (1 - target * (1 - k))
         if need > N:        # recycling every tonne falls short
@@ -604,6 +618,13 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix):
         ("less_new_material_at_70pct_recycled", eu.less_consumption_for_eu_target_70pct_recycled_pct, "%",
          "ceilings: less_consumption_for_eu_target_70pct_recycled_pct; the same under both bounds"),
         ("waste_back_per_material_consumed", T / D * 100, "%", "waste_treated_kt / consumption_kt"),
+        ("rate_rebuilt", Rc / (Rc + D) * 100, "%", "waste_recycled_kt / (waste_recycled_kt + DMC), env_wastrt; no trade"),
+        ("rate_rebuilt_with_backfilling", (Rc + Bf) / (Rc + Bf + D) * 100, "%",
+         "(recycled + backfilled) / (recycled + backfilled + DMC), env_wastrt; no trade"),
+        ("not_recycled_major_mineral_share", major_mineral / left("TOTAL") * 100, "%",
+         "env_wastrt: (TOTAL - TOT_X_MIN) treated less recycled / TOTAL treated less recycled"),
+        ("not_recycled_major_mineral_and_ash_share", (major_mineral + ash) / left("TOTAL") * 100, "%",
+         "env_wastrt: as above, plus W124 (combustion) and W128_13 (mineral waste from waste treatment)"),
         ("ireland_ring_closed", ie.rate_pct / target, "%", "Ireland's rate_pct / 24"),
         ("ireland_less_using_less_alone", ie.less_consumption_for_eu_target_today_pct, "%",
          "Ireland's less_consumption_for_eu_target_today_pct"),
@@ -799,6 +820,13 @@ def examples_table():
          "Winnow's yearly food saved / structure_kept"),
         ("comparison", "winnow_co2e_vs_zin", ikea("winnow_co2e_per_year") / zin("upfront_saved_total"), "times",
          "Winnow's yearly CO2e / ZIN's one-off saving"),
+        ("comparison", "structure_share_of_tonnes_saved", zin("structure_kept") / (zin("structure_kept") + ikea_t) * 100,
+         "%", "structure_kept / (structure_kept + food_saved_to_2022)"),
+        ("comparison", "food_share_of_tonnes_saved", ikea_t / (zin("structure_kept") + ikea_t) * 100, "%",
+         "food_saved_to_2022 / (structure_kept + food_saved_to_2022)"),
+        ("comparison", "food_share_of_carbon_saved",
+         ikea("co2e_avoided") / (ikea("co2e_avoided") + zin("upfront_saved_total")) * 100, "%",
+         "co2e_avoided / (co2e_avoided + upfront_saved_total); CO2e and CO2, total to 2022 and one-off"),
         ("comparison", "food_vs_structure_per_tonne", (ikea("co2e_avoided") / ikea_t) / zin_ratio, "times",
          "IKEA's CO2e per tonne of food / ZIN's CO2 per tonne of structure kept"),
     ]
