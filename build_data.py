@@ -102,7 +102,7 @@ PAGE_K = next(key for key, k in REPLACEMENTS.items() if k == REPLACEMENT)
 
 # Countries whose figures the explorers flag, and why
 EXPLORER_WARNINGS = {
-    "RO": "imputed_use",       # material use imputed by Eurostat for 2010 to 2018; reported minerals then jump
+    "RO": "imputed_use",       # material use imputed by Eurostat for 2009 to 2019; reported minerals then jump
     "SE": "recycling_jump",    # recycled waste doubled from 2020 to 2022, in mineral wastes unpublished by category
     "EE": "swings",            # rates that swing by several points on recycling alone
     "FI": "swings",
