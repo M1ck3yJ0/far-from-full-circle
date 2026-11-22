@@ -627,8 +627,8 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix):
             return np.nan
         return sum(min(1.0, k * need * wm.loc[g, "share_of_not_recycled_pct"] / 100 / dmc("EU27_2020", FLOW_MATERIALS[g], YEAR))
                    * WEIGHT_VS_CLIMATE[g][1] for g in FLOW_MATERIALS)
-    per_point = 0.01 * T
-    cut_slope = per_point * (1 - target) / target / D * 100
+    per_pct = 0.01 * T                        # 1% of treated waste, kt
+    cut_slope = per_pct * (1 - target) / target / D * 100
     eu_steps = steps[steps["geo"] == "EU27_2020"]
     fell = eu_steps[eu_steps["consumption_change_pct"] < 0]
     no_fossil = D - dmc("EU27_2020", "MF4", YEAR)
@@ -668,8 +668,8 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix):
              f"{k} x extra recycled at 70% / DMC"),
             (f"gone_without_at_70pct_{key}", eu[f"gone_without_for_eu_target_70pct_recycled_{key}_pct"], "%",
              f"less_new_material_at_70pct_recycled - replaced_at_70pct_{key}"),
-            (f"gone_without_per_point_recycled_{key}", cut_slope + k * per_point / D * 100, "% per point",
-             f"each point of treated waste recycled: cut falls by 1% of T x 0.76 / 0.24 / DMC, and recycling stands in for {k} x 1% of T / DMC more"),
+            (f"gone_without_per_1pct_recycled_{key}", cut_slope + k * per_pct / D * 100, "% per 1% of waste recycled",
+             f"each 1% of treated waste recycled: cut falls by 1% of T x 0.76 / 0.24 / DMC, and recycling stands in for {k} x 1% of T / DMC more"),
             (f"climate_cut_by_recycling_at_70pct_{key}", tl.loc[(key, tl.loc[key].index.max()), "climate_cut_by_recycling_pct"], "%",
              "two_levers at 70%: climate impact removed by recycling alone, at each group's average impact per tonne"),
             (f"climate_cut_by_recycling_at_close_{key}", close_climate(k), "%",
@@ -680,30 +680,30 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix):
              "countries", "rate at 70% recycled, recycling alone, at or above 24%"),
         ]],
         ("replacement", REPLACEMENT, "new t per recycled t", "the page's assumed midpoint; the tables also carry 0 and 1"),
-        ("cut_per_point_recycled", cut_slope, "% per point", "1% of T x 0.76 / 0.24 / DMC; the same at every replacement"),
+        ("cut_per_1pct_recycled", cut_slope, "% per 1% of waste recycled", "1% of T x 0.76 / 0.24 / DMC; the same at every replacement"),
         ("not_recycled_minerals_share", wm.loc["Non-metallic minerals", "share_of_not_recycled_pct"], "%",
          "env_wassd: minerals' treated less recycled over all four groups'"),
         ("not_recycled_biomass_share", wm.loc["Biomass", "share_of_not_recycled_pct"], "%", "as above"),
         ("not_recycled_fossil_share", wm.loc["Fossil fuels", "share_of_not_recycled_pct"], "%", "as above"),
         ("not_recycled_metals_share", wm.loc["Metal ores", "share_of_not_recycled_pct"], "%", "as above"),
         ("climate_total", CLIMATE_TOTAL_MT, "Mt CO2e", "ETC CE Report 2025/3, Table 3-1, 2022"),
-        (f"waterfall_change_{S0}_{B}", eu_steps["rate_change_pts"].sum(), "pts", "sum of EU steps"),
-        (f"waterfall_recycling_{S0}_{B}", eu_steps["recycling_effect_pts"].sum(), "pts", "sum of recycling effects"),
-        (f"waterfall_using_less_{S0}_{B}", eu_steps["consumption_effect_pts"].sum(), "pts", "sum of consumption effects"),
-        ("step_2008_2010_change", st.loc[("EU27_2020", 2008), "rate_change_pts"], "pts", "trend_steps"),
+        (f"waterfall_change_{S0}_{B}", eu_steps["rate_change_pts"].sum(), "change in rate", "sum of EU steps"),
+        (f"waterfall_recycling_{S0}_{B}", eu_steps["recycling_effect_pts"].sum(), "change in rate", "sum of recycling effects"),
+        (f"waterfall_using_less_{S0}_{B}", eu_steps["consumption_effect_pts"].sum(), "change in rate", "sum of consumption effects"),
+        ("step_2008_2010_change", st.loc[("EU27_2020", 2008), "rate_change_pts"], "change in rate", "trend_steps"),
         ("step_2008_2010_use_share", st.loc[("EU27_2020", 2008), "consumption_effect_pts"]
          / st.loc[("EU27_2020", 2008), "rate_change_pts"] * 100, "%", "consumption effect / change"),
         ("step_2008_2010_use_change", st.loc[("EU27_2020", 2008), "consumption_change_pct"], "%", "trend_steps"),
-        (f"step_{A}_{B}_change", st.loc[("EU27_2020", A), "rate_change_pts"], "pts", "trend_steps; 2024 estimated"),
+        (f"step_{A}_{B}_change", st.loc[("EU27_2020", A), "rate_change_pts"], "change in rate", "trend_steps; 2024 estimated"),
         (f"step_{A}_{B}_use_share", st.loc[("EU27_2020", A), "consumption_effect_pts"]
          / st.loc[("EU27_2020", A), "rate_change_pts"] * 100, "%", "consumption effect / change"),
         (f"step_{A}_{B}_use_change", st.loc[("EU27_2020", A), "consumption_change_pct"], "%", "trend_steps"),
         ("steps_using_less_added", eu_steps.loc[eu_steps["consumption_change_pct"] < 0, "consumption_effect_pts"].sum(),
-         "pts", "consumption effects in steps when use fell"),
+         "change in rate", "consumption effects in steps when use fell"),
         ("steps_using_more_took_back", eu_steps.loc[eu_steps["consumption_change_pct"] >= 0, "consumption_effect_pts"].sum(),
-         "pts", "consumption effects in steps when use rose"),
-        ("pace_needed_per_year", (target * 100 - eu.rate_pct) / (2030 - YEAR), "pts a year", "(24 - rate) / 8"),
-        (f"pace_{S0}_{B}_per_year", eu_steps["rate_change_pts"].sum() / (B - S0), "pts a year", "change over the steps / years"),
+         "change in rate", "consumption effects in steps when use rose"),
+        ("pace_needed_per_year", (target * 100 - eu.rate_pct) / (2030 - YEAR), "change in rate a year", "(24 - rate) / 8"),
+        (f"pace_{S0}_{B}_per_year", eu_steps["rate_change_pts"].sum() / (B - S0), "change in rate a year", "change over the steps / years"),
         ("use_per_person", dmc("EU27_2020", "TOTAL", YEAR, "T_HAB"), "t", "DMC per person"),
         ("use_per_person_a_day", dmc("EU27_2020", "TOTAL", YEAR, "T_HAB") * 1000 / 365, "kg", "DMC per person x 1000 / 365"),
         ("use_per_person_to_close_by_using_less", dmc("EU27_2020", "TOTAL", YEAR, "T_HAB")
@@ -769,7 +769,7 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix):
         ("nl_minerals_share_rank_lowest", int(mix["minerals_pct"].drop("EU27_2020").rank().loc["NL"]), "rank", "weight_mix, 1 = least"),
         ("nl_fossil_share_rank_highest", int(mix["fossil_pct"].drop("EU27_2020").rank(ascending=False).loc["NL"]), "rank",
          "weight_mix, 1 = most"),
-        (f"nl_step_{A}_{B}_change", st.loc[("NL", A), "rate_change_pts"], "pts", "trend_steps; 2024 estimated"),
+        (f"nl_step_{A}_{B}_change", st.loc[("NL", A), "rate_change_pts"], "change in rate", "trend_steps; 2024 estimated"),
         (f"nl_rate_{B}", st.loc[("NL", A), "rate_to_pct"], "%", "estimate"),
         (f"nl_step_{A}_{B}_use_share", st.loc[("NL", A), "consumption_effect_pts"]
          / st.loc[("NL", A), "rate_change_pts"] * 100, "%", "consumption effect / change"),
@@ -777,7 +777,7 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix):
         (f"nl_fall_{A}_{B}_fossil_share", fall("NL", "MF4", A, B) / nl_fall * 100, "%", "DMC fall"),
         (f"nl_fall_{A}_{B}_gas_share", fall("NL", "MF422", A, B) / nl_fall * 100, "%",
          "natural gas: extraction + imports - exports"),
-        ("nl_step_2014_2016_change", st.loc[("NL", 2014), "rate_change_pts"], "pts", "trend_steps"),
+        ("nl_step_2014_2016_change", st.loc[("NL", 2014), "rate_change_pts"], "change in rate", "trend_steps"),
         ("nl_step_2014_2016_use_change", st.loc[("NL", 2014), "consumption_change_pct"], "%", "trend_steps"),
         # 20b's country cards
         ("de_step_2022_2024_use_change", st.loc[("DE", 2022), "consumption_change_pct"], "%", "trend_steps; DMC reported"),
