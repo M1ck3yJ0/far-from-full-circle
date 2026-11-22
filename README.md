@@ -10,7 +10,7 @@ Most of what Europe uses never comes back as waste. Of every 100 tonnes of mater
 
 The EU wants to double the share of its materials that comes from recycled waste, to 24% by 2030. In 2022 it was 11.4%. Had Europe recycled every tonne of waste it treated that year, soil and mining rock included, its rate would have reached 23.7%: about the target, and no further. Leave out the soil and rock, and it reaches 15.4%. Latvia, Lithuania, Portugal, Croatia and Ireland would have stayed below 12% even recycling everything.
 
-The trend points the same way. From 2012 to 2022 the rate rose only 0.4 points. Europe recycled 8% more waste, but it also consumed 3% more material and treated 7% less waste. The most recycling could deliver has stayed between 23.7% and 25.8% since 2010, and on Eurostat's 2024 estimates it is 24.7%.
+The trend points the same way. From 2012 to 2022 the rate rose only from 11.0% to 11.4%. Europe recycled 8% more waste, but it also consumed 3% more material and treated 7% less waste. The most recycling could deliver has stayed between 23.7% and 25.8% since 2010, and on Eurostat's 2024 estimates it is 24.7%.
 
 Neither lever is practical alone at the scale 24% needs: recycling gets there only by reaching about 93% of the waste treated, 2.3 times 2022's, and only if each recycled tonne replaces half a new one, while using less gets there only with 59.3% less material, when the EU's biggest two-year fall on record was 14%. So what Europe cuts matters more than the rate: the waste left to recycle is mostly minerals, but most of the climate impact of making materials lies in biomass, fossil fuels and metal ores.
 
@@ -33,7 +33,7 @@ The published rate doesn't rebuild exactly from Eurostat's component tables, so 
 - The two levers together, for the EU: at each share of treated waste recycled from 2022's (41.1%) to 70%, circular use is U + (share - 2022's share) × treated, with waste held at 2022's tonnes, and the cut follows as above. The cut takes whole material groups in one of two orders, heaviest first or dirtiest per tonne first, on each group's share of Eurostat's consumption by weight and the climate shares of Figure 3-4 of ETC CE Report 2025/3. Imports fall in proportion to each group's use, from 2022's imports by material (env_ac_mfa). Recycling more removes no material, so it cuts neither measure. For a country, the cut falls in a straight line between the today and 70% columns of `ceilings_2022.csv`.
 - What moved the rate between two years: the recycling effect is U₂ / (U₂ + DMC₁) - r₁, and the consumption effect is U₁ / (U₁ + DMC₂) - r₁.
 - What moved the rate in each two-year step: the recycling effect is the change from U₁ to U₂ alone, averaged over holding consumption at DMC₁ and at DMC₂, so ½ × [(U₂ / (U₂ + DMC₁) - r₁) + (r₂ - U₁ / (U₁ + DMC₂))]. The consumption effect is the rest of the change, so the two add up to it. The EU's rate starts in 2004, each country's in 2010.
-- What each lever is worth, in points added to the 2022 rate with everything else unchanged: recycling all waste but soil and rock, and recycling every tonne, are the ceilings above minus the rate. Using 15% less of everything is U / (U + 0.85 × DMC) - r. Using no fossil fuels takes fossil energy materials out of DMC. Recycling all household waste adds the waste households generated (env_wasgen) to U: an upper bound, since it counts that waste as if none of it were recycled today.
+- What each lever is worth, as the change in the 2022 rate it brings with everything else unchanged: recycling all waste but soil and rock, and recycling every tonne, are the ceilings above minus the rate. Using 15% less of everything is U / (U + 0.85 × DMC) - r. Using no fossil fuels takes fossil energy materials out of DMC. Recycling all household waste adds the waste households generated (env_wasgen) to U: an upper bound, since it counts that waste as if none of it were recycled today.
 
 Waste is reported every two years, so the trend uses the even years from 2010 to 2024.
 
@@ -69,7 +69,7 @@ Built by `build_data.py` into `data/processed`:
 | `materials_2022.csv` | What each country consumed in 2022, in kg per person a day, by material group |
 | `loop_2022.csv` | Where each country's processed material went in 2022, in tonnes and out of every 100 tonnes |
 | `flows_by_material_2022.csv` | The same, by material, for the EU and the 13 member states that publish it |
-| `levers_2022.csv` | How many points each lever would add to each country's 2022 rate |
+| `levers_2022.csv` | How much each lever would raise each country's 2022 rate |
 | `two_levers_2022.csv` | For the EU in 2022, at each share of treated waste recycled from 2022's to 70%: the consumption cut the 24% target would need, and the share of climate impact and of imported tonnes that cut removes, heaviest first or dirtiest per tonne first |
 | `unrecycled_waste_2022.csv` | Waste treated but not recycled in 2022, other than soil and rock, by kind of waste |
 | `footprint_2022.csv` | What the EU's material footprint ended up as in 2022, and how much of each group was investment or spending |
