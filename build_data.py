@@ -25,8 +25,8 @@ data/processed/:
     flows_by_material_2022.csv
                              the same, by material, for the EU and the 13
                              member states that publish it
-    levers_2022.csv          how many points each lever would add to each
-                             country's 2022 rate
+    levers_2022.csv          how much each lever would raise each country's
+                             2022 rate
     two_levers_2022.csv      for the EU, the new material the 2030 target takes
                              away at each share of waste recycled from 2022's to
                              70%, how much of it recycling stands in for, and
@@ -104,7 +104,7 @@ PAGE_K = next(key for key, k in REPLACEMENTS.items() if k == REPLACEMENT)
 EXPLORER_WARNINGS = {
     "RO": "imputed_use",       # material use imputed by Eurostat for 2009 to 2019; reported minerals then jump
     "SE": "recycling_jump",    # recycled waste doubled from 2020 to 2022, in mineral wastes unpublished by category
-    "EE": "swings",            # rates that swing by several points on recycling alone
+    "EE": "swings",            # rates that swing widely on recycling alone
     "FI": "swings",
     "BG": "swings",
 }
@@ -145,7 +145,7 @@ LOOP_FLOWS = {
 }
 FLOW_MATERIALS = {"Non-metallic minerals": "MF3", "Biomass": "MF1", "Fossil fuels": "MF4", "Metal ores": "MF2"}
 
-# Levers, in points added to the 2022 rate with everything else unchanged
+# Levers, as the change in the 2022 rate each brings with everything else unchanged
 LEVERS = ["recycling_all_but_soil_rock", "recycling_every_tonne", "using_15pct_less", "using_no_fossil_fuels"]
 
 # Waste treated but not recycled, other than soil and rock, by kind (env_wastrt categories)
@@ -332,7 +332,7 @@ def load_generated():
 
 
 def levers_table(ceilings, mfa, households, names):
-    """Points each lever would add to the 2022 rate, with everything else unchanged.
+    """The change in the 2022 rate each lever would bring, with everything else unchanged.
     Recycling levers keep consumption as it is; using less keeps recycling as it is."""
     fossil = mfa[(mfa["material"] == "MF4") & (mfa["unit"] == "THS_T") & (mfa["year"] == YEAR)].set_index("geo")["value"]
     rows = []
