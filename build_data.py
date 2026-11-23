@@ -49,7 +49,9 @@ data/processed/:
                              (EU only, from ETC CE Report 2025/3)
     examples.csv             figures derived from the example datapoints in
                              data/examples, each with its calculation
-    far_from_full_circle_data.js       everything the web page draws, in one file
+    far_from_full_circle_data_build.js
+                             everything the web page draws, before the site's
+                             own blocks are merged in
 
 Tables are named by YEAR. To move the piece to a new year, replace the raw files,
 set YEAR (and LATEST_STEP_YEAR if the waterfall gains a step) and rerun; the script
@@ -1258,7 +1260,7 @@ def main():
     examples_table().round(3).to_csv(OUT / "examples.csv", index=False)
 
     # 8. Everything the web page draws
-    (OUT / "far_from_full_circle_data.js").write_text(
+    (OUT / "far_from_full_circle_data_build.js").write_text(
         page_data(ceilings, trend, steps, materials, mix, loop, flows_m, levers, unrecycled, generated,
                   loop.set_index("geo").loc["EU27_2020", "back_as_waste_kt"], footprint, climate, by_material,
                   dmc_by_group, names, geos),
