@@ -1,29 +1,63 @@
-example,metric,value,unit,calculation
-zin,benchmark_upfront_per_m2,561.0,kg CO2/m2,"upfront_per_m2 + upfront_saved_per_m2, reading the 377 as the whole building"
-zin,building_upfront_cut_check,32.799,%,"upfront_saved_per_m2 / benchmark_upfront_per_m2, against the paper's 33%"
-zin,structure_benchmark_per_m2,368.0,kg CO2/m2,upfront_saved_per_m2 / structure_upfront_cut
-zin,implied_area,116304.348,m2,upfront_saved_total / upfront_saved_per_m2; the paper doesn't state its area basis
-zin,original_structure,201176.471,t,structure_kept / structure_kept_share
-zin,slabs_demolished,30176.471,t,original_structure - structure_kept
-zin,co2_per_tonne_kept,0.125,t CO2 per t,upfront_saved_total / structure_kept
-zin,tonnes_kept_per_tonne_co2,7.991,t per t CO2,structure_kept / upfront_saved_total
-zin,tonnes_kept_per_tonne_recycled,5.7,t per t,structure_kept / rubble_to_aggregate
-zin,module_d_credit_per_m2,71.0,kg CO2/m2,whole_life_per_m2 - whole_life_with_credits_per_m2
-zin,existing_reused_or_recycled_share,94.0,%,existing_reused_on_site_share + existing_recycled_share
-ikea,winnow_kg_per_meal,0.444,kg,winnow_food_saved_per_year / (winnow_meals_per_second x seconds in a year)
-ikea,winnow_co2e_per_tonne,4.357,t CO2e per t,winnow_co2e_per_year / winnow_food_saved_per_year; Winnow publishes no factor
-ikea,food_saved_to_2022,8878.742,t,"meals_saved x winnow_kg_per_meal; an estimate, as Ingka publishes meals, not tonnes"
-ikea,food_saved_fy17_fy25,21087.012,t,meals_saved_fy17_fy25 x winnow_kg_per_meal; an estimate
-ikea,food_saved_fy25,4261.796,t,meals_saved_fy25 x winnow_kg_per_meal; an estimate
-ikea,co2e_per_tonne,4.055,t CO2e per t,co2e_avoided / food_saved_to_2022
-ikea,share_of_winnow_2022_if_yearly,51.698,%,"meals the 36,000 t would mean if yearly, at Winnow's ratios, over Winnow's whole fleet in 2022"
-ikea,food_spend_saved_by_halving_low,2.5,%,kitchen_waste_share_low / 2
-ikea,food_spend_saved_by_halving_high,7.5,%,kitchen_waste_share_high / 2
-comparison,ikea_food_vs_zin_structure,5.192,%,food_saved_to_2022 / structure_kept
-comparison,ikea_co2e_vs_zin,1.682,times,IKEA's running total to 2022 / ZIN's one-off saving
-comparison,winnow_food_vs_zin_structure,16.374,%,Winnow's yearly food saved / structure_kept
-comparison,winnow_co2e_vs_zin,5.701,times,Winnow's yearly CO2e / ZIN's one-off saving
-comparison,structure_share_of_tonnes_saved,95.064,%,structure_kept / (structure_kept + food_saved_to_2022)
-comparison,food_share_of_tonnes_saved,4.936,%,food_saved_to_2022 / (structure_kept + food_saved_to_2022)
-comparison,food_share_of_carbon_saved,62.718,%,"co2e_avoided / (co2e_avoided + upfront_saved_total); CO2e and CO2, total to 2022 and one-off"
-comparison,food_vs_structure_per_tonne,32.399,times,IKEA's CO2e per tonne of food / ZIN's CO2 per tonne of structure kept
+example,metric,value,unit,calculation,f_numbers,sources
+zin,upfront_per_m2,377.0,kg CO2/m2,"as published (greisch_iabse2025, Section 5)",F50,greisch_iabse2025
+zin,upfront_saved_per_m2,184.0,kg CO2/m2,"as published (greisch_iabse2025, Section 5, Fig. 14)",F50,greisch_iabse2025
+zin,benchmark_upfront_per_m2,561.0,kg CO2/m2,"upfront_per_m2 + upfront_saved_per_m2, reading the 377 as the whole building",F50,greisch_iabse2025
+zin,building_upfront_cut_check,32.799,%,"upfront_saved_per_m2 / benchmark_upfront_per_m2, against the paper's 33%",F50,greisch_iabse2025
+zin,building_upfront_cut,33.0,%,"as published (greisch_iabse2025, Section 5)",F50,greisch_iabse2025
+zin,structure_upfront_cut,50.0,%,"as published (greisch_iabse2025, Section 5, Fig. 14)",,greisch_iabse2025
+zin,structure_benchmark_per_m2,368.0,kg CO2/m2,upfront_saved_per_m2 / structure_upfront_cut,F50,greisch_iabse2025
+zin,upfront_saved_total,21400.0,t CO2,"as published (greisch_iabse2025, Section 5, Fig. 14)",,greisch_iabse2025
+zin,implied_area,116304.348,m2,upfront_saved_total / upfront_saved_per_m2; the paper doesn't state its area basis,F50,greisch_iabse2025
+zin,fig14_benchmark_total,65000.0,t CO2,"as published (greisch_iabse2025, Fig. 14)",F50,greisch_iabse2025
+zin,fig14_upfront_total,43500.0,t CO2,"as published (greisch_iabse2025, Fig. 14)",F50,greisch_iabse2025
+zin,fig14_benchmark_area,115864.528,m2,fig14_benchmark_total / benchmark_upfront_per_m2,F50,greisch_iabse2025
+zin,fig14_upfront_area,115384.615,m2,fig14_upfront_total / upfront_per_m2,F50,greisch_iabse2025
+zin,built_area_architects,115000.0,m2,as published (51n4e),F35,51n4e
+zin,floor_area_above_ground,110000.0,m2,"as published (greisch_iabse2025, Section 2)",F35,greisch_iabse2025
+zin,floor_area_basements,35000.0,m2,"as published (greisch_iabse2025, Section 2)",,greisch_iabse2025
+zin,structure_kept,171000.0,t,"as published (greisch_iabse2025, Section 3.1)",F50,greisch_iabse2025
+zin,structure_kept_share,85.0,%,"as published (greisch_iabse2025, Section 3.1)",,greisch_iabse2025
+zin,original_structure,201176.471,t,structure_kept / structure_kept_share,F50,greisch_iabse2025
+zin,slabs_demolished,30176.471,t,original_structure - structure_kept,F50,greisch_iabse2025
+zin,slabs_share_of_structure,15.0,%,100 - structure_kept_share,,greisch_iabse2025
+zin,rubble_to_aggregate,30000.0,t,"as published (greisch_iabse2025, Abstract)",F51,greisch_iabse2025
+zin,aggregate_into_zin,3500.0,t,"as published (greisch_iabse2025, Fig. 5)",F51,greisch_iabse2025
+zin,aggregate_radius,15.0,km,"as published (greisch_iabse2025, Section 3.3, Fig. 5)",F51,greisch_iabse2025
+zin,tonnes_kept_per_tonne_recycled,5.7,t per t,structure_kept / rubble_to_aggregate,F50; F51,greisch_iabse2025
+zin,tonnes_kept_per_tonne_into_zin,48.857,t per t,structure_kept / aggregate_into_zin,F50; F51,greisch_iabse2025
+zin,co2_per_tonne_kept,0.125,t CO2 per t,upfront_saved_total / structure_kept,F50,greisch_iabse2025
+zin,tonnes_kept_per_tonne_co2,7.991,t per t CO2,structure_kept / upfront_saved_total,F50,greisch_iabse2025
+zin,module_d_credit_per_m2,71.0,kg CO2/m2,whole_life_per_m2 - whole_life_with_credits_per_m2,,greisch_iabse2025
+zin,existing_reused_or_recycled_share,94.0,%,existing_reused_on_site_share + existing_recycled_share,,greisch_iabse2025
+ikea,food_waste_cut,57.8,%,"as published (ingka_fy22, Pages 11, 14 and 64)",F36,ingka_fy22
+ikea,heap_2022_share_of_2017,42.2,%,100 - food_waste_cut: 2022's heap's area as a share of 2017's (make_heaps.py),F36,ingka_fy22
+ikea,food_waste_cut_fy24,60.5,%,as published (ingka_fy24),F36,ingka_fy24
+ikea,meals_saved,20000000.0,meals,"as published (ingka2022, Headline)",F66,ingka2022
+ikea,co2e_avoided,36000.0,t CO2e,"as published (ingka2022, Body)",F66,ingka2022
+ikea,restaurants,400.0,restaurants,as published (wri_ikea),,wri_ikea
+ikea,ingka_share_of_ikea_sales,87.0,%,as published (ingka_faq),F36,ingka_faq
+ikea,ikea_franchisees,12.0,franchisees,as published (ingka_faq),F36,ingka_faq
+ikea,ingka_stake_in_winnow,2019.0,year,"as published (ingka2022, About Winnow)",,ingka2022
+ikea,kitchen_waste_share_low,5.0,%,as published (winnow2026),,winnow2026
+ikea,kitchen_waste_share_high,15.0,%,as published (winnow2026),,winnow2026
+ikea,food_spend_saved_by_halving_low,2.5,%,kitchen_waste_share_low / 2,,winnow2026
+ikea,food_spend_saved_by_halving_high,7.5,%,kitchen_waste_share_high / 2,,winnow2026
+ikea,winnow_food_saved_per_year,28000.0,t,as published (winnow2026),,winnow2026
+ikea,winnow_co2e_per_year,122000.0,t CO2e,as published (winnow2026),,winnow2026
+ikea,winnow_meals_per_second,2.0,meals,as published (winnow2026),,winnow2026
+ikea,winnow_kg_per_meal,0.444,kg,winnow_food_saved_per_year / (winnow_meals_per_second x seconds in a year),,winnow2026
+ikea,winnow_co2e_per_tonne,4.357,t CO2e per t,winnow_co2e_per_year / winnow_food_saved_per_year; Winnow publishes no factor,,winnow2026
+ikea,food_saved_to_2022,8878.742,t,"meals_saved x winnow_kg_per_meal; an estimate, as Ingka publishes meals, not tonnes",F66,ingka2022; winnow2026
+ikea,food_saved_fy17_fy25,21087.012,t,meals_saved_fy17_fy25 x winnow_kg_per_meal; an estimate,F66,ingka_fy25; winnow2026
+ikea,food_saved_fy25,4261.796,t,meals_saved_fy25 x winnow_kg_per_meal; an estimate,F66,ingka_fy25; winnow2026
+ikea,co2e_per_tonne,4.055,t CO2e per t,co2e_avoided / food_saved_to_2022; both totals since FY17,F66,ingka2022; winnow2026
+ikea,share_of_winnow_2022_if_yearly,51.698,%,"meals the 36,000 t would mean if yearly, at Winnow's ratios, over Winnow's whole fleet in 2022",F66,ingka2022; winnow2026
+comparison,structure_share_of_tonnes_saved,95.064,%,structure_kept / (structure_kept + food_saved_to_2022),F50; F66,greisch_iabse2025; ingka2022; winnow2026
+comparison,food_share_of_tonnes_saved,4.936,%,food_saved_to_2022 / (structure_kept + food_saved_to_2022),F50; F66,greisch_iabse2025; ingka2022; winnow2026
+comparison,structure_share_of_carbon_saved,37.282,%,"upfront_saved_total / (co2e_avoided + upfront_saved_total); CO2 and CO2e, one-off and total since FY17",F66,greisch_iabse2025; ingka2022
+comparison,food_share_of_carbon_saved,62.718,%,"co2e_avoided / (co2e_avoided + upfront_saved_total); CO2e and CO2, total since FY17 and one-off",F66,greisch_iabse2025; ingka2022
+comparison,food_vs_structure_per_tonne,32.399,times,ikea.co2e_per_tonne / zin.co2_per_tonne_kept; the page rounds it down to roughly 30,F50; F66,greisch_iabse2025; ingka2022; winnow2026
+comparison,ikea_food_vs_zin_structure,5.192,%,food_saved_to_2022 / structure_kept,F50; F66,greisch_iabse2025; ingka2022; winnow2026
+comparison,ikea_co2e_vs_zin,1.682,times,IKEA's total since FY17 / ZIN's one-off saving,F66,greisch_iabse2025; ingka2022
+comparison,winnow_food_vs_zin_structure,16.374,%,Winnow's yearly food saved / structure_kept,F50,greisch_iabse2025; winnow2026
+comparison,winnow_co2e_vs_zin,5.701,times,Winnow's yearly CO2e / ZIN's one-off saving,,greisch_iabse2025; winnow2026

@@ -47,8 +47,9 @@ data/processed/:
                              each material group's share of EU material use by
                              weight and by the climate impact of producing it
                              (EU only, from ETC CE Report 2025/3)
-    examples.csv             figures derived from the example datapoints in
-                             data/examples, each with its calculation
+    examples.csv             every figure the page states for its examples, from
+                             the datapoints in data/examples, each with its
+                             calculation, F numbers and sources
     far_from_full_circle_data_build.js
                              everything the web page draws, before the site's
                              own blocks are merged in
@@ -826,82 +827,172 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix):
 
 
 def examples_table():
-    """Figures derived from the example datapoints in data/examples/examples_input.csv, each
-    with its calculation. ZIN's carbon saving is one-off, Winnow's is yearly, and IKEA's is
-    a running total to 2022."""
-    inputs = pd.read_csv(EXAMPLES / "examples_input.csv")
-    v = inputs.dropna(subset=["value"]).set_index(["example", "metric"])["value"]
+    """Every figure the page states for its examples (ZIN, IKEA's kitchens and the two compared),
+    from the datapoints in data/examples/examples_input.csv, each with its calculation and the
+    register entries (F numbers) and sources behind its inputs. ZIN's carbon saving is one-off,
+    Winnow's yearly, and IKEA's a total since FY17 (F66)."""
+    inputs = pd.read_csv(EXAMPLES / "examples_input.csv").set_index(["example", "metric"])
+    v = inputs["value"].dropna()
     zin = lambda m: v[("zin", m)]
     ikea = lambda m: v[("ikea", m)]
+
+    def refs(names):
+        """The F numbers and source ids behind the named inputs, such as "zin.structure_kept"."""
+        rows = [inputs.loc[tuple(n.split("."))] for n in names]
+        fs = sorted({r["f_number"] for r in rows if isinstance(r["f_number"], str)}, key=lambda f: int(f[1:]))
+        return "; ".join(fs), "; ".join(sorted({r["source_id"] for r in rows if isinstance(r["source_id"], str)}))
+
+    def given(example, metric):
+        """An input the page states as published."""
+        r = inputs.loc[(example, metric)]
+        where = f"{r['source_id']}, {r['locator']}" if isinstance(r["locator"], str) else r["source_id"]
+        return (example, metric, r["value"], r["unit"], f"as published ({where})", [f"{example}.{metric}"])
 
     kg_per_meal = ikea("winnow_food_saved_per_year") * 1000 / (ikea("winnow_meals_per_second") * SECONDS_A_YEAR)
     winnow_ratio = ikea("winnow_co2e_per_year") / ikea("winnow_food_saved_per_year")
     ikea_t = ikea("meals_saved") * kg_per_meal / 1000
+    ikea_ratio = ikea("co2e_avoided") / ikea_t
     benchmark = zin("upfront_per_m2") + zin("upfront_saved_per_m2")
     original = zin("structure_kept") / (zin("structure_kept_share") / 100)
     zin_ratio = zin("upfront_saved_total") / zin("structure_kept")
+    both_t = zin("structure_kept") + ikea_t
+    both_c = zin("upfront_saved_total") + ikea("co2e_avoided")
+    WINNOW = ["ikea.winnow_food_saved_per_year", "ikea.winnow_meals_per_second"]
+    IKEA_T = ["ikea.meals_saved"] + WINNOW
+    ZIN_PT = ["zin.upfront_saved_total", "zin.structure_kept"]
+    IKEA_PT = ["ikea.co2e_avoided"] + IKEA_T
     rows = [
+        # ZIN, panel 12 and its note
+        given("zin", "upfront_per_m2"),
+        given("zin", "upfront_saved_per_m2"),
         ("zin", "benchmark_upfront_per_m2", benchmark, "kg CO2/m2",
-         "upfront_per_m2 + upfront_saved_per_m2, reading the 377 as the whole building"),
+         "upfront_per_m2 + upfront_saved_per_m2, reading the 377 as the whole building",
+         ["zin.upfront_per_m2", "zin.upfront_saved_per_m2"]),
         ("zin", "building_upfront_cut_check", zin("upfront_saved_per_m2") / benchmark * 100, "%",
-         "upfront_saved_per_m2 / benchmark_upfront_per_m2, against the paper's 33%"),
+         "upfront_saved_per_m2 / benchmark_upfront_per_m2, against the paper's 33%",
+         ["zin.upfront_per_m2", "zin.upfront_saved_per_m2"]),
+        given("zin", "building_upfront_cut"),
+        given("zin", "structure_upfront_cut"),
         ("zin", "structure_benchmark_per_m2", zin("upfront_saved_per_m2") / (zin("structure_upfront_cut") / 100),
-         "kg CO2/m2", "upfront_saved_per_m2 / structure_upfront_cut"),
+         "kg CO2/m2", "upfront_saved_per_m2 / structure_upfront_cut",
+         ["zin.upfront_saved_per_m2", "zin.structure_upfront_cut"]),
+        given("zin", "upfront_saved_total"),
         ("zin", "implied_area", zin("upfront_saved_total") * 1000 / zin("upfront_saved_per_m2"), "m2",
-         "upfront_saved_total / upfront_saved_per_m2; the paper doesn't state its area basis"),
-        ("zin", "original_structure", original, "t", "structure_kept / structure_kept_share"),
-        ("zin", "slabs_demolished", original - zin("structure_kept"), "t", "original_structure - structure_kept"),
-        ("zin", "co2_per_tonne_kept", zin_ratio, "t CO2 per t", "upfront_saved_total / structure_kept"),
-        ("zin", "tonnes_kept_per_tonne_co2", 1 / zin_ratio, "t per t CO2", "structure_kept / upfront_saved_total"),
+         "upfront_saved_total / upfront_saved_per_m2; the paper doesn't state its area basis",
+         ["zin.upfront_saved_total", "zin.upfront_saved_per_m2"]),
+        given("zin", "fig14_benchmark_total"),
+        given("zin", "fig14_upfront_total"),
+        ("zin", "fig14_benchmark_area", zin("fig14_benchmark_total") * 1000 / benchmark, "m2",
+         "fig14_benchmark_total / benchmark_upfront_per_m2",
+         ["zin.fig14_benchmark_total", "zin.upfront_per_m2", "zin.upfront_saved_per_m2"]),
+        ("zin", "fig14_upfront_area", zin("fig14_upfront_total") * 1000 / zin("upfront_per_m2"), "m2",
+         "fig14_upfront_total / upfront_per_m2", ["zin.fig14_upfront_total", "zin.upfront_per_m2"]),
+        given("zin", "built_area_architects"),
+        given("zin", "floor_area_above_ground"),
+        given("zin", "floor_area_basements"),
+        given("zin", "structure_kept"),
+        given("zin", "structure_kept_share"),
+        ("zin", "original_structure", original, "t", "structure_kept / structure_kept_share",
+         ["zin.structure_kept", "zin.structure_kept_share"]),
+        ("zin", "slabs_demolished", original - zin("structure_kept"), "t", "original_structure - structure_kept",
+         ["zin.structure_kept", "zin.structure_kept_share"]),
+        ("zin", "slabs_share_of_structure", 100 - zin("structure_kept_share"), "%", "100 - structure_kept_share",
+         ["zin.structure_kept_share"]),
+        given("zin", "rubble_to_aggregate"),
+        given("zin", "aggregate_into_zin"),
+        given("zin", "aggregate_radius"),
         ("zin", "tonnes_kept_per_tonne_recycled", zin("structure_kept") / zin("rubble_to_aggregate"), "t per t",
-         "structure_kept / rubble_to_aggregate"),
+         "structure_kept / rubble_to_aggregate", ["zin.structure_kept", "zin.rubble_to_aggregate"]),
+        ("zin", "tonnes_kept_per_tonne_into_zin", zin("structure_kept") / zin("aggregate_into_zin"), "t per t",
+         "structure_kept / aggregate_into_zin", ["zin.structure_kept", "zin.aggregate_into_zin"]),
+        ("zin", "co2_per_tonne_kept", zin_ratio, "t CO2 per t", "upfront_saved_total / structure_kept", ZIN_PT),
+        ("zin", "tonnes_kept_per_tonne_co2", 1 / zin_ratio, "t per t CO2", "structure_kept / upfront_saved_total", ZIN_PT),
         ("zin", "module_d_credit_per_m2", zin("whole_life_per_m2") - zin("whole_life_with_credits_per_m2"),
-         "kg CO2/m2", "whole_life_per_m2 - whole_life_with_credits_per_m2"),
+         "kg CO2/m2", "whole_life_per_m2 - whole_life_with_credits_per_m2",
+         ["zin.whole_life_per_m2", "zin.whole_life_with_credits_per_m2"]),
         ("zin", "existing_reused_or_recycled_share",
          zin("existing_reused_on_site_share") + zin("existing_recycled_share"), "%",
-         "existing_reused_on_site_share + existing_recycled_share"),
+         "existing_reused_on_site_share + existing_recycled_share",
+         ["zin.existing_reused_on_site_share", "zin.existing_recycled_share"]),
+        # IKEA's kitchens, panel 18 and its note
+        given("ikea", "food_waste_cut"),
+        ("ikea", "heap_2022_share_of_2017", 100 - ikea("food_waste_cut"), "%",
+         "100 - food_waste_cut: 2022's heap's area as a share of 2017's (make_heaps.py)", ["ikea.food_waste_cut"]),
+        given("ikea", "food_waste_cut_fy24"),
+        given("ikea", "meals_saved"),
+        given("ikea", "co2e_avoided"),
+        given("ikea", "restaurants"),
+        given("ikea", "ingka_share_of_ikea_sales"),
+        given("ikea", "ikea_franchisees"),
+        given("ikea", "ingka_stake_in_winnow"),
+        given("ikea", "kitchen_waste_share_low"),
+        given("ikea", "kitchen_waste_share_high"),
+        ("ikea", "food_spend_saved_by_halving_low", ikea("kitchen_waste_share_low") / 2, "%",
+         "kitchen_waste_share_low / 2", ["ikea.kitchen_waste_share_low"]),
+        ("ikea", "food_spend_saved_by_halving_high", ikea("kitchen_waste_share_high") / 2, "%",
+         "kitchen_waste_share_high / 2", ["ikea.kitchen_waste_share_high"]),
+        # Winnow's fleet, behind IKEA's tonnes of food
+        given("ikea", "winnow_food_saved_per_year"),
+        given("ikea", "winnow_co2e_per_year"),
+        given("ikea", "winnow_meals_per_second"),
         ("ikea", "winnow_kg_per_meal", kg_per_meal, "kg",
-         "winnow_food_saved_per_year / (winnow_meals_per_second x seconds in a year)"),
+         "winnow_food_saved_per_year / (winnow_meals_per_second x seconds in a year)", WINNOW),
         ("ikea", "winnow_co2e_per_tonne", winnow_ratio, "t CO2e per t",
-         "winnow_co2e_per_year / winnow_food_saved_per_year; Winnow publishes no factor"),
+         "winnow_co2e_per_year / winnow_food_saved_per_year; Winnow publishes no factor",
+         ["ikea.winnow_co2e_per_year", "ikea.winnow_food_saved_per_year"]),
         ("ikea", "food_saved_to_2022", ikea_t, "t",
-         "meals_saved x winnow_kg_per_meal; an estimate, as Ingka publishes meals, not tonnes"),
+         "meals_saved x winnow_kg_per_meal; an estimate, as Ingka publishes meals, not tonnes", IKEA_T),
         ("ikea", "food_saved_fy17_fy25", ikea("meals_saved_fy17_fy25") * kg_per_meal / 1000, "t",
-         "meals_saved_fy17_fy25 x winnow_kg_per_meal; an estimate"),
+         "meals_saved_fy17_fy25 x winnow_kg_per_meal; an estimate", ["ikea.meals_saved_fy17_fy25"] + WINNOW),
         ("ikea", "food_saved_fy25", ikea("meals_saved_fy25") * kg_per_meal / 1000, "t",
-         "meals_saved_fy25 x winnow_kg_per_meal; an estimate"),
-        ("ikea", "co2e_per_tonne", ikea("co2e_avoided") / ikea_t, "t CO2e per t", "co2e_avoided / food_saved_to_2022"),
+         "meals_saved_fy25 x winnow_kg_per_meal; an estimate", ["ikea.meals_saved_fy25"] + WINNOW),
+        ("ikea", "co2e_per_tonne", ikea_ratio, "t CO2e per t",
+         "co2e_avoided / food_saved_to_2022; both totals since FY17", IKEA_PT),
         ("ikea", "share_of_winnow_2022_if_yearly",
          ikea("co2e_avoided") / winnow_ratio * 1000 / kg_per_meal / ikea("winnow_meals_per_year_2022") * 100, "%",
-         "meals the 36,000 t would mean if yearly, at Winnow's ratios, over Winnow's whole fleet in 2022"),
-        ("ikea", "food_spend_saved_by_halving_low", ikea("kitchen_waste_share_low") / 2, "%",
-         "kitchen_waste_share_low / 2"),
-        ("ikea", "food_spend_saved_by_halving_high", ikea("kitchen_waste_share_high") / 2, "%",
-         "kitchen_waste_share_high / 2"),
+         "meals the 36,000 t would mean if yearly, at Winnow's ratios, over Winnow's whole fleet in 2022",
+         ["ikea.co2e_avoided", "ikea.winnow_co2e_per_year", "ikea.winnow_meals_per_year_2022"] + WINNOW),
+        # The two compared, panel 20 and its note: each column is 100% of what the two saved together
+        ("comparison", "structure_share_of_tonnes_saved", zin("structure_kept") / both_t * 100, "%",
+         "structure_kept / (structure_kept + food_saved_to_2022)", ["zin.structure_kept"] + IKEA_T),
+        ("comparison", "food_share_of_tonnes_saved", ikea_t / both_t * 100, "%",
+         "food_saved_to_2022 / (structure_kept + food_saved_to_2022)", ["zin.structure_kept"] + IKEA_T),
+        ("comparison", "structure_share_of_carbon_saved", zin("upfront_saved_total") / both_c * 100, "%",
+         "upfront_saved_total / (co2e_avoided + upfront_saved_total); CO2 and CO2e, one-off and total since FY17",
+         ["zin.upfront_saved_total", "ikea.co2e_avoided"]),
+        ("comparison", "food_share_of_carbon_saved", ikea("co2e_avoided") / both_c * 100, "%",
+         "co2e_avoided / (co2e_avoided + upfront_saved_total); CO2e and CO2, total since FY17 and one-off",
+         ["zin.upfront_saved_total", "ikea.co2e_avoided"]),
+        ("comparison", "food_vs_structure_per_tonne", ikea_ratio / zin_ratio, "times",
+         "ikea.co2e_per_tonne / zin.co2_per_tonne_kept; the page rounds it down to roughly 30", ZIN_PT + IKEA_PT),
         ("comparison", "ikea_food_vs_zin_structure", ikea_t / zin("structure_kept") * 100, "%",
-         "food_saved_to_2022 / structure_kept"),
+         "food_saved_to_2022 / structure_kept", ["zin.structure_kept"] + IKEA_T),
         ("comparison", "ikea_co2e_vs_zin", ikea("co2e_avoided") / zin("upfront_saved_total"), "times",
-         "IKEA's running total to 2022 / ZIN's one-off saving"),
+         "IKEA's total since FY17 / ZIN's one-off saving", ["zin.upfront_saved_total", "ikea.co2e_avoided"]),
         ("comparison", "winnow_food_vs_zin_structure",
          ikea("winnow_food_saved_per_year") / zin("structure_kept") * 100, "%",
-         "Winnow's yearly food saved / structure_kept"),
+         "Winnow's yearly food saved / structure_kept", ["ikea.winnow_food_saved_per_year", "zin.structure_kept"]),
         ("comparison", "winnow_co2e_vs_zin", ikea("winnow_co2e_per_year") / zin("upfront_saved_total"), "times",
-         "Winnow's yearly CO2e / ZIN's one-off saving"),
-        ("comparison", "structure_share_of_tonnes_saved", zin("structure_kept") / (zin("structure_kept") + ikea_t) * 100,
-         "%", "structure_kept / (structure_kept + food_saved_to_2022)"),
-        ("comparison", "food_share_of_tonnes_saved", ikea_t / (zin("structure_kept") + ikea_t) * 100, "%",
-         "food_saved_to_2022 / (structure_kept + food_saved_to_2022)"),
-        ("comparison", "food_share_of_carbon_saved",
-         ikea("co2e_avoided") / (ikea("co2e_avoided") + zin("upfront_saved_total")) * 100, "%",
-         "co2e_avoided / (co2e_avoided + upfront_saved_total); CO2e and CO2, total to 2022 and one-off"),
-        ("comparison", "food_vs_structure_per_tonne", (ikea("co2e_avoided") / ikea_t) / zin_ratio, "times",
-         "IKEA's CO2e per tonne of food / ZIN's CO2 per tonne of structure kept"),
+         "Winnow's yearly CO2e / ZIN's one-off saving", ["ikea.winnow_co2e_per_year", "zin.upfront_saved_total"]),
     ]
-    return pd.DataFrame(rows, columns=["example", "metric", "value", "unit", "calculation"])
+    table = [(e, m, val, unit, calc, *refs(names)) for e, m, val, unit, calc, names in rows]
+    return pd.DataFrame(table, columns=["example", "metric", "value", "unit", "calculation", "f_numbers", "sources"])
+
+
+def examples_block(examples):
+    """The examples' figures the page draws (panels 12, 18 and 20), from examples.csv."""
+    v = examples.set_index(["example", "metric"])["value"]
+    num = lambda x: int(x) if float(x).is_integer() else round(float(x), 3)
+    return {
+        "zin": {m: num(v[("zin", m)]) for m in ["benchmark_upfront_per_m2", "upfront_per_m2", "upfront_saved_per_m2",
+                                                 "upfront_saved_total", "structure_kept"]},
+        "ikea": {m: num(v[("ikea", m)]) for m in ["food_waste_cut", "food_waste_cut_fy24", "meals_saved", "co2e_avoided",
+                                                   "food_saved_to_2022"]},
+    }
 
 
 def page_data(ceilings, trend, steps, materials, mix, loop, flows_m, levers, unrecycled, generated,
-              waste_in_flows_kt, footprint, climate, by_material, dmc_by_group, names, geos):
+              waste_in_flows_kt, footprint, climate, by_material, dmc_by_group, names, geos, examples):
     """Everything the web page draws, rounded for display, as one JavaScript file."""
     def r(x, digits=2):
         return None if pd.isna(x) else round(float(x), digits)
@@ -1014,6 +1105,7 @@ def page_data(ceilings, trend, steps, materials, mix, loop, flows_m, levers, unr
         },
         "weight_vs_climate": [{k: (r(v) if isinstance(v, float) else v) for k, v in row.items()}
                               for row in climate.to_dict("records")],
+        "examples": examples_block(examples),
     }
     return "window.FAR_FROM_FULL_CIRCLE_DATA = " + json.dumps(data, separators=(",", ":"), ensure_ascii=False) + ";\n"
 
@@ -1257,13 +1349,14 @@ def main():
     climate.round(3).to_csv(OUT / f"weight_vs_climate_{YEAR}.csv", index=False)
 
     # 7b. What the example datapoints imply
-    examples_table().round(3).to_csv(OUT / "examples.csv", index=False)
+    examples = examples_table()
+    examples.round(3).to_csv(OUT / "examples.csv", index=False)
 
     # 8. Everything the web page draws
     (OUT / "far_from_full_circle_data_build.js").write_text(
         page_data(ceilings, trend, steps, materials, mix, loop, flows_m, levers, unrecycled, generated,
                   loop.set_index("geo").loc["EU27_2020", "back_as_waste_kt"], footprint, climate, by_material,
-                  dmc_by_group, names, geos),
+                  dmc_by_group, names, geos, examples),
         encoding="utf-8")
 
     eu = ceilings.set_index("geo").loc["EU27_2020"]
