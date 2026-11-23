@@ -621,6 +621,26 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix, trend):
     fi_u22 = st.loc[("FI", 2022), "rate_from_pct"] / (100 - st.loc[("FI", 2022), "rate_from_pct"]) * dmc("FI", "TOTAL", 2022)
     fi_u24 = fi_u22 * recycled("FI", 2024) / recycled("FI", 2022)
 
+    # Where the waste not recycled went, EU and Ireland, YEAR: buried (landfilled or backfilled) or not
+    fate = read_eurostat(
+        "waste",
+        ["unit", "hazard", "wst_oper", "waste", "geo", "TIME_PERIOD", "OBS_VALUE", "CONF_STATUS"],
+        lambda d: d["geo"].isin(["EU27_2020", "IE"]) & (d["unit"] == "T") & (d["hazard"] == "HAZ_NHAZ")
+        & d["wst_oper"].isin(["TRT", "RCV_R", "RCV_B", "DSP_L", "DSP_L_OTH"]) & (d["waste"] == "TOTAL")
+        & (d["TIME_PERIOD"] == str(YEAR)),
+    ).set_index(["geo", "wst_oper"])["value"]
+
+    def not_recycled_share(geo, ops):
+        return sum(fate[(geo, o)] for o in ops) / (fate[(geo, "TRT")] - fate[(geo, "RCV_R")]) * 100
+
+    # Member states' rates, ranked from the lowest (ties share the lower rank)
+    ms_rates = trend[trend["geo"] != "EU27_2020"].set_index(["year", "geo"])["rate_pct"]
+
+    def rank_from_lowest(geo, year):
+        return int(ms_rates.loc[year].rank(method="min")[geo])
+    rate_at = trend[trend["geo"] == "EU27_2020"].set_index("year")["rate_pct"]
+    S1 = REPORTING_YEARS[0]
+
     def left(code):      # treated but not yet recycled, kt
         return wst[(code, "TRT")] - wst[(code, "RCV_R")]
     major_mineral = left("TOTAL") - left("TOT_X_MIN")
@@ -720,6 +740,24 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix, trend):
         ("steps_using_more_took_back", eu_steps.loc[eu_steps["consumption_change_pct"] >= 0, "consumption_effect_pts"].sum(),
          "change in rate", "consumption effects in steps when use rose"),
         ("pace_needed_per_year", (target * 100 - eu.rate_pct) / (2030 - YEAR), "change in rate a year", "(24 - rate) / 8"),
+        (f"rate_{B}", rate_at[B], "%", f"env_ac_cur, {B}: the newest published rate; imputed by Eurostat"),
+        (f"rate_{S1}", rate_at[S1], "%", f"env_ac_cur, {S1}: the first year with country rates"),
+        (f"rise_{S1}_{B}", rate_at[B] - rate_at[S1], "change in rate", f"rate in {B} - rate in {S1}"),
+        (f"pace_needed_per_year_from_{B}", (target * 100 - rate_at[B]) / (2030 - B), "change in rate a year",
+         f"(24 - rate in {B}) / {2030 - B}"),
+        (f"ireland_rank_from_lowest_{YEAR}", rank_from_lowest("IE", YEAR), "rank", "env_ac_cur, 27 member states, 1 the lowest"),
+        (f"ireland_rank_from_lowest_{B}", rank_from_lowest("IE", B), "rank",
+         "env_ac_cur, 27 member states, 1 the lowest; ties share the lower rank; imputed by Eurostat"),
+        ("not_recycled_buried_share", not_recycled_share("EU27_2020", ["DSP_L", "RCV_B"]), "%",
+         "env_wastrt: landfilled (D1, D5, D12) plus backfilled, over treated less recycled"),
+        ("not_recycled_landfill_and_other_disposal_share", not_recycled_share("EU27_2020", ["DSP_L_OTH"]), "%",
+         "env_wastrt: D1 to D7 and D12, over treated less recycled"),
+        ("not_recycled_backfilled_share", not_recycled_share("EU27_2020", ["RCV_B"]), "%",
+         "env_wastrt: backfilled, over treated less recycled"),
+        ("ireland_not_recycled_buried_share", not_recycled_share("IE", ["DSP_L", "RCV_B"]), "%",
+         "env_wastrt: as above, Ireland"),
+        ("ireland_not_recycled_backfilled_share", not_recycled_share("IE", ["RCV_B"]), "%",
+         "env_wastrt: backfilled, over treated less recycled, Ireland"),
         (f"pace_{S0}_{B}_per_year", eu_steps["rate_change_pts"].sum() / (B - S0), "change in rate a year", "change over the steps / years"),
         ("use_per_person", dmc("EU27_2020", "TOTAL", YEAR, "T_HAB"), "t", "DMC per person"),
         ("other_products_share", (dmc("EU27_2020", "MF5", YEAR) + dmc("EU27_2020", "MF6", YEAR))

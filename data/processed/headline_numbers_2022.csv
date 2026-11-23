@@ -73,6 +73,17 @@ step_2022_2024_use_change,-6.183,%,trend_steps
 steps_using_less_added,2.859,change in rate,consumption effects in steps when use fell
 steps_using_more_took_back,-1.259,change in rate,consumption effects in steps when use rose
 pace_needed_per_year,1.575,change in rate a year,(24 - rate) / 8
+rate_2024,12.2,%,"env_ac_cur, 2024: the newest published rate; imputed by Eurostat"
+rate_2010,10.7,%,"env_ac_cur, 2010: the first year with country rates"
+rise_2010_2024,1.5,change in rate,rate in 2024 - rate in 2010
+pace_needed_per_year_from_2024,1.967,change in rate a year,(24 - rate in 2024) / 6
+ireland_rank_from_lowest_2022,2.0,rank,"env_ac_cur, 27 member states, 1 the lowest"
+ireland_rank_from_lowest_2024,2.0,rank,"env_ac_cur, 27 member states, 1 the lowest; ties share the lower rank; imputed by Eurostat"
+not_recycled_buried_share,74.762,%,"env_wastrt: landfilled (D1, D5, D12) plus backfilled, over treated less recycled"
+not_recycled_landfill_and_other_disposal_share,64.066,%,"env_wastrt: D1 to D7 and D12, over treated less recycled"
+not_recycled_backfilled_share,24.395,%,"env_wastrt: backfilled, over treated less recycled"
+ireland_not_recycled_buried_share,79.47,%,"env_wastrt: as above, Ireland"
+ireland_not_recycled_backfilled_share,58.07,%,"env_wastrt: backfilled, over treated less recycled, Ireland"
 pace_2004_2024_per_year,0.2,change in rate a year,change over the steps / years
 use_per_person,14.285,t,DMC per person
 other_products_share,0.496,%,"DMC of other products and waste for final treatment (MF5, MF6) / DMC; left out of the shards"
