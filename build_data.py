@@ -45,8 +45,9 @@ data/processed/:
                              much of each is investment or spending (EU only)
     weight_vs_climate_2022.csv
                              each material group's share of EU material use by
-                             weight and by the climate impact of producing it
-                             (EU only, from ETC CE Report 2025/3)
+                             weight and by the climate impact of producing it,
+                             and its impact per tonne against minerals' (EU
+                             only, from ETC CE Report 2025/3)
     examples.csv             every figure the page states for its examples, from
                              the datapoints in data/examples, each with its
                              calculation, F numbers and sources
@@ -1416,6 +1417,8 @@ def main():
         columns=["material_group", "share_of_weight_pct", "share_of_climate_impact_pct"],
     )
     climate["impact_per_weight"] = climate["share_of_climate_impact_pct"] / climate["share_of_weight_pct"]
+    climate["impact_per_tonne_vs_minerals"] = (
+        climate["impact_per_weight"] / climate.set_index("material_group").loc["Non-metallic minerals", "impact_per_weight"])
     climate.round(3).to_csv(OUT / f"weight_vs_climate_{YEAR}.csv", index=False)
 
     # 7b. What the example datapoints imply
