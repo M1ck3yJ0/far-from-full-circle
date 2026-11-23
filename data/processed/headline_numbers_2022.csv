@@ -21,6 +21,7 @@ climate_cut_by_recycling_at_70pct_k0,0.0,%,"two_levers at 70%: climate impact re
 climate_cut_by_recycling_at_close_k0,,%,recycling alone closing the ring: each group's share of its use replaced x its climate share
 climate_cut_by_recycling_at_close_mt_k0,,Mt CO2e,climate_cut_by_recycling_at_close_k0 x climate_total
 countries_past_target_at_70pct_k0,4.0,countries,"rate at 70% recycled, recycling alone, at or above 24%"
+countries_short_at_70pct_k0,23.0,countries,"rate at 70% recycled, recycling alone, below 24%: those that still have to go without"
 recycled_share_to_close_k05,93.4,%,"(waste_recycled_kt + extra) / waste_treated_kt, extra = (24% x (U + DMC) - U) / (1 - 24% x (1 - 0.5)); over 100: can't"
 recycling_multiple_to_close_k05,2.275,times,(waste_recycled_kt + extra) / waste_recycled_kt
 less_new_material_to_close_k05,8.08,%,0.5 x extra / DMC; the least new material any route to 24% takes away
@@ -33,6 +34,7 @@ climate_cut_by_recycling_at_70pct_k05,2.003,%,"two_levers at 70%: climate impact
 climate_cut_by_recycling_at_close_k05,3.622,%,recycling alone closing the ring: each group's share of its use replaced x its climate share
 climate_cut_by_recycling_at_close_mt_k05,104.68,Mt CO2e,climate_cut_by_recycling_at_close_k05 x climate_total
 countries_past_target_at_70pct_k05,8.0,countries,"rate at 70% recycled, recycling alone, at or above 24%"
+countries_short_at_70pct_k05,19.0,countries,"rate at 70% recycled, recycling alone, below 24%: those that still have to go without"
 recycled_share_to_close_k1,87.119,%,"(waste_recycled_kt + extra) / waste_treated_kt, extra = (24% x (U + DMC) - U) / (1 - 24% x (1 - 1.0)); over 100: can't"
 recycling_multiple_to_close_k1,2.122,times,(waste_recycled_kt + extra) / waste_recycled_kt
 less_new_material_to_close_k1,14.221,%,1.0 x extra / DMC; the least new material any route to 24% takes away
@@ -45,6 +47,10 @@ climate_cut_by_recycling_at_70pct_k1,4.006,%,"two_levers at 70%: climate impact 
 climate_cut_by_recycling_at_close_k1,6.375,%,recycling alone closing the ring: each group's share of its use replaced x its climate share
 climate_cut_by_recycling_at_close_mt_k1,184.236,Mt CO2e,climate_cut_by_recycling_at_close_k1 x climate_total
 countries_past_target_at_70pct_k1,8.0,countries,"rate at 70% recycled, recycling alone, at or above 24%"
+countries_short_at_70pct_k1,19.0,countries,"rate at 70% recycled, recycling alone, below 24%: those that still have to go without"
+eu_countries,27.0,countries,member states in the tables
+target,24.0,%,the EU's aim for 2030 (TARGETS)
+eea_recycled_share_2030,70.0,%,share of treated waste recycled in the EEA's 2030 scenario
 replacement,0.5,new t per recycled t,the page's assumed midpoint; the tables also carry 0 and 1
 cut_per_1pct_recycled,0.978,% per 1% of waste recycled,1% of T x 0.76 / 0.24 / DMC; the same at every replacement
 not_recycled_minerals_share,86.466,%,env_wassd: minerals' treated less recycled over all four groups'
@@ -53,8 +59,11 @@ not_recycled_fossil_share,3.154,%,as above
 not_recycled_metals_share,0.902,%,as above
 climate_total,2890.0,Mt CO2e,"ETC CE Report 2025/3, Table 3-1, 2022"
 waterfall_change_2004_2024,4.0,change in rate,sum of EU steps
+pace_2004_2022_per_year,0.178,change in rate a year,(rate in 2022 - rate in 2004) / 18 years
 waterfall_recycling_2004_2024,2.4,change in rate,sum of recycling effects
 waterfall_using_less_2004_2024,1.6,change in rate,sum of consumption effects
+waterfall_recycling_share_2004_2024,60.009,%,waterfall_recycling / waterfall_change
+waterfall_using_less_share_2004_2024,39.991,%,waterfall_using_less / waterfall_change
 step_2008_2010_change,1.6,change in rate,trend_steps
 step_2008_2010_use_share,83.671,%,consumption effect / change
 step_2008_2010_use_change,-13.964,%,trend_steps
@@ -66,6 +75,8 @@ steps_using_more_took_back,-1.259,change in rate,consumption effects in steps wh
 pace_needed_per_year,1.575,change in rate a year,(24 - rate) / 8
 pace_2004_2024_per_year,0.2,change in rate a year,change over the steps / years
 use_per_person,14.285,t,DMC per person
+other_products_share,0.496,%,"DMC of other products and waste for final treatment (MF5, MF6) / DMC; left out of the shards"
+weight_shares_max_gap,0.597,%,largest gap between ETC Figure 3-4's weight shares and Eurostat's (weight_mix)
 use_per_person_a_day,39.137,kg,DMC per person x 1000 / 365
 use_per_person_to_close_by_using_less,8.465,t,per person x 59.3%
 threshold_recycled_per_tonne_today,0.129,t per t,U / DMC
@@ -147,3 +158,8 @@ ee_oil_shale_2018_2020_change,-42.331,%,"DMC, oil shale and tar sands (MF413)"
 ro_minerals_2018,314.258,Mt,DMC; total DMC imputed by Eurostat for 2009 to 2019
 ro_minerals_2020,444.784,Mt,DMC
 ro_minerals_2018_2020_change,41.535,%,DMC
+countries_used_less_2022_2024,22.0,countries,"trend_steps, 2022 to 2024: consumption_change_pct below 0"
+countries_rate_2024_estimated,26.0,countries,trend: a flag on Eurostat's 2024 rate
+countries_split_flagged,15.0,countries,waste_by_material: any material with a check
+minerals_imported_share,3.2,%,extra-EU imports of non-metallic minerals over their direct material input (env_ac_mfa)
+lu_waste_imported_for_recycling,3100.0,kt,waste_by_material: imported_for_recycling_kt over the four groups (env_ac_sd)

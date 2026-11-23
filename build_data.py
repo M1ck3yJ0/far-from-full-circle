@@ -397,7 +397,7 @@ def two_levers_table(ceilings, imports, by_material, dmc_by_group):
     each one's waste not yet recycled. What the EU goes without is taken in whole material groups,
     heaviest first or dirtiest per tonne first, on each group's share of Eurostat's consumption (the ring's
     weight shares) and Figure 3-4's climate shares; recycling's removals are each group's own share of its
-    Eurostat consumption. Imports fall in proportion to each group's use."""
+    Eurostat consumption. Imports fall in proportion to each group's use; tonnes are of all extra-EU imports."""
     eu = ceilings.set_index("geo").loc["EU27_2020"]
     target = TARGETS["eu"]
     weight = {g: 100 * dmc_by_group[g] / sum(dmc_by_group.values()) for g in WEIGHT_VS_CLIMATE}
@@ -410,6 +410,7 @@ def two_levers_table(ceilings, imports, by_material, dmc_by_group):
     not_recycled = m["share_of_not_recycled_pct"] / 100
 
     today = eu.share_recycled_pct
+    imports_kt = imports_block()["imports_kt"]
     rows = []
     for (key, k), s in [(kk, s) for kk in REPLACEMENTS.items()
                         for s in [today] + list(range(int(today) + 1, round(EEA_RECYCLED_SHARE * 100) + 1))]:
@@ -422,6 +423,7 @@ def two_levers_table(ceilings, imports, by_material, dmc_by_group):
                "recycling_multiple": (eu.waste_recycled_kt + e) / eu.waste_recycled_kt,
                "rate_without_cut_pct": u / (u + eu.consumption_kt - k * e) * 100,
                "less_consumption_for_eu_target_pct": cut,
+               "less_consumption_for_eu_target_mt": cut / 100 * eu.consumption_kt / 1000,
                "replaced_by_recycling_pct": replaced,
                "gone_without_pct": max(0.0, cut - replaced),
                "climate_cut_by_recycling_pct": sum(by_recycling[g] * climate[g] for g in weight),
@@ -435,6 +437,7 @@ def two_levers_table(ceilings, imports, by_material, dmc_by_group):
             row[f"climate_cut_{name}_pct"] = sum(share[g] * climate[g] for g in order)
             row[f"climate_cut_{name}_mt"] = row[f"climate_cut_{name}_pct"] / 100 * CLIMATE_TOTAL_MT
             row[f"imports_cut_{name}_pct"] = sum(share[g] * imports[g] for g in order)
+            row[f"imports_cut_{name}_mt"] = row[f"imports_cut_{name}_pct"] / 100 * imports_kt / 1000
         rows.append(row)
     return pd.DataFrame(rows)
 
@@ -548,7 +551,7 @@ def footprint_table():
     return pd.DataFrame(rows).sort_values("share_of_footprint_pct", ascending=False)
 
 
-def headline_table(ceilings, steps, two_levers, by_material, loop, mix):
+def headline_table(ceilings, steps, two_levers, by_material, loop, mix, trend):
     """The figures the page's cards quote, EU and YEAR unless named, each with its calculation."""
     c = ceilings.set_index("geo")
     eu, ie = c.loc["EU27_2020"], c.loc["IE"]
@@ -561,7 +564,7 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix):
     S0 = STEP_YEARS[0]
     U, D, T = eu.circular_use_kt, eu.consumption_kt, eu.waste_treated_kt
     N = T - eu.waste_recycled_kt
-    codes = ["TOTAL", "MF1", "MF2", "MF3", "MF4", "MF41", "MF411", "MF413", "MF422"]   # MF411 lignite, MF413 oil shale
+    codes = ["TOTAL", "MF1", "MF2", "MF3", "MF4", "MF41", "MF411", "MF413", "MF422", "MF5", "MF6"]   # MF411 lignite, MF413 oil shale
     mfa = read_eurostat(
         "mfa",
         ["indic_env", "material", "unit", "geo", "TIME_PERIOD", "OBS_VALUE", "CONF_STATUS"],
@@ -681,7 +684,12 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix):
              f"climate_cut_by_recycling_at_close_{key} x climate_total"),
             (f"countries_past_target_at_70pct_{key}", int((c.drop("EU27_2020")[f"rate_70pct_recycled_{key}_pct"] >= 24).sum()),
              "countries", "rate at 70% recycled, recycling alone, at or above 24%"),
+            (f"countries_short_at_70pct_{key}", int((c.drop("EU27_2020")[f"rate_70pct_recycled_{key}_pct"] < 24).sum()),
+             "countries", "rate at 70% recycled, recycling alone, below 24%: those that still have to go without"),
         ]],
+        ("eu_countries", len(c.drop("EU27_2020")), "countries", "member states in the tables"),
+        ("target", target * 100, "%", "the EU's aim for 2030 (TARGETS)"),
+        ("eea_recycled_share_2030", EEA_RECYCLED_SHARE * 100, "%", "share of treated waste recycled in the EEA's 2030 scenario"),
         ("replacement", REPLACEMENT, "new t per recycled t", "the page's assumed midpoint; the tables also carry 0 and 1"),
         ("cut_per_1pct_recycled", cut_slope, "% per 1% of waste recycled", "1% of T x 0.76 / 0.24 / DMC; the same at every replacement"),
         ("not_recycled_minerals_share", wm.loc["Non-metallic minerals", "share_of_not_recycled_pct"], "%",
@@ -691,8 +699,14 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix):
         ("not_recycled_metals_share", wm.loc["Metal ores", "share_of_not_recycled_pct"], "%", "as above"),
         ("climate_total", CLIMATE_TOTAL_MT, "Mt CO2e", "ETC CE Report 2025/3, Table 3-1, 2022"),
         (f"waterfall_change_{S0}_{B}", eu_steps["rate_change_pts"].sum(), "change in rate", "sum of EU steps"),
+        (f"pace_{S0}_{YEAR}_per_year", (eu.rate_pct - st.loc[("EU27_2020", S0), "rate_from_pct"]) / (YEAR - S0),
+         "change in rate a year", f"(rate in {YEAR} - rate in {S0}) / {YEAR - S0} years"),
         (f"waterfall_recycling_{S0}_{B}", eu_steps["recycling_effect_pts"].sum(), "change in rate", "sum of recycling effects"),
         (f"waterfall_using_less_{S0}_{B}", eu_steps["consumption_effect_pts"].sum(), "change in rate", "sum of consumption effects"),
+        (f"waterfall_recycling_share_{S0}_{B}", eu_steps["recycling_effect_pts"].sum() / eu_steps["rate_change_pts"].sum() * 100,
+         "%", "waterfall_recycling / waterfall_change"),
+        (f"waterfall_using_less_share_{S0}_{B}", eu_steps["consumption_effect_pts"].sum() / eu_steps["rate_change_pts"].sum() * 100,
+         "%", "waterfall_using_less / waterfall_change"),
         ("step_2008_2010_change", st.loc[("EU27_2020", 2008), "rate_change_pts"], "change in rate", "trend_steps"),
         ("step_2008_2010_use_share", st.loc[("EU27_2020", 2008), "consumption_effect_pts"]
          / st.loc[("EU27_2020", 2008), "rate_change_pts"] * 100, "%", "consumption effect / change"),
@@ -708,6 +722,11 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix):
         ("pace_needed_per_year", (target * 100 - eu.rate_pct) / (2030 - YEAR), "change in rate a year", "(24 - rate) / 8"),
         (f"pace_{S0}_{B}_per_year", eu_steps["rate_change_pts"].sum() / (B - S0), "change in rate a year", "change over the steps / years"),
         ("use_per_person", dmc("EU27_2020", "TOTAL", YEAR, "T_HAB"), "t", "DMC per person"),
+        ("other_products_share", (dmc("EU27_2020", "MF5", YEAR) + dmc("EU27_2020", "MF6", YEAR))
+         / dmc("EU27_2020", "TOTAL", YEAR) * 100, "%", "DMC of other products and waste for final treatment (MF5, MF6) / DMC; left out of the shards"),
+        ("weight_shares_max_gap", max(abs(WEIGHT_VS_CLIMATE[g][0] - mix.loc["EU27_2020", f"{k}_pct"])
+                                      for g, k in zip(WEIGHT_VS_CLIMATE, ["minerals", "biomass", "fossil", "metals"])),
+         "%", "largest gap between ETC Figure 3-4's weight shares and Eurostat's (weight_mix)"),
         ("use_per_person_a_day", dmc("EU27_2020", "TOTAL", YEAR, "T_HAB") * 1000 / 365, "kg", "DMC per person x 1000 / 365"),
         ("use_per_person_to_close_by_using_less", dmc("EU27_2020", "TOTAL", YEAR, "T_HAB")
          * eu.less_consumption_for_eu_target_today_pct / 100, "t", "per person x 59.3%"),
@@ -822,6 +841,19 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix):
         ("ro_minerals_2018", dmc("RO", "MF3", 2018) / 1000, "Mt", "DMC; total DMC imputed by Eurostat for 2009 to 2019"),
         ("ro_minerals_2020", dmc("RO", "MF3", 2020) / 1000, "Mt", "DMC"),
         ("ro_minerals_2018_2020_change", (dmc("RO", "MF3", 2020) / dmc("RO", "MF3", 2018) - 1) * 100, "%", "DMC"),
+        (f"countries_used_less_{A}_{B}", int((st.xs(A, level="from_year").drop("EU27_2020")["consumption_change_pct"] < 0).sum()),
+         "countries", f"trend_steps, {A} to {B}: consumption_change_pct below 0"),
+        (f"countries_rate_{B}_estimated", int((trend[(trend["year"] == B) & (trend["geo"] != "EU27_2020")]["rate_flag"]
+                                               .fillna("") != "").sum()),
+         "countries", f"trend: a flag on Eurostat's {B} rate"),
+        ("countries_split_flagged", by_material[(by_material["geo"] != "EU27_2020")
+                                                    & (by_material["check"].fillna("") != "")]["geo"].nunique(),
+         "countries", "waste_by_material: any material with a check"),
+        ("minerals_imported_share", next(m["imports_over_dmi_pct"] for m in imports_block()["materials"]
+                                         if m["material_group"] == "Non-metallic minerals"), "%",
+         "extra-EU imports of non-metallic minerals over their direct material input (env_ac_mfa)"),
+        ("lu_waste_imported_for_recycling", by_material[by_material["geo"] == "LU"]["imported_for_recycling_kt"].sum(), "kt",
+         "waste_by_material: imported_for_recycling_kt over the four groups (env_ac_sd)"),
     ]
     return pd.DataFrame(rows, columns=["metric", "value", "unit", "calculation"])
 
@@ -1333,7 +1365,7 @@ def main():
     two_levers.round(3).to_csv(OUT / f"two_levers_{YEAR}.csv", index=False)
 
     # 5d. The figures the cards quote
-    headline_table(ceilings, steps, two_levers, by_material, loop, mix).round(3).to_csv(
+    headline_table(ceilings, steps, two_levers, by_material, loop, mix, trend).round(3).to_csv(
         OUT / f"headline_numbers_{YEAR}.csv", index=False)
 
     # 6. What the EU's material footprint ends up as
