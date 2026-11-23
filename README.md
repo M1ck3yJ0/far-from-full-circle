@@ -1,109 +1,46 @@
 # Far from Full Circle
 
-*How far could recycling take every EU country's circularity rate? Eurostat data for 2022, with a trend from 2010.*
+The analysis behind [Far from Full Circle](https://milcahjoseph.com/projects/far_from_full_circle/a_circularity_story.html), by Milcah M. Joseph: what it would take for the EU to double its circularity rate, to 24% by 2030, and what that target really asks.
 
-The analysis behind [Far from Full Circle](https://milcahjoseph.com/projects/far_from_full_circle/a_circularity_story.html), by Milcah M. Joseph.
+## The finding
 
-## Bottom line
+The rate can rise in only two ways: recycle more, or use less new material. On Eurostat's data for 2022, neither gets the EU to 24% alone at any practical scale, and every route there takes less new material, even recycling almost all of its waste. So what Europe cuts matters more than the rate. The page has the numbers.
 
-Most of what Europe uses never comes back as waste. Of every 100 tonnes of material moving through its economy in 2022, 40 were built into buildings, roads and machines, 29 were burned or eaten, 8 were exported and 3 were spread on land. Only 20 came back as waste, and more than half of that was soil and rock.
+## How it works
 
-The EU wants to double the share of its materials that comes from recycled waste, to 24% by 2030. In 2022 it was 11.4%. Had Europe recycled every tonne of waste it treated that year, soil and mining rock included, its rate would have reached 23.7%: about the target, and no further. Leave out the soil and rock, and it reaches 15.4%. Latvia, Lithuania, Portugal, Croatia and Ireland would have stayed below 12% even recycling everything.
+- The rate is circular use over circular use plus domestic material consumption (Eurostat's env_ac_cur). Every calculation starts from the published rate.
+- Recycling more is modeled as a rising share of the waste the EU treats, with waste held at 2022's tonnes. Using less takes the same share of every material, or whole material groups in a chosen order.
+- Each extra recycled tonne is assumed to replace half a new tonne of the same material. That's an assumed midpoint, not an estimate, between replacing none (recycled tonnes adding to new ones) and replacing a whole tonne (an upper limit). `REPLACEMENT` in `build_data.py` sets it, and every table that depends on it gives all three cases.
+- The main numbers use only figures Eurostat reports, never its estimates. The waterfall of what moved the rate, from 2004, may carry Eurostat's estimates for its latest steps, flagged.
+- Climate impact by material is read from ETC CE Report 2025/3 (Figure 3-4).
 
-The trend points the same way. From 2012 to 2022 the rate rose only from 11.0% to 11.4%. Europe recycled 8% more waste, but it also consumed 3% more material and treated 7% less waste. The most recycling could deliver has stayed between 23.7% and 25.8% since 2010, and on Eurostat's 2024 estimates it is 24.7%.
+## What it can't say
 
-Neither lever is practical alone at the scale 24% needs: recycling gets there only by reaching about 93% of the waste treated, 2.3 times 2022's, and only if each recycled tonne replaces half a new one, while using less gets there only with 59.3% less material, when the EU's biggest two-year fall on record was 14%. So what Europe cuts matters more than the rate: the waste left to recycle is mostly minerals, but most of the climate impact of making materials lies in biomass, fossil fuels and metal ores.
+- The ceilings are bounds, not forecasts: they count every treated tonne as recyclable, contaminated soil and mine waste included.
+- The rate is measured by weight, and weight isn't impact. The climate shares stop at the factory gate, so burning fuel isn't counted.
+- Whether a recycled tonne replaces a new one is set by markets, and can be zero.
+- The arithmetic is static: using less material today also means less waste later.
 
-## The question
-
-Eurostat's circular material use rate measures the share of the material an economy uses that comes from recycled waste. It can rise in only two ways: recycle more of the waste that comes back, or use less material. This analysis asks how far the first one could go, for the EU and each of its 27 countries, by setting a ceiling on the rate: the rate each country would have had if it had recycled every tonne of waste it treated.
-
-## Method
-
-The rate is U / (U + DMC), where DMC is domestic material consumption and U is circular use: waste recycled at home, adjusted for waste traded for recycling. Recycling here means recovery operations R2 to R11; energy recovery and backfilling don't count.
-
-The published rate doesn't rebuild exactly from Eurostat's component tables, so every calculation starts from the published rate, r:
-
-- Circular use implied by the rate: U = r / (1 - r) × DMC.
-- Ceiling, recycling every treated tonne with consumption unchanged: (U + treated - recycled) / (U + treated - recycled + DMC).
-- Ceiling if each recycled tonne replaced a tonne of new material, so U + DMC stays the same: (U + treated - recycled) / (U + DMC).
-- Ceiling without soil and rock: as above, adding only the waste that isn't soils, dredging spoils or other mineral waste (codes W126, W127 and W12B). Where a country keeps part of that confidential, the sum is derived from Eurostat's totals.
-- Rate with backfilling counted as recycling: (U + backfilled) / (U + backfilled + DMC).
-- Consumption needed for a target t, holding recycling fixed: DMC falls to U × (1 - t) / t. The tables give the cut at four levels of recycling: today's, every tonne but soil and rock, 70% of all treated waste (the EEA's 2030 scenario) and every tonne. A negative cut means room to use more.
-- The two levers together, for the EU: at each share of treated waste recycled from 2022's (41.1%) to 70%, circular use is U + (share - 2022's share) × treated, with waste held at 2022's tonnes, and the cut follows as above. The cut takes whole material groups in one of two orders, heaviest first or dirtiest per tonne first, on each group's share of Eurostat's consumption by weight and the climate shares of Figure 3-4 of ETC CE Report 2025/3. Imports fall in proportion to each group's use, from 2022's imports by material (env_ac_mfa). Recycling more removes no material, so it cuts neither measure. For a country, the cut falls in a straight line between the today and 70% columns of `ceilings_2022.csv`.
-- What moved the rate between two years: the recycling effect is U₂ / (U₂ + DMC₁) - r₁, and the consumption effect is U₁ / (U₁ + DMC₂) - r₁.
-- What moved the rate in each two-year step: the recycling effect is the change from U₁ to U₂ alone, averaged over holding consumption at DMC₁ and at DMC₂, so ½ × [(U₂ / (U₂ + DMC₁) - r₁) + (r₂ - U₁ / (U₁ + DMC₂))]. The consumption effect is the rest of the change, so the two add up to it. The EU's rate starts in 2004, each country's in 2010.
-- What each lever is worth, as the change in the 2022 rate it brings with everything else unchanged: recycling all waste but soil and rock, and recycling every tonne, are the ceilings above minus the rate. Using 15% less of everything is U / (U + 0.85 × DMC) - r. Using no fossil fuels takes fossil energy materials out of DMC. Recycling all household waste adds the waste households generated (env_wasgen) to U: an upper bound, since it counts that waste as if none of it were recycled today.
-
-Waste is reported every two years, so the trend uses the even years from 2010 to 2024.
-
-The other tables:
-
-- The loop follows Eurostat's Sankey data. Processed material (extracted at home, imported, recycled or backfilled) is split into material built into stock, emissions (burned or eaten), exports, dissipative flows (spread on land) and waste treated. Shares are rounded to whole tonnes out of 100 by largest remainder. The soil and rock part of the waste is approximate: each country's soil and rock share of all its treated waste, applied to the waste in the flows.
-- Where each material goes uses the same Sankey data for biomass, metal ores, non-metallic minerals and fossil fuels, which only the EU and 13 member states publish for every flow. Other products and waste imported for final treatment, about 1% of the EU's processed material, are left out. The soil and rock part, estimated as in the loop, sits in non-metallic minerals' waste.
-- Unrecycled waste other than soil and rock is waste treated minus waste recycled in each env_wastrt category, gathered into eight kinds.
-- The footprint is the EU's raw material consumption by product, with Eurostat's 63 product groups gathered into seven. Investment is gross capital formation, households buying new homes included. Spending is what households, governments and non-profits buy and use up.
-- Weight against climate impact is read from Figure 3-4 of ETC CE Report 2025/3. The climate impact covers producing the materials, up to the factory gate, so burning fuel isn't included.
-
-## What the numbers can't say
-
-- The ceilings are bounds, not forecasts. They count every treated tonne as recyclable, contaminated soil and mining waste included, so real limits are lower. Mining waste lifts the ceilings of Finland, Bulgaria, Romania and Sweden.
-- They count only waste treated at home, so waste a country exports for energy recovery or disposal is left out.
-- The consumption figures are static arithmetic. In reality, using less material also means less waste later.
-- 2024 values are Eurostat estimates, flagged in `trend.csv`, until reported data replaces them.
-- In the loop, Malta's flows record no emissions and leave about a fifth of its material unaccounted for.
-- The loop counts waste as Eurostat's Sankey data does (env_wassd), which leaves out soils and dredging spoils sent to disposal, and waste from treating waste. In the EU in 2022 that's 1.67 billion tonnes, against the 1.97 billion tonnes of waste treated that the ceilings use (env_wastrt).
-- Eurostat splits dissipative flows across materials in the same shares in every country (60% metal ores, 25% biomass, 15% non-metallic minerals), so by material they are an estimate.
-
-## Data
-
-Built by `build_data.py` into `data/processed`:
-
-| File | What it holds |
-|---|---|
-| `ceilings_2022.csv` | For the EU and each country in 2022: the published rate, consumption, waste treated, recycled and backfilled, soil and rock, every ceiling, and the consumption cut each target would need |
-| `trend.csv` | The same measures in every waste reporting year from 2010 to 2024, with Eurostat's flags |
-| `material_vs_circular_use.csv` | Material use against circular use in every reporting year, with both ceilings expressed as circular use |
-| `trend_drivers.csv` | The change in each rate from 2012 to 2022, split into a recycling effect and a consumption effect |
-| `trend_steps.csv` | The change in each rate in every two-year step, from 2004 for the EU and from 2010 for each country, split the same way |
-| `materials_2022.csv` | What each country consumed in 2022, in kg per person a day, by material group |
-| `loop_2022.csv` | Where each country's processed material went in 2022, in tonnes and out of every 100 tonnes |
-| `flows_by_material_2022.csv` | The same, by material, for the EU and the 13 member states that publish it |
-| `levers_2022.csv` | How much each lever would raise each country's 2022 rate |
-| `two_levers_2022.csv` | For the EU in 2022, at each share of treated waste recycled from 2022's to 70%: the consumption cut the 24% target would need, and the share of climate impact and of imported tonnes that cut removes, heaviest first or dirtiest per tonne first |
-| `unrecycled_waste_2022.csv` | Waste treated but not recycled in 2022, other than soil and rock, by kind of waste |
-| `footprint_2022.csv` | What the EU's material footprint ended up as in 2022, and how much of each group was investment or spending |
-| `weight_vs_climate_2022.csv` | Each material group's share of EU material use in 2022 by weight and by climate impact |
-| `examples.csv` | Figures derived from the example datapoints in `data/examples`, each with its calculation |
-| `far_from_full_circle_data.js` | Everything the web page draws, rounded for display, in one file the page loads |
-
-Weights are in thousand tonnes (kt) and shares in percent.
-
-## Repository structure
+## Files
 
 ```
-build_data.py       builds every table in data/processed from the raw downloads and the examples
-data/raw/           Eurostat downloads, gzip-compressed (see data/raw/README.md)
-data/examples/      datapoints for the page's examples, with their sources
-data/processed/     the tables the page uses
-requirements.txt
+build_data.py          builds every table in data/processed; its settings set the year and the replacement
+data/raw/              Eurostat downloads, gzip-compressed (see data/raw/README.md)
+data/examples/         datapoints for the page's examples, with their sources
+data/processed/        the tables the page uses; headline_numbers_2022.csv holds every card figure with its calculation
+research.md            the research register: every published finding the page cites, with its source and check status
+dry_run_2024.md        a provisional run on 2024 data, never on the page
 ```
-
-## Reproducing the data
-
-The Eurostat downloads are stored in `data/raw`. [data/raw/README.md](data/raw/README.md) lists their versions and how to replace one with a newer release.
-
-1. Install the requirements: `pip install -r requirements.txt`
-2. From the repository root, run `python build_data.py`
 
 ## Sources
 
-- Eurostat, [circular material use rate (env_ac_cur)](https://ec.europa.eu/eurostat/databrowser/view/env_ac_cur/default/table?lang=en) and its [metadata](https://ec.europa.eu/eurostat/cache/metadata/EN/env_ac_cur_esms.htm)
-- Eurostat, [material flow accounts (env_ac_mfa)](https://ec.europa.eu/eurostat/databrowser/view/env_ac_mfa/default/table?lang=en)
-- Eurostat, [treatment of waste by waste category (env_wastrt)](https://ec.europa.eu/eurostat/databrowser/view/env_wastrt/default/table?lang=en)
-- Eurostat, [material flows for circular economy (env_ac_sd)](https://ec.europa.eu/eurostat/databrowser/view/env_ac_sd/default/table?lang=en) and [management of waste by type of material (env_wassd)](https://ec.europa.eu/eurostat/databrowser/view/env_wassd/default/table?lang=en)
-- Eurostat, [generation of waste by waste category (env_wasgen)](https://ec.europa.eu/eurostat/databrowser/view/env_wasgen/default/table?lang=en)
-- Eurostat, [material footprints by final use of products (env_ac_rmefd)](https://ec.europa.eu/eurostat/databrowser/view/env_ac_rmefd/default/table?lang=en)
+- Eurostat, [circular material use rate (env_ac_cur)](https://ec.europa.eu/eurostat/databrowser/view/env_ac_cur/default/table?lang=en), [material flow accounts (env_ac_mfa)](https://ec.europa.eu/eurostat/databrowser/view/env_ac_mfa/default/table?lang=en), [treatment of waste (env_wastrt)](https://ec.europa.eu/eurostat/databrowser/view/env_wastrt/default/table?lang=en), [generation of waste (env_wasgen)](https://ec.europa.eu/eurostat/databrowser/view/env_wasgen/default/table?lang=en), [material flows for circular economy (env_ac_sd)](https://ec.europa.eu/eurostat/databrowser/view/env_ac_sd/default/table?lang=en), [management of waste by type of material (env_wassd)](https://ec.europa.eu/eurostat/databrowser/view/env_wassd/default/table?lang=en) and [material footprints (env_ac_rmefd)](https://ec.europa.eu/eurostat/databrowser/view/env_ac_rmefd/default/table?lang=en)
 - Vercalsteren and others (2025), [Measuring environmental benefits of circular economy](https://www.eionet.europa.eu/etcs/etc-ce/products/etc-ce-report-2025-3-measuring-environmental-benefits-of-circular-economy), ETC CE Report 2025/3
-- European Commission, [Clean Industrial Deal](https://commission.europa.eu/topics/competitiveness/clean-industrial-deal_en), which sets the EU's 24% goal for 2030
-- Government of Ireland, [Whole of Government Circular Economy Strategy 2026-2028](https://www.gov.ie/en/department-of-climate-energy-and-the-environment/publications/whole-of-government-circular-economy-strategy-2026-2028-accelerating-action/), which sets Ireland's 12% goal for 2030
+- Every other source is in `research.md` and `data/examples/sources.csv`.
+
+## Rebuild
+
+```
+pip install -r requirements.txt
+python build_data.py
+```
