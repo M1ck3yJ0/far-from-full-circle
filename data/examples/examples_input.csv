@@ -1,15 +1,15 @@
 example,state,metric,value,unit,basis,source_id,f_number,locator,status,note
-zin,could_have_been,structure_upfront_cut,50,%,"Structure, upfront carbon (module A), against a realistic benchmark for efficient new construction",greisch_iabse2025,,"Section 5, Fig. 14",confirmed,"About 50%. The paper doesn't define the benchmark further"
+zin,could_have_been,structure_upfront_cut,50,%,"Structure, upfront carbon (module A), against a realistic benchmark for efficient new construction",greisch_iabse2025,F101,"Section 5, Fig. 14",confirmed,"About 50%. The paper doesn't define the benchmark further"
 zin,could_have_been,building_upfront_cut,33,%,"Whole building, upfront carbon, against the same benchmark",greisch_iabse2025,F50,Section 5,confirmed,"Greisch's project page gives the same 50% and 33%"
-zin,is,upfront_saved_per_m2,184,kg CO2/m2,"Structure kept, upfront (module A); one-off",greisch_iabse2025,F50,"Section 5, Fig. 14",confirmed,"Area basis not stated. 21,400 t divided by 184 kg/m2 implies about 116,300 m2"
-zin,is,upfront_saved_total,21400,t CO2,"Structure kept, upfront (module A); one-off",greisch_iabse2025,,"Section 5, Fig. 14",confirmed,
+zin,is,upfront_saved_per_m2,184,kg CO2/m2,"Structure kept, upfront (module A); one-off",greisch_iabse2025,F101,"Section 5, Fig. 14",confirmed,"Area basis not stated. 21,400 t divided by 184 kg/m2 implies about 116,300 m2"
+zin,is,upfront_saved_total,21400,t CO2,"Structure kept, upfront (module A); one-off",greisch_iabse2025,F101,"Section 5, Fig. 14",confirmed,
 zin,is,upfront_per_m2,377,kg CO2/m2,Construction stage (module A),greisch_iabse2025,F50,Section 5,confirmed,"The paper doesn't say whether this covers the structure or the whole building. Read as the whole building, 184 / (377 + 184) is 33%, the paper's whole-building cut"
 zin,could_have_been,fig14_benchmark_total,65000,t CO2,"Upfront carbon of the benchmark new build, all elements",greisch_iabse2025,F50,Fig. 14,confirmed,Read from the figure by eye
 zin,is,fig14_upfront_total,43500,t CO2,"ZIN's upfront carbon, all elements",greisch_iabse2025,F50,Fig. 14,confirmed,"About 43,500 t, read from the figure by eye"
-zin,is,structure_kept,171000,t,"Concrete structure retained, cores and basements",greisch_iabse2025,F50,Section 3.1,confirmed,"Cores plus basements make 170,000 t; the paper rounds"
+zin,is,structure_kept,171000,t,"Concrete structure retained, cores and basements",greisch_iabse2025,F100,Section 3.1,confirmed,"Cores plus basements make 170,000 t; the paper rounds"
 zin,is,structure_kept_cores,40000,t,Cores,greisch_iabse2025,,Section 3.1,confirmed,
 zin,is,structure_kept_basements,130000,t,Basements,greisch_iabse2025,,Section 3.1,confirmed,
-zin,is,structure_kept_share,85,%,Share of the original structural mass,greisch_iabse2025,,Section 3.1,confirmed,"The other 15% was slabs, demolished"
+zin,is,structure_kept_share,85,%,Share of the original structural mass,greisch_iabse2025,F100,Section 3.1,confirmed,"The other 15% was slabs, demolished"
 zin,is,rubble_to_aggregate,30000,t,"Concrete rubble recycled into certified aggregate",greisch_iabse2025,F51,Abstract,confirmed,"Matches the demolished slabs: 15% of about 201,000 t of structure. Section 3.3 gives no tonnage; Figure 5 shows 3,500 t of A+ aggregate going into ZIN's new concrete, within 15 km"
 zin,is,aggregate_into_zin,3500,t,A+ recycled aggregate that went into ZIN's new concrete,greisch_iabse2025,F51,Fig. 5,confirmed,Read from the figure by eye
 zin,is,aggregate_radius,15,km,"Recycled aggregate trucked at most this far, in a closed loop",greisch_iabse2025,F51,"Section 3.3, Fig. 5",confirmed,
