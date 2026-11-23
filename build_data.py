@@ -1023,7 +1023,7 @@ def examples_table():
          ikea("co2e_avoided") / winnow_ratio * 1000 / kg_per_meal / ikea("winnow_meals_per_year_2022") * 100, "%",
          "meals the 36,000 t would mean if yearly, at Winnow's ratios, over Winnow's whole fleet in 2022",
          ["ikea.co2e_avoided", "ikea.winnow_co2e_per_year", "ikea.winnow_meals_per_year_2022"] + WINNOW),
-        # The two compared, panel 20 and its note: each column is 100% of what the two saved together
+        # The two compared, no longer on the page: each column is 100% of what the two saved together
         ("comparison", "structure_share_of_tonnes_saved", zin("structure_kept") / both_t * 100, "%",
          "structure_kept / (structure_kept + food_saved_to_2022)", ["zin.structure_kept"] + IKEA_T),
         ("comparison", "food_share_of_tonnes_saved", ikea_t / both_t * 100, "%",
@@ -1051,14 +1051,13 @@ def examples_table():
 
 
 def examples_block(examples):
-    """The examples' figures the page draws (panels 12, 18 and 20), from examples.csv."""
+    """The examples' figures the page draws (ZIN's and IKEA's kitchens' panels), from examples.csv."""
     v = examples.set_index(["example", "metric"])["value"]
     num = lambda x: int(x) if float(x).is_integer() else round(float(x), 3)
     return {
         "zin": {m: num(v[("zin", m)]) for m in ["benchmark_upfront_per_m2", "upfront_per_m2", "upfront_saved_per_m2",
-                                                 "upfront_saved_total", "structure_kept"]},
-        "ikea": {m: num(v[("ikea", m)]) for m in ["food_waste_cut", "food_waste_cut_fy24", "meals_saved", "co2e_avoided",
-                                                   "food_saved_to_2022"]},
+                                                 "upfront_saved_total"]},
+        "ikea": {m: num(v[("ikea", m)]) for m in ["food_waste_cut", "food_waste_cut_fy24", "meals_saved"]},
     }
 
 
