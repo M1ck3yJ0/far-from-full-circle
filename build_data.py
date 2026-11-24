@@ -31,6 +31,11 @@ data/processed/:
                              away at each share of waste recycled from 2022's to
                              70%, how much of it recycling stands in for, and
                              what it removes, one row set per replacement
+    cut_by_recycling_2022.csv
+                             for the EU, the new material the 2030 target takes
+                             away at each share of waste recycled, from 2022's to
+                             every tonne, the same at every replacement, and how
+                             much of it recycling stands in for at each
     waste_by_material_2022.csv
                              waste treated, recycled and traded for recycling, by
                              material, with circular use and the waste not yet
@@ -464,6 +469,27 @@ def two_levers_table(ceilings, imports, by_material, dmc_by_group):
             row[f"climate_cut_{name}_mt"] = row[f"climate_cut_{name}_pct"] / 100 * CLIMATE_TOTAL_MT
             row[f"imports_cut_{name}_pct"] = sum(share[g] * imports[g] for g in order)
             row[f"imports_cut_{name}_mt"] = row[f"imports_cut_{name}_pct"] / 100 * imports_kt / 1000
+        rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def cut_curve_table(ceilings):
+    """For the EU: at each share of treated waste recycled, from today's to every tonne, the new
+    material the EU target takes away with waste held at its tonnes, which is the same at every
+    replacement, and the part each extra recycled tonne stands in for at each k in REPLACEMENTS.
+    Where that part passes the cut, recycling alone takes the rate past the target."""
+    eu = ceilings.set_index("geo").loc["EU27_2020"]
+    target = TARGETS["eu"]
+    today = eu.share_recycled_pct
+    rows = []
+    for s in [today] + list(range(int(today) + 1, 101)):
+        e = (s - today) / 100 * eu.waste_treated_kt
+        u = eu.circular_use_kt + e
+        row = {"recycled_share_pct": s,
+               "less_consumption_for_eu_target_pct": (1 - u * (1 - target) / target / eu.consumption_kt) * 100}
+        for key, k in REPLACEMENTS.items():
+            row[f"replaced_by_recycling_{key}_pct"] = k * e / eu.consumption_kt * 100
+            row[f"rate_recycling_alone_{key}_pct"] = u / (u + eu.consumption_kt - k * e) * 100
         rows.append(row)
     return pd.DataFrame(rows)
 
@@ -1095,7 +1121,7 @@ def examples_block(examples):
 
 
 def page_data(ceilings, trend, steps, materials, mix, loop, flows_m, levers, unrecycled, generated,
-              waste_in_flows_kt, footprint, climate, by_material, dmc_by_group, names, geos, examples):
+              waste_in_flows_kt, footprint, climate, by_material, dmc_by_group, names, geos, examples, cut_curve):
     """Everything the web page draws, rounded for display, as one JavaScript file."""
     def r(x, digits=2):
         return None if pd.isna(x) else round(float(x), digits)
@@ -1211,6 +1237,12 @@ def page_data(ceilings, trend, steps, materials, mix, loop, flows_m, levers, unr
         "weight_vs_climate": [{k: (r(v) if isinstance(v, float) else v) for k, v in row.items()}
                               for row in climate.to_dict("records")],
         "examples": examples_block(examples),
+        "cut_curve": {      # for the Method chart: the EU's cut for 24% at each share of waste recycled
+            "recycled_share": [r(x, 2) for x in cut_curve["recycled_share_pct"]],
+            "cut": [r(x, 2) for x in cut_curve["less_consumption_for_eu_target_pct"]],
+            "replaced": {key: [r(x, 2) for x in cut_curve[f"replaced_by_recycling_{key}_pct"]]
+                         for key in REPLACEMENTS if key != "k0"},
+        },
     }
     return "window.FAR_FROM_FULL_CIRCLE_DATA = " + json.dumps(data, separators=(",", ":"), ensure_ascii=False) + ";\n"
 
@@ -1440,6 +1472,9 @@ def main():
     two_levers = two_levers_table(ceilings, import_shares(), by_material, dmc_by_group)
     two_levers.round(3).to_csv(OUT / f"two_levers_{YEAR}.csv", index=False)
 
+    cut_curve = cut_curve_table(ceilings)
+    cut_curve.round(3).to_csv(OUT / f"cut_by_recycling_{YEAR}.csv", index=False)
+
     # 5d. The figures the cards quote
     headline_table(ceilings, steps, two_levers, by_material, loop, mix, trend).round(3).to_csv(
         OUT / f"headline_numbers_{YEAR}.csv", index=False)
@@ -1466,7 +1501,7 @@ def main():
     (OUT / "far_from_full_circle_data_build.js").write_text(
         page_data(ceilings, trend, steps, materials, mix, loop, flows_m, levers, unrecycled, generated,
                   loop.set_index("geo").loc["EU27_2020", "back_as_waste_kt"], footprint, climate, by_material,
-                  dmc_by_group, names, geos, examples),
+                  dmc_by_group, names, geos, examples, cut_curve),
         encoding="utf-8")
 
     eu = ceilings.set_index("geo").loc["EU27_2020"]
