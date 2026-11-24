@@ -29,6 +29,7 @@ data/raw/              Eurostat downloads, gzip-compressed (see data/raw/README.
 data/examples/         datapoints for the page's examples, with their sources
 data/processed/        the tables the page uses; headline_numbers_2022.csv holds every card figure with its calculation
 research.md            the research register: every published finding the page cites, with its source and check status
+compare_years.py       lists what moves between two data years
 dry_run_2024.md        a provisional run on 2024 data, never on the page
 ```
 
