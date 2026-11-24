@@ -18,7 +18,8 @@ Provisional: reported 2024 waste and material use, with Eurostat's imputed 2024 
 3. `python3 -I compare_years.py 2022 2024`: every finding the page rests on, old against new.
 4. Merge the build into the site's data file, keeping `center_shards` and `food_heaps`, then run `make_shards.py` and check the five discs by eye.
 5. `check_numbers.py` on the page against the rebuilt repo: every figure it reports is a word to redraft. It accepts the trend table's rows for any year, so a sentence that names 2022 (about 100 on the page) still passes with 2022's figures: search the page for "2022" too.
-6. In `check_numbers_by_hand.csv`, remove the entries for 2026: at 2024, years up to 2027 are read as times, so they go unused.
+6. Recheck for newer versions of ETC Figure 3-4's shares and F53's total.
+7. In `check_numbers_by_hand.csv`, remove the entries for 2026: at 2024, years up to 2027 are read as times, so they go unused.
 
 The rehearsal of steps 2 to 5, on November 24: the discs solve within 0.0001% of their shares; 93 figures fail against the 2024 tables (sections `sec-ring`, `notes-method`, `notes-ring`, `notes-closer`, `notes-explore`, `notes-game`, the hero and the closer's captions), besides the sentences naming 2022.
 
