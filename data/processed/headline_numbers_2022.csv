@@ -10,6 +10,11 @@ not_recycled_major_mineral_share,75.791,%,env_wastrt: (TOTAL - TOT_X_MIN) treate
 not_recycled_major_mineral_and_ash_share,81.811,%,"env_wastrt: as above, plus W124 (combustion) and W128_13 (mineral waste from waste treatment)"
 ireland_ring_closed,8.75,%,Ireland's rate_pct / 24
 ireland_less_using_less_alone,93.207,%,Ireland's less_consumption_for_eu_target_today_pct
+ireland_own_target_2030,12.0,%,Ireland's Circular Economy Strategy 2026 to 2028 (F106)
+ireland_ceiling_k0,10.476,%,"ceilings: Ireland's ceiling_k0_pct, every tonne recycled"
+ireland_ceiling_k05,10.945,%,"ceilings: Ireland's ceiling_k05_pct, every tonne recycled"
+ireland_ceiling_k1,11.457,%,"ceilings: Ireland's ceiling_k1_pct, every tonne recycled"
+ireland_less_for_own_target_70pct_recycled,37.689,%,ceilings: Ireland's less_consumption_for_ireland_target_70pct_recycled_pct; the same under both bounds
 recycled_share_to_close_k0,101.665,%,"(waste_recycled_kt + extra) / waste_treated_kt, extra = (24% x (U + DMC) - U) / (1 - 24% x (1 - 0.0)); over 100: can't"
 recycling_multiple_to_close_k0,2.476,times,(waste_recycled_kt + extra) / waste_recycled_kt
 less_new_material_to_close_k0,0.0,%,0.0 x extra / DMC; the least new material any route to 24% takes away

@@ -682,6 +682,11 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix, trend):
         ("ireland_ring_closed", ie.rate_pct / target, "%", "Ireland's rate_pct / 24"),
         ("ireland_less_using_less_alone", ie.less_consumption_for_eu_target_today_pct, "%",
          "Ireland's less_consumption_for_eu_target_today_pct"),
+        ("ireland_own_target_2030", TARGETS["ireland"] * 100, "%", "Ireland's Circular Economy Strategy 2026 to 2028 (F106)"),
+        *[(f"ireland_ceiling_{key}", ie[f"ceiling_{key}_pct"], "%", f"ceilings: Ireland's ceiling_{key}_pct, every tonne recycled")
+          for key in REPLACEMENTS],
+        ("ireland_less_for_own_target_70pct_recycled", ie.less_consumption_for_ireland_target_70pct_recycled_pct, "%",
+         "ceilings: Ireland's less_consumption_for_ireland_target_70pct_recycled_pct; the same under both bounds"),
         *[row for key, k in REPLACEMENTS.items() for row in [
             (f"recycled_share_to_close_{key}", eu[f"recycled_share_to_close_eu_alone_{key}_pct"], "%",
              f"(waste_recycled_kt + extra) / waste_treated_kt, extra = (24% x (U + DMC) - U) / (1 - 24% x (1 - {k})); over 100: can't"),
