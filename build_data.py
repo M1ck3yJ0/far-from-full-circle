@@ -1135,6 +1135,7 @@ def page_data(ceilings, trend, steps, materials, mix, loop, flows_m, levers, unr
             "extra_recycled_70pct_kt": r(np.maximum(0.0, EEA_RECYCLED_SHARE * x.waste_treated_kt - x.waste_recycled_kt), 0),
             "rate_70pct_recycled": r(x[f"rate_70pct_recycled_{PAGE_K}_pct"], 3),
             "rate_70pct_recycled_if_adding": r(x["rate_70pct_recycled_k0_pct"], 3),   # recycled tonnes replacing none
+            "rate_without_soil_rock": r(x[f"rate_without_soil_rock_{PAGE_K}_pct"], 3),   # all but soil and rock recycled
             "replaced_70pct_recycled": {name: r(x[f"replaced_by_recycling_for_{name}_target_70pct_recycled_{PAGE_K}_pct"], 3)
                                         for name in TARGETS},
             "gone_without_70pct_recycled": {name: r(x[f"gone_without_for_{name}_target_70pct_recycled_{PAGE_K}_pct"], 3)
