@@ -593,7 +593,7 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix, trend):
         "waste",
         ["unit", "hazard", "wst_oper", "waste", "geo", "TIME_PERIOD", "OBS_VALUE", "CONF_STATUS"],
         lambda d: (d["geo"] == "EU27_2020") & (d["unit"] == "T") & (d["hazard"] == "HAZ_NHAZ")
-        & d["wst_oper"].isin(["TRT", "RCV_R"]) & d["waste"].isin(["TOTAL", "TOT_X_MIN", "W124", "W128_13"])
+        & d["wst_oper"].isin(["TRT", "RCV_R"]) & d["waste"].isin(["TOTAL", "TOT_X_MIN", "W124", "W128_13", "W121"] + SOIL_AND_ROCK)
         & (d["TIME_PERIOD"] == str(YEAR)),
     ).set_index(["waste", "wst_oper"])["value"] / 1000
 
@@ -670,6 +670,8 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix, trend):
         ("less_new_material_at_70pct_recycled", eu.less_consumption_for_eu_target_70pct_recycled_pct, "%",
          "ceilings: less_consumption_for_eu_target_70pct_recycled_pct; the same under both bounds"),
         ("waste_back_per_material_consumed", T / D * 100, "%", "waste_treated_kt / consumption_kt"),
+        ("treated_soil_rubble_rock_share", sum(wst[(c, "TRT")] for c in ["W121"] + SOIL_AND_ROCK) / wst[("TOTAL", "TRT")] * 100, "%",
+         "env_wastrt TRT: W121 (construction and demolition) + W126, W127, W12B (soils, dredging spoils, other mineral) / TOTAL"),
         ("rate_rebuilt", Rc / (Rc + D) * 100, "%", "waste_recycled_kt / (waste_recycled_kt + DMC), env_wastrt; no trade"),
         ("rate_rebuilt_with_backfilling", (Rc + Bf) / (Rc + Bf + D) * 100, "%",
          "(recycled + backfilled) / (recycled + backfilled + DMC), env_wastrt; no trade"),

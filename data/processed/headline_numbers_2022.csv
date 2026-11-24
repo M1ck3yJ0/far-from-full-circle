@@ -3,6 +3,7 @@ ring_closed,47.5,%,rate_pct / 24
 less_new_material_using_less_alone,59.255,%,ceilings: less_consumption_for_eu_target_today_pct
 less_new_material_at_70pct_recycled,30.958,%,ceilings: less_consumption_for_eu_target_70pct_recycled_pct; the same under both bounds
 waste_back_per_material_consumed,30.874,%,waste_treated_kt / consumption_kt
+treated_soil_rubble_rock_share,68.162,%,"env_wastrt TRT: W121 (construction and demolition) + W126, W127, W12B (soils, dredging spoils, other mineral) / TOTAL"
 rate_rebuilt,11.25,%,"waste_recycled_kt / (waste_recycled_kt + DMC), env_wastrt; no trade"
 rate_rebuilt_with_backfilling,14.614,%,"(recycled + backfilled) / (recycled + backfilled + DMC), env_wastrt; no trade"
 not_recycled_major_mineral_share,75.791,%,env_wastrt: (TOTAL - TOT_X_MIN) treated less recycled / TOTAL treated less recycled
