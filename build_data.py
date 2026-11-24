@@ -57,7 +57,9 @@ data/processed/:
 
 Tables are named by YEAR. To move the piece to a new year, replace the raw files,
 set YEAR (and LATEST_STEP_YEAR if the waterfall gains a step) and rerun; the script
-warns if the ETC CE shares are for another year.
+warns if the ETC CE shares are for another year. A country without YEAR's rate,
+consumption or waste keeps its latest year with all three, every input together,
+recorded as data_year; the script warns. compare_years.py then lists what moved.
 
 Run from the repository root:
 
@@ -204,6 +206,29 @@ def read_eurostat(name, columns, keep):
     return df
 
 
+GEO_YEAR = {}   # countries without YEAR's rate, consumption or waste: their latest year with all three
+
+
+def data_year(geo):
+    """The year a country's figures come from: YEAR, or its fallback in GEO_YEAR."""
+    return GEO_YEAR.get(geo, YEAR)
+
+
+def in_data_year(d):
+    """Rows from each country's own data year."""
+    return d["TIME_PERIOD"] == d["geo"].map(lambda g: str(data_year(g)))
+
+
+def fallback_years(geos, rate, consumption, waste):
+    """For each country missing YEAR's rate, consumption or waste treated, its latest reporting year
+    with all three."""
+    def complete(g, y):
+        return all(pd.notna(v) for v in (rate.get((g, y)), consumption.get((g, y)), waste.get((g, y, "TOTAL", "TRT"))))
+    years = [y for y in REPORTING_YEARS if y < YEAR]
+    return {g: max((y for y in years if complete(g, y)), default=YEAR)
+            for g in geos if g != "EU27_2020" and not complete(g, YEAR)}
+
+
 def load():
     rate = read_eurostat(
         "rate",
@@ -228,7 +253,7 @@ def load():
 
 def load_loop():
     materials = ["TOTAL"] + list(FLOW_MATERIALS.values())
-    in_year = lambda d: d["material"].isin(materials) & (d["unit"] == "THS_T") & (d["TIME_PERIOD"] == str(YEAR))
+    in_year = lambda d: d["material"].isin(materials) & (d["unit"] == "THS_T") & in_data_year(d)
     flows = read_eurostat(
         "flows",
         ["indic_env", "material", "unit", "geo", "TIME_PERIOD", "OBS_VALUE", "CONF_STATUS"],
@@ -330,7 +355,7 @@ def load_generated():
         "generated",
         ["unit", "hazard", "nace_r2", "waste", "geo", "TIME_PERIOD", "OBS_VALUE", "CONF_STATUS"],
         lambda d: (d["unit"] == "T") & (d["hazard"] == "HAZ_NHAZ") & (d["waste"] == "TOTAL")
-        & d["nace_r2"].isin(["EP_HH", "TOTAL_HH"]) & (d["TIME_PERIOD"] == str(YEAR)),
+        & d["nace_r2"].isin(["EP_HH", "TOTAL_HH"]) & in_data_year(d),
     )
     return gen.pivot(index="geo", columns="nace_r2", values="value") / 1000
 
@@ -338,7 +363,7 @@ def load_generated():
 def levers_table(ceilings, mfa, households, names):
     """The change in the 2022 rate each lever would bring, with everything else unchanged.
     Recycling levers keep consumption as it is; using less keeps recycling as it is."""
-    fossil = mfa[(mfa["material"] == "MF4") & (mfa["unit"] == "THS_T") & (mfa["year"] == YEAR)].set_index("geo")["value"]
+    fossil = mfa[(mfa["material"] == "MF4") & (mfa["unit"] == "THS_T") & in_data_year(mfa)].set_index("geo")["value"]
     rows = []
     for x in ceilings.itertuples():
         u, dmc, r = x.circular_use_kt, x.consumption_kt, x.rate_pct
@@ -454,13 +479,13 @@ def waste_by_material_table(ceilings, names, geos):
     wst = read_eurostat(
         "waste_by_material",
         ["wst_oper", "material", "unit", "geo", "TIME_PERIOD", "OBS_VALUE", "CONF_STATUS"],
-        lambda d: (d["unit"] == "THS_T") & (d["TIME_PERIOD"] == str(YEAR))
+        lambda d: (d["unit"] == "THS_T") & in_data_year(d)
         & d["wst_oper"].isin(["TRT", "RCV_R"]) & d["material"].isin(codes),
     ).set_index(["geo", "material", "wst_oper"])["value"]
     trade = read_eurostat(
         "flows",
         ["indic_env", "material", "unit", "geo", "TIME_PERIOD", "OBS_VALUE", "CONF_STATUS"],
-        lambda d: (d["unit"] == "THS_T") & (d["TIME_PERIOD"] == str(YEAR))
+        lambda d: (d["unit"] == "THS_T") & in_data_year(d)
         & d["indic_env"].isin(["EXP_RCV_R", "IMP_RCV_R"]) & d["material"].isin(codes),
     ).set_index(["geo", "material", "indic_env"])["value"]
     c = ceilings.set_index("geo")
@@ -507,7 +532,7 @@ def unrecycled_table(names, geos):
         "waste",
         ["unit", "hazard", "wst_oper", "waste", "geo", "TIME_PERIOD", "OBS_VALUE", "CONF_STATUS"],
         lambda d: (d["unit"] == "T") & (d["hazard"] == "HAZ_NHAZ") & d["wst_oper"].isin(["TRT", "RCV_R"])
-        & d["waste"].isin(codes) & (d["TIME_PERIOD"] == str(YEAR)),
+        & d["waste"].isin(codes) & in_data_year(d),
     )
     v = wst.set_index(["geo", "waste", "wst_oper"])["value"] / 1000
     rows = []
@@ -1098,6 +1123,7 @@ def page_data(ceilings, trend, steps, materials, mix, loop, flows_m, levers, unr
         x = c.loc[g]
         countries[g] = {
             "name": names[g],
+            **({"data_year": data_year(g)} if data_year(g) != YEAR else {}),
             "rate": r(x.rate_pct),
             "ceiling": r(x.ceiling_pct),
             "ceiling_without_soil_rock": r(x.ceiling_without_soil_rock_pct),
@@ -1317,11 +1343,14 @@ def main():
                   waste_df[(waste_df["waste"] == "TOTAL") & (waste_df["wst_oper"] == "TRT")].itertuples()}
 
     OUT.mkdir(parents=True, exist_ok=True)
+    GEO_YEAR.update(fallback_years(geos, rate, consumption, waste))
+    for g, y in GEO_YEAR.items():
+        print(f"Warning: {names[g]} has no rate, consumption or waste for {YEAR}; its figures are for {y}")
 
-    # 1. The ceilings in 2022
-    ceilings = pd.DataFrame([measures(g, YEAR, rate, consumption, waste) for g in geos])
+    # 1. The ceilings in YEAR, or a country's fallback year
+    ceilings = pd.DataFrame([measures(g, data_year(g), rate, consumption, waste) for g in geos])
     ceilings.insert(1, "country", ceilings["geo"].map(names))
-    ceilings.drop(columns="year").round(3).to_csv(OUT / f"ceilings_{YEAR}.csv", index=False)
+    ceilings.rename(columns={"year": "data_year"}).round(3).to_csv(OUT / f"ceilings_{YEAR}.csv", index=False)
     missing = ceilings.loc[ceilings[["rate_pct", "consumption_kt", "waste_treated_kt", "waste_recycled_kt"]]
                            .isna().any(axis=1), "country"].tolist()
     if missing:
@@ -1361,7 +1390,7 @@ def main():
     steps.round(3).to_csv(OUT / "trend_steps.csv", index=False)
 
     # 4. What each country consumes, in kg per person a day
-    per_person = mfa[(mfa["unit"] == "T_HAB") & (mfa["year"] == YEAR)].pivot(
+    per_person = mfa[(mfa["unit"] == "T_HAB") & in_data_year(mfa)].pivot(
         index="geo", columns="material", values="value")
     kg_a_day = 1000 / 365
     materials = pd.DataFrame({
@@ -1380,7 +1409,7 @@ def main():
 
     # 4b. The same consumption in the ring's four material groups, as shares of their sum by
     # weight; other products and waste for final treatment (MF5, MF6) are left out
-    tonnes = mfa[(mfa["unit"] == "THS_T") & (mfa["year"] == YEAR)].pivot(
+    tonnes = mfa[(mfa["unit"] == "THS_T") & in_data_year(mfa)].pivot(
         index="geo", columns="material", values="value")
     four = tonnes[list(MIX_GROUPS.values())]
     mix = four.div(four.sum(axis=1), axis=0).mul(100).set_axis([f"{k}_pct" for k in MIX_GROUPS], axis=1)
