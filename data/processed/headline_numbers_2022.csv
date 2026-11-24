@@ -17,7 +17,7 @@ ireland_ceiling_k1,11.457,%,"ceilings: Ireland's ceiling_k1_pct, every tonne rec
 ireland_less_for_own_target_70pct_recycled,37.689,%,ceilings: Ireland's less_consumption_for_ireland_target_70pct_recycled_pct; the same under both bounds
 recycled_share_to_close_k0,101.665,%,"(waste_recycled_kt + extra) / waste_treated_kt, extra = (24% x (U + DMC) - U) / (1 - 24% x (1 - 0.0)); over 100: can't"
 recycling_multiple_to_close_k0,2.476,times,(waste_recycled_kt + extra) / waste_recycled_kt
-less_new_material_to_close_k0,0.0,%,0.0 x extra / DMC; the least new material any route to 24% takes away
+less_new_material_to_close_k0,,%,0.0 x extra / DMC: the new material recycling replaces when it alone closes the ring; blank if it can't
 rate_every_tonne_k0,23.702,%,(U + not yet recycled) / (U + DMC + (1 - 0.0) x not yet recycled)
 rate_70pct_recycled_k0,17.9,%,(U + extra at 70%) / (U + DMC + (1 - 0.0) x extra)
 replaced_at_70pct_k0,0.0,%,0.0 x extra recycled at 70% / DMC
@@ -30,7 +30,7 @@ countries_past_target_at_70pct_k0,4.0,countries,"rate at 70% recycled, recycling
 countries_short_at_70pct_k0,23.0,countries,"rate at 70% recycled, recycling alone, below 24%: those that still have to go without"
 recycled_share_to_close_k05,93.4,%,"(waste_recycled_kt + extra) / waste_treated_kt, extra = (24% x (U + DMC) - U) / (1 - 24% x (1 - 0.5)); over 100: can't"
 recycling_multiple_to_close_k05,2.275,times,(waste_recycled_kt + extra) / waste_recycled_kt
-less_new_material_to_close_k05,8.08,%,0.5 x extra / DMC; the least new material any route to 24% takes away
+less_new_material_to_close_k05,8.08,%,0.5 x extra / DMC: the new material recycling replaces when it alone closes the ring; blank if it can't
 rate_every_tonne_k05,25.47,%,(U + not yet recycled) / (U + DMC + (1 - 0.5) x not yet recycled)
 rate_70pct_recycled_k05,18.582,%,(U + extra at 70%) / (U + DMC + (1 - 0.5) x extra)
 replaced_at_70pct_k05,4.468,%,0.5 x extra recycled at 70% / DMC
@@ -43,7 +43,7 @@ countries_past_target_at_70pct_k05,8.0,countries,"rate at 70% recycled, recyclin
 countries_short_at_70pct_k05,19.0,countries,"rate at 70% recycled, recycling alone, below 24%: those that still have to go without"
 recycled_share_to_close_k1,87.119,%,"(waste_recycled_kt + extra) / waste_treated_kt, extra = (24% x (U + DMC) - U) / (1 - 24% x (1 - 1.0)); over 100: can't"
 recycling_multiple_to_close_k1,2.122,times,(waste_recycled_kt + extra) / waste_recycled_kt
-less_new_material_to_close_k1,14.221,%,1.0 x extra / DMC; the least new material any route to 24% takes away
+less_new_material_to_close_k1,14.221,%,1.0 x extra / DMC: the new material recycling replaces when it alone closes the ring; blank if it can't
 rate_every_tonne_k1,27.524,%,(U + not yet recycled) / (U + DMC + (1 - 1.0) x not yet recycled)
 rate_70pct_recycled_k1,19.317,%,(U + extra at 70%) / (U + DMC + (1 - 1.0) x extra)
 replaced_at_70pct_k1,8.936,%,1.0 x extra recycled at 70% / DMC
