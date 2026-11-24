@@ -114,7 +114,7 @@ EXPLORER_WARNINGS = {
     "FI": "swings",
     "BG": "swings",
 }
-# 20b's highlighted steps: country, then (first year of the step, the arrow its label names),
+# The waterfall explorer's highlighted steps: country, then (first year of the step, the arrow its label names),
 # "use" for material use and "recycling" for circular use. "imports" names the recycling arrow
 # but labels it as waste brought in. Romania has none.
 WATERFALL_HIGHLIGHTS = {
@@ -622,7 +622,7 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix, trend):
         & (d["TIME_PERIOD"] == str(YEAR)),
     ).set_index(["waste", "wst_oper"])["value"] / 1000
 
-    # Waste recycled by country, for 20b's cards, kt
+    # Waste recycled by country, for the waterfall explorer's cards, kt
     rcv = read_eurostat(
         "waste",
         ["unit", "hazard", "wst_oper", "waste", "geo", "TIME_PERIOD", "OBS_VALUE", "CONF_STATUS"],
@@ -872,7 +872,7 @@ def headline_table(ceilings, steps, two_levers, by_material, loop, mix, trend):
          "natural gas: extraction + imports - exports"),
         ("nl_step_2014_2016_change", st.loc[("NL", 2014), "rate_change_pts"], "change in rate", "trend_steps"),
         ("nl_step_2014_2016_use_change", st.loc[("NL", 2014), "consumption_change_pct"], "%", "trend_steps"),
-        # 20b's country cards
+        # The waterfall explorer's country cards
         ("de_step_2022_2024_use_change", st.loc[("DE", 2022), "consumption_change_pct"], "%", "trend_steps; DMC reported"),
         ("de_fall_2022_2024_minerals_share", fall("DE", "MF3", 2022, 2024) / fall("DE", "TOTAL", 2022, 2024) * 100,
          "%", "DMC fall, minerals over total; biomass rose, so the shares add to more than 100"),
@@ -965,7 +965,7 @@ def examples_table():
     ZIN_PT = ["zin.upfront_saved_total", "zin.structure_kept"]
     IKEA_PT = ["ikea.co2e_avoided"] + IKEA_T
     rows = [
-        # ZIN, panel 12 and its note
+        # ZIN and its note
         given("zin", "upfront_per_m2"),
         given("zin", "upfront_saved_per_m2"),
         ("zin", "benchmark_upfront_per_m2", benchmark, "kg CO2/m2",
@@ -1017,7 +1017,7 @@ def examples_table():
          zin("existing_reused_on_site_share") + zin("existing_recycled_share"), "%",
          "existing_reused_on_site_share + existing_recycled_share",
          ["zin.existing_reused_on_site_share", "zin.existing_recycled_share"]),
-        # IKEA's kitchens, panel 18 and its note
+        # IKEA's kitchens and its note
         given("ikea", "food_waste_cut"),
         ("ikea", "heap_2022_share_of_2017", 100 - ikea("food_waste_cut"), "%",
          "100 - food_waste_cut: 2022's heap's area as a share of 2017's (make_heaps.py)", ["ikea.food_waste_cut"]),
